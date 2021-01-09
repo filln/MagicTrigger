@@ -1,0 +1,2 @@
+# MagicTrigger
+ PC game
