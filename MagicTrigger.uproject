@@ -23,22 +23,22 @@
 		},
 		{
 			"Name": "AutoSizeComments",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/ae89a2c4ab384de0a3f213b23de324f3"
 		},
 		{
 			"Name": "MORT",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/f6a838d3c72b4d28b5635da50d3335e5"
 		},
 		{
 			"Name": "ImageResizUEr",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/670be04026664663875aadd4dea45b9d"
 		},
 		{
 			"Name": "ST_ExportPNG",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/230db584ce5749f284945d3286c745fa"
 		}
 	],
