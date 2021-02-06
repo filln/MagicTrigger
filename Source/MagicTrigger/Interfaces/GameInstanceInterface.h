@@ -7,6 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "MagicTrigger/Data/GameSettingsStruct.h"
 #include "GameInstanceInterface.generated.h"
 
 class UPlayerStateSaveGame;
@@ -29,9 +30,9 @@ class MAGICTRIGGER_API IGameInstanceInterface
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		UPlayerStateSaveGame* LoadGamesData_IF(FString NameOfLoadGame);
+		UPlayerStateSaveGame* LoadGamesData_IF(FString& NameOfLoadGame);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		GetGameSettingsStruct_IF() const;
+		FGameSettingsStruct GetGameSettingsStruct_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void SetGameSettingsStruct_IF();
+		void SetGameSettingsStruct_IF(FGameSettingsStruct GameSettingsStruct);
 };
