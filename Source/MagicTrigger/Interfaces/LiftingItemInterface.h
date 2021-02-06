@@ -6,7 +6,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include "MagicTrigger/Interfaces/InterfaceCheck.h"
 #include "LiftingItemInterface.generated.h"
 
 // This class does not need to be modified.

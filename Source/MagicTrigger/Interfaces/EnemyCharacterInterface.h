@@ -6,7 +6,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include "MagicTrigger/Interfaces/InterfaceCheck.h"
 #include "EnemyCharacterInterface.generated.h"
 
 class AActor;

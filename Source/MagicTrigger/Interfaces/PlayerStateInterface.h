@@ -6,7 +6,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include "MagicTrigger/Interfaces/InterfaceCheck.h"
 #include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
 #include "PlayerStateInterface.generated.h"
 
