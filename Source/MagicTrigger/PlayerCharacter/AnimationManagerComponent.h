@@ -84,9 +84,12 @@ protected:
 		float StartPositionLiftingThrowingObject;
 
 private:
-	UAnimInstance* AnimInstance;
-	AActor* Owner;
-	ACharacter* PlayerCharacter;
+	UPROPERTY()
+		UAnimInstance* AnimInstance;
+	UPROPERTY()
+		AActor* Owner;
+	UPROPERTY()
+		ACharacter* PlayerCharacter;
 	FTimerHandle CheckStopJumpAnimationTimer;
 	FTimerHandle CheckStopAttackAnimationTimer;
 	FTimerHandle CheckStopThrowAnimationTimer;
