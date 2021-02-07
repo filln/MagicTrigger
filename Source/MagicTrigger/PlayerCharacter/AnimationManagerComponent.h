@@ -233,9 +233,7 @@ public:
 		float GetStartPositionLiftingThrowingObject_IF() const;
 	virtual float GetStartPositionLiftingThrowingObject_IF_Implementation() const override;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
-		UActorComponent* GetAnimationManagerComponent_IF() const;
-	virtual UActorComponent* GetAnimationManagerComponent_IF_Implementation() const override;
+
 
 	/**
 * AnimationManagerInterface methods.

@@ -293,7 +293,7 @@ void UAnimationManagerComponent::SetPlayingAnimationPutDown2Hands(bool bPlaying)
 
 void UAnimationManagerComponent::StopAnimations()
 {
-	if (this->AnimInstance->Montage_IsPlaying())
+	if (this->AnimInstance->Montage_IsPlaying(FightIdleMontage))
 	{
 		this->AnimInstance->Montage_Stop(0, FightIdleMontage);
 	}
@@ -418,10 +418,6 @@ float UAnimationManagerComponent::GetStartPositionLiftingThrowingObject_IF_Imple
 	return this->StartPositionLiftingThrowingObject;
 }
 
-UActorComponent* UAnimationManagerComponent::GetAnimationManagerComponent_IF_Implementation() const
-{
-	return this;
-}
 
 /**
 * AnimationManagerInterface methods.
@@ -443,41 +439,89 @@ void UAnimationManagerComponent::StartTraceAttackRightFoot_IF_Implementation()
 
 void UAnimationManagerComponent::StopTraceAttackRightFoot_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_StopTraceAttackRightFoot_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::StartTraceAttackLeftFoot_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_StartTraceAttackLeftFoot_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::StopTraceAttackLeftFoot_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::SpawnThrowableActor_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_SpawnThrowableActor_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::AttachThrowableActor_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_AttachThrowableActor_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::AttachLiftingActor_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_AttachLiftingActor_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::DetachLiftingActor_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_DetachLiftingActor_IF(Owner);
+		}
+	}
 }
 
 void UAnimationManagerComponent::ReportNoise_IF_Implementation()
 {
-
+	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_ReportNoise_IF(Owner);
+		}
+	}
 }
 

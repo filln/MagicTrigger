@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
+/**
+ * Персонаж игры.
+ */
 
 
 #include "PlayerCharacterMagicTrigger.h"
@@ -30,5 +33,17 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+/**
+* AnimationManagerInterface methods.
+*/
+/**
+ * Getters
+ */
+UActorComponent* APlayerCharacterMagicTrigger::GetAnimationManagerComponent_IF_Implementation() const
+{
+	UActorComponent* ActorComponent = nullptr;
+	return ActorComponent;
 }
 
