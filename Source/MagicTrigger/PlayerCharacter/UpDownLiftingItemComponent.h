@@ -7,9 +7,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "UpDownLiftingItemComponent.generated.h"
 
+class UCapsuleComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Category = "UpDownLiftingItemComponent")
 class MAGICTRIGGER_API UUpDownLiftingItemComponent : public UActorComponent
@@ -39,7 +39,7 @@ protected:
 	 * Длина горизонтального трейса для обнаружения препятствия (когда нельзя поставить актор). Зависит от размера актора.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
-		float DistanceOfHorizontalTrace;
+		float DistanceOfTraceObstacle;
 	/**
 	 * Увеличение луча трейса ниже точки PointPutDown, чтобы трейсить неровности ландшафта. При положительном значении увеличивает длину трейса.
 	 */
@@ -56,16 +56,30 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
 		float AttachOverTime;
+	///**
+	// * Тип дебаг-линии трейса.
+	// */
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
+	//	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType;
+
 	/**
-	 * Тип дебаг-линии трейса.
+	 * Показывать ли дебаг-линию трейса.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
-		TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType;
+		bool bDrawDebugTrace;
+
 	/**
 	 * Канал коллизии трейса.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
-		TEnumAsByte<ETraceTypeQuery> TraceChannel;
+		TEnumAsByte<ECollisionChannel> TraceCollisionChannel;
+
+	/**
+	 * Название сокета, из которого будет выпускаться трейс определения препятствия. Можно использовать 
+	 * какой-нибудь сокет в центре скелетона перса. 
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
+		FName StartTraceObstacleSocketName;
 
 private:
 
@@ -77,7 +91,8 @@ private:
 		AActor* LiftUpObject;
 	FVector InstallationLocation;
 	FHitResult DetachLiftingActorTraceOut;
-	FTransform LiftUpObjectTransform;
+	UCapsuleComponent* InterractCollision;
+
 
 /**
  * Methods

@@ -47,6 +47,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
 		UArrowComponent* GetUpDownLiftingArrow_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+		FVector GetUpDownLiftingArrowForwardVector_IF() const;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
 		FTransform GetPointPutDownTransform_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
 		FTransform GetPointStartTraceToPutDownPointTransform_IF() const;

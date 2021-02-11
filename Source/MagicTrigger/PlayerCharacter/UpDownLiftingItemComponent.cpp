@@ -7,6 +7,10 @@
 #include "UpDownLiftingItemComponent.h"
 #include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
 #include "MagicTrigger\Interfaces\LiftingItemInterface.h"
+#include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Engine/World.h"
 
 class ALiftingItem;
 
@@ -18,12 +22,14 @@ UUpDownLiftingItemComponent::UUpDownLiftingItemComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
-	DistanceOfHorizontalTrace = 100;
+	DistanceOfTraceObstacle = 100;
 	DeltaVerticalTraceZ = 20;
-	DrawDebugType = EDrawDebugTrace::None;
-	TraceChannel = ETraceTypeQuery::TraceTypeQuery1;
+	//DrawDebugType = EDrawDebugTrace::None;
+	TraceCollisionChannel = ECollisionChannel::ECC_Visibility;
+	bDrawDebugTrace = false;
 	DetachOverTime = 0.3;
 	AttachOverTime = 0.2;
+	StartTraceObstacleSocketName = FName(TEXT("Hips"));
 
 }
 
@@ -35,6 +41,19 @@ void UUpDownLiftingItemComponent::BeginPlay()
 
 	this->Owner = GetOwner();
 
+	if (this->Owner)
+	{
+		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+		{
+			this->OwnersMesh = IPlayerCharacterInterface::Execute_GetMesh_IF(this->Owner);
+		}
+
+		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+		{
+			this->InterractCollision = IPlayerCharacterInterface::Execute_GetInteractCollision_IF(this->Owner);
+		}
+
+	}
 }
 
 void UUpDownLiftingItemComponent::DetachLiftingActor()
@@ -49,7 +68,7 @@ void UUpDownLiftingItemComponent::DetachLiftingActor()
 	FTransform PointPutDownTransform;
 	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
 	{
-		PointPutDownTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(Owner);
+		PointPutDownTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
 	}
 
 	FVector TargetRelativeLocation = this->DetachLiftingActorTraceOut.Location;
@@ -89,7 +108,7 @@ void UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor()
 
 void UUpDownLiftingItemComponent::AttachLiftingActor()
 {
-	if (!this->LiftUpObject || !this->Owner)
+	if (!this->LiftUpObject || !this->OwnersMesh)
 	{
 		return;
 	}
@@ -98,11 +117,6 @@ void UUpDownLiftingItemComponent::AttachLiftingActor()
 	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
 	{
 		this->AttachSocket = ILiftingItemInterface::Execute_GetAttachSocket_IF(this->LiftUpObject);
-	}
-
-	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
-	{
-		this->OwnersMesh = IPlayerCharacterInterface::Execute_GetMesh_IF(Owner);
 	}
 
 	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
@@ -136,46 +150,211 @@ void UUpDownLiftingItemComponent::AttachLiftingActor()
 
 void UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor()
 {
-	FAttachmentTransformRules AttachmentTransformRules;
-	AttachmentTransformRules.LocationRule = EAttachmentRule::SnapToTarget;
-	AttachmentTransformRules.RotationRule = EAttachmentRule::KeepWorld;
-	AttachmentTransformRules.ScaleRule = EAttachmentRule::KeepWorld;
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
 	this->LiftUpObject->AttachToComponent(this->OwnersMesh, AttachmentTransformRules, this->AttachSocket);
 }
 
 
 void UUpDownLiftingItemComponent::LiftUp()
 {
-	if (this->LiftUpObject || this->Owner)
+	if (this->LiftUpObject || !this->Owner)
 	{
 		return;
 	}
 
+	this->LiftUpObject = FindLifUpObject();
+
+	if (!this->LiftUpObject)
+	{
+		return;
+	}
+
+	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner))
+	{
+		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(this->Owner);
+	}
+
+	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	{
+		ILiftingItemInterface::Execute_SetPlayingAnimationLiftUp_IF(this->LiftUpObject, true);
+	}
 
 }
 
 void UUpDownLiftingItemComponent::PutDown()
 {
+	if (!this->LiftUpObject)
+	{
+		return;
+	}
 
+	if (TraceObstacle())
+	{
+		return;
+	}
+
+	if (!TracePutDownPoint())
+	{
+		return;
+	}
+
+	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	{
+		ILiftingItemInterface::Execute_SetPlayingAnimationPutDown_IF(this->LiftUpObject, true);
+	}
 }
 
 void UUpDownLiftingItemComponent::DestroyLiftingActor()
 {
+	if (!this->LiftUpObject)
+	{
+		return;
+	}
 
+	bool bDestroyed = this->LiftUpObject->Destroy();
+	if (bDestroyed)
+	{
+		this->LiftUpObject = nullptr;
+	}
 }
 
 AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 {
-	return this->LiftUpObject;
+	AActor* LiftUpObjectTmp = nullptr;
+
+
+	if (!this->InterractCollision || !this->LiftUpClass)
+	{
+		return LiftUpObjectTmp;
+	}
+
+	TArray<AActor*> OverlappingActorsArr;
+	this->InterractCollision->GetOverlappingActors(OverlappingActorsArr, this->LiftUpClass);
+
+	if (!OverlappingActorsArr.Num())
+	{
+		return LiftUpObjectTmp;
+	}
+
+	AActor* ObservedActor = nullptr;
+	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner))
+	{
+		ObservedActor = IOwnerTargetSelectionInterface::Execute_GetObservedActor_IF(this->Owner);
+	}
+
+	if (ObservedActor)
+	{
+		for (const auto& CurrentActor : OverlappingActorsArr)
+		{
+			if (!CurrentActor)
+			{
+				continue;
+			}
+
+			if (CurrentActor == ObservedActor)
+			{
+				return CurrentActor;
+			}
+		}
+	}
+	else
+	{
+		for (const auto& CurrentActor : OverlappingActorsArr)
+		{
+			if (CurrentActor)
+			{
+				return CurrentActor;
+			}
+		}
+	}
+
+	return LiftUpObjectTmp;
 }
 
 bool UUpDownLiftingItemComponent::TracePutDownPoint()
 {
-	return true;
+	if (!this->Owner || !GetWorld())
+	{
+		return false;
+	}
+
+	FTransform StartTraceTransform;
+	FTransform EndTraceTransform;
+	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+	{
+		StartTraceTransform = IPlayerCharacterInterface::Execute_GetPointStartTraceToPutDownPointTransform_IF(this->Owner);
+		EndTraceTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
+	}
+
+	FVector StartTrace = StartTraceTransform.GetLocation();
+	FVector EndTrace = EndTraceTransform.GetLocation();
+	EndTrace.Z = EndTrace.Z - this->DeltaVerticalTraceZ;
+
+	FName TraceTag = FName(TEXT("TracePutDownPoint"));
+	FCollisionQueryParams CollisionQueryParams = FCollisionQueryParams(TraceTag, FCollisionQueryParams::GetUnknownStatId());
+	TArray<AActor*> IgnoredActors;
+	IgnoredActors.Add(this->Owner);
+	IgnoredActors.Add(this->LiftUpObject);
+	CollisionQueryParams.AddIgnoredActors(IgnoredActors);
+
+	FCollisionResponseParams CollisionResponseParams;
+
+
+	if (this->bDrawDebugTrace)
+	{
+		GetWorld()->DebugDrawTraceTag = TraceTag;
+	}
+	else
+	{
+		GetWorld()->DebugDrawTraceTag = FName();
+	}
+
+	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(this->DetachLiftingActorTraceOut, StartTrace, EndTrace, this->TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
+
+	return bTraceResult;
 }
 
 bool UUpDownLiftingItemComponent::TraceObstacle()
 {
-	return true;
+	if (!this->Owner)
+	{
+		return true;
+	}
+
+	FTransform StartTraceObstacleSocketNameTransform;
+	FVector UpDownLiftingArrowForwardVector;
+	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+	{
+		StartTraceObstacleSocketNameTransform = IPlayerCharacterInterface::Execute_GetSocketTransform_IF(this->Owner, this->StartTraceObstacleSocketName);
+		UpDownLiftingArrowForwardVector = IPlayerCharacterInterface::Execute_GetUpDownLiftingArrowForwardVector_IF(this->Owner);
+	}
+
+	FVector StartTrace = StartTraceObstacleSocketNameTransform.GetLocation();
+	FVector EndTrace = StartTrace + UpDownLiftingArrowForwardVector * this->DistanceOfTraceObstacle;
+
+	FName TraceTag = FName(TEXT("TraceObstacle"));
+	FCollisionQueryParams CollisionQueryParams = FCollisionQueryParams(TraceTag, FCollisionQueryParams::GetUnknownStatId());
+	TArray<AActor*> IgnoredActors;
+	IgnoredActors.Add(this->Owner);
+	IgnoredActors.Add(this->LiftUpObject);
+	CollisionQueryParams.AddIgnoredActors(IgnoredActors);
+
+	FCollisionResponseParams CollisionResponseParams;
+
+
+	if (this->bDrawDebugTrace)
+	{
+		GetWorld()->DebugDrawTraceTag = TraceTag;
+	}
+	else
+	{
+		GetWorld()->DebugDrawTraceTag = FName();
+	}
+
+	FHitResult HitResultTmp;
+	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(HitResultTmp, StartTrace, EndTrace, this->TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
+
+	return bTraceResult;
+
 }
 
