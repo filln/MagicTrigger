@@ -29,7 +29,6 @@ protected:
 	 */
 public:
 
-protected:
 	/**
 	 * Класс поднимаемого актора. Используется для фильтра в методе GetOverlappingActors().
 	 */
