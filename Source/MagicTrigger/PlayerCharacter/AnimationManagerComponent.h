@@ -44,7 +44,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimationManagerComponent")
 		float CheckStopThrowAnimationTimerRate;
 
-protected:
+public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bAttacking;

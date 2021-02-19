@@ -24,7 +24,6 @@ UUpDownLiftingItemComponent::UUpDownLiftingItemComponent()
 
 	DistanceOfTraceObstacle = 100;
 	DeltaVerticalTraceZ = 20;
-	//DrawDebugType = EDrawDebugTrace::None;
 	TraceCollisionChannel = ECollisionChannel::ECC_Visibility;
 	bDrawDebugTrace = false;
 	DetachOverTime = 0.3;
@@ -74,10 +73,6 @@ void UUpDownLiftingItemComponent::DetachLiftingActor()
 	FVector TargetRelativeLocation = this->DetachLiftingActorTraceOut.Location;
 	FRotator TargetRelativeRotation = PointPutDownTransform.Rotator();
 	FLatentActionInfo LatentInfo;
-	//LatentInfo.CallbackTarget = this;
-	//LatentInfo.ExecutionFunction = FName("DoAfterMoveComponentInDetachLiftingActor");
-	//LatentInfo.Linkage = 0;
-	//LatentInfo.UUID = 0;
 
 	UKismetSystemLibrary::MoveComponentTo
 	(

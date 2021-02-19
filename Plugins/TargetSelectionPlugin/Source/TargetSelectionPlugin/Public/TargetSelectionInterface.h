@@ -8,7 +8,7 @@
 
 // This class does not need to be modified.
 UINTERFACE(Category = "TargetSelectionInterface", Blueprintable)
-class UTargetSelectionInterface : public UInterface
+class TARGETSELECTIONPLUGIN_API UTargetSelectionInterface : public UInterface
 {
 	GENERATED_BODY()
 };

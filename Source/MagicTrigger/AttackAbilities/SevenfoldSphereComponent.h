@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
+/**
+ * 
+ */
 
 #pragma once
 
@@ -7,7 +10,7 @@
 #include "SevenfoldSphereComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Category = "SevenfoldSphereComponent")
 class MAGICTRIGGER_API USevenfoldSphereComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -23,6 +26,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	/**
+	 * 
+	 */
+	UFUNCTION(BlueprintCallable, Category = "SevenfoldSphereComponent")
+		void UseSevenfoldSphereAbility();
 
 		
 };

@@ -55,11 +55,6 @@ public:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
 		float AttachOverTime;
-	///**
-	// * Тип дебаг-линии трейса.
-	// */
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
-	//	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType;
 
 	/**
 	 * Показывать ли дебаг-линию трейса.
@@ -80,14 +75,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UpDownLiftingItemComponent")
 		FName StartTraceObstacleSocketName;
 
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "UpDownLiftingItemComponent")
+		AActor* LiftUpObject;
+
 private:
 
 	UPROPERTY()
 		AActor* Owner;
 	USkeletalMeshComponent* OwnersMesh;
 	FName AttachSocket;
-	UPROPERTY()
-		AActor* LiftUpObject;
 	FVector InstallationLocation;
 	FHitResult DetachLiftingActorTraceOut;
 	UCapsuleComponent* InterractCollision;

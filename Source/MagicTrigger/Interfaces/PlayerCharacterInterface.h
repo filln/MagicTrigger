@@ -11,7 +11,6 @@
 
 class UTextureRenderTarget2D;
 class UCapsuleComponent;
-class UArrowComponent;
 class USkeletalMeshComponent;
 
 // This class does not need to be modified.
@@ -44,8 +43,6 @@ public:
 		FTransform GetSocketTransform_IF(FName& SocketName) const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
 		UCapsuleComponent* GetInteractCollision_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		UArrowComponent* GetUpDownLiftingArrow_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
 		FVector GetUpDownLiftingArrowForwardVector_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")

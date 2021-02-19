@@ -10,12 +10,12 @@
 #include "MeleeAttackComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Category = "MeleeAttackComponent" )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Category = "MeleeAttackComponent")
 class MAGICTRIGGER_API UMeleeAttackComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMeleeAttackComponent();
 
@@ -30,7 +30,7 @@ public:
 	 * Длина трейса.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
-		float AttackLengthTrace; 
+		float AttackLengthTrace;
 
 	/**
 	 * Радиус трейс-сферы.
@@ -48,7 +48,7 @@ public:
 	 * Комплексный или простой трейс.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
-		bool TraceComplex;
+		bool bTraceComplex;
 
 	/**
 	 * Показывать ли дебаг-линию трейса.
@@ -59,8 +59,14 @@ public:
 	/**
 	 *  Таймер, по которому выполняется DoAttack() для трейса цели.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
+	UPROPERTY(BlueprintReadWrite, Category = "MeleeAttackComponent")
 		FTimerHandle AttackTimer;
+
+	/**
+	 * Период таймера.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
+		float AttackTimerDeltaTime;
 
 
 	/**
@@ -75,14 +81,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MeleeAttackComponent")
 		void DoAttack
 		(
-			const FVector& StartTrace, 
-			const FVector& EndTraceUnit, 
-			const TArray<AActor*>& IgnoredActors, 
-			float BaseDamage, 
-			AController* EventInstigator, 
-			AActor* DamageCauser, 
+			const FVector& StartTrace,
+			const FVector& EndTraceUnit,
+			const TArray<AActor*>& IgnoredActors,
+			float BaseDamage,
+			AController* EventInstigator,
+			AActor* DamageCauser,
 			TSubclassOf<UDamageType> DamageTypeClass
 		);
+
+	/**
+	 * Остановить таймер.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeleeAttackComponent")
+		void StopAttackTimer();
 
 private:
 	/**
@@ -90,9 +102,9 @@ private:
 	 */
 	bool TraceAttack
 	(
-		FHitResult& OutHit, 
-		const FVector& StartTrace, 
-		const FVector& EndTraceUnit, 
+		FHitResult& OutHit,
+		const FVector& StartTrace,
+		const FVector& EndTraceUnit,
 		const TArray<AActor*>& IgnoredActors
 	);
 

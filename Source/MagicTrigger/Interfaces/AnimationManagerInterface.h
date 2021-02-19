@@ -12,7 +12,7 @@
 class UActorComponent;
 
 // This class does not need to be modified.
-UINTERFACE(Category = "AnimationManagerInterface", Blueprintable)
+UINTERFACE(Blueprintable, Category = "AnimationManagerInterface")
 class UAnimationManagerInterface : public UInterface
 {
 	GENERATED_BODY()

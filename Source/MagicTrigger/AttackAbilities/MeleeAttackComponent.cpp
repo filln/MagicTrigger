@@ -6,6 +6,7 @@
 
 #include "MeleeAttackComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
 
 // Sets default values for this component's properties
 UMeleeAttackComponent::UMeleeAttackComponent()
@@ -17,9 +18,10 @@ UMeleeAttackComponent::UMeleeAttackComponent()
 
 	AttackLengthTrace = 100;
 	TraceSphereRadius = 50;
-	TraceCollisionChannel = ECC_GameTraceChannel1;
-	TraceComplex = false;
+	TraceCollisionChannel = ECC_Attack;
+	bTraceComplex = false;
 	bDrawDebugTrace = false;
+	AttackTimerDeltaTime = 0.017;
 
 }
 
@@ -31,10 +33,15 @@ void UMeleeAttackComponent::DoAttack(const FVector& StartTrace, const FVector& E
 
 	if (bTraceResult)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(this->AttackTimer);
+		StopAttackTimer();
 
 		UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), BaseDamage, EventInstigator, DamageCauser, DamageTypeClass);
 	}
+}
+
+void UMeleeAttackComponent::StopAttackTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(this->AttackTimer);
 }
 
 bool UMeleeAttackComponent::TraceAttack(FHitResult& OutHit, const FVector& StartTrace, const FVector& EndTraceUnit, const TArray<AActor*>& IgnoredActors)

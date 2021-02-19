@@ -14,8 +14,14 @@ public class MagicTrigger : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore",
-			"UMG", "Slate", "SlateCore"
+			"UMG", "Slate", "SlateCore",
+			"TargetSelectionPlugin"
 		});
+
+		//PublicIncludePaths.AddRange(new string[]
+		//{
+		//	"TargetSelectionPlugin/Public"
+		//});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

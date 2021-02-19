@@ -1,5 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
+/**
+ * Родительский класс метаемых предметов.
+ */
 
 
 #include "ThrowableItem.h"
 
+AThrowableItem::AThrowableItem()
+{
+
+}

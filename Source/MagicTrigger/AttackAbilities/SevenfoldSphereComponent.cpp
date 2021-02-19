@@ -32,3 +32,8 @@ void USevenfoldSphereComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	// ...
 }
 
+void USevenfoldSphereComponent::UseSevenfoldSphereAbility()
+{
+
+}
+
