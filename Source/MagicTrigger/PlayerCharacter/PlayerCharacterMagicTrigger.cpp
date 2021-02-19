@@ -141,6 +141,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	AxisValueRunningCoeff = 1;
 	AxisValueShortWalkingCoeff = 0.1;
 	AxisValueWalkingCoeff = 0.34;
+	AxisValueMovementCoeff = AxisValueWalkingCoeff;
 	AxisValueStopCoeff = 0;
 	ArrowLeftFootSocketName = FName(TEXT("LeftFoot"));
 	ArrowRightFootSocketName = FName(TEXT("RightFoot"));
@@ -216,6 +217,9 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 
 		this->GameMode = UGameplayStatics::GetGameMode(GetWorld());
 	}
+
+	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
+	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap);
 
 }
 
@@ -763,6 +767,17 @@ void APlayerCharacterMagicTrigger::RemoveAndSwitchActors(AActor* RemovingActor)
 	this->TargetSelectionComponent->RemoveAndSwitchActors(RemovingActor);
 	this->AnimationManagerComponent->bWatchingNow = this->TargetSelectionComponent->GetIsWatchingNow();
 }
+
+void APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	this->TargetSelectionComponent->AddActor(OtherActor);
+}
+
+void APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	this->TargetSelectionComponent->RemoveAndSwitchActors(OtherActor);
+}
+
 
 float APlayerCharacterMagicTrigger::GetDamage() const
 {
