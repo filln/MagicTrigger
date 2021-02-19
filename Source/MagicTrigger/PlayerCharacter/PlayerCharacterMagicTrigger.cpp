@@ -917,7 +917,7 @@ void APlayerCharacterMagicTrigger::StartTraceAttackLeftFoot_IF_Implementation()
 		return;
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(this->MeleeAttackComponent->AttackTimer, &APlayerCharacterMagicTrigger::TraceAttackLeftFoot, this->MeleeAttackComponent->AttackTimerDeltaTime, true);
+	GetWorld()->GetTimerManager().SetTimer(this->MeleeAttackComponent->AttackTimer, this, &APlayerCharacterMagicTrigger::TraceAttackLeftFoot, this->MeleeAttackComponent->AttackTimerDeltaTime, true);
 }
 
 void APlayerCharacterMagicTrigger::StopTraceAttackRightFoot_IF_Implementation()
@@ -932,7 +932,7 @@ void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot_IF_Implementation()
 		return;
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(this->MeleeAttackComponent->AttackTimer, &APlayerCharacterMagicTrigger::TraceAttackRightFoot, this->MeleeAttackComponent->AttackTimerDeltaTime, true);
+	GetWorld()->GetTimerManager().SetTimer(this->MeleeAttackComponent->AttackTimer, this, &APlayerCharacterMagicTrigger::TraceAttackRightFoot, this->MeleeAttackComponent->AttackTimerDeltaTime, true);
 }
 
 void APlayerCharacterMagicTrigger::OffWatchingActors_IF_Implementation()
