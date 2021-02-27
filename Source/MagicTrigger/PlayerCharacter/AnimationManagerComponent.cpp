@@ -8,6 +8,7 @@
 //#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
+#include "MagicTrigger\Data\DebugMessage.h"
 
  // Sets default values for this component's properties
 UAnimationManagerComponent::UAnimationManagerComponent()
@@ -54,8 +55,16 @@ void UAnimationManagerComponent::BeginPlay()
 		USkeletalMeshComponent* Mesh = PlayerCharacter->GetMesh();
 		this->AnimInstance = Mesh->GetAnimInstance();
 	}
+	else
+	{
+		DEBUGMESSAGE("!this->PlayerCharacter")
+	}
 
 	this->Owner = GetOwner();
+	if (!this->Owner)
+	{
+		DEBUGMESSAGE("!this->Owner")
+	}
 
 }
 
@@ -434,6 +443,10 @@ void UAnimationManagerComponent::StartTraceAttackRightFoot_IF_Implementation()
 		{
 			IAnimationManagerInterface::Execute_StartTraceAttackRightFoot_IF(Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
 	}
 }
 
@@ -444,6 +457,10 @@ void UAnimationManagerComponent::StopTraceAttackRightFoot_IF_Implementation()
 		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
 		{
 			IAnimationManagerInterface::Execute_StopTraceAttackRightFoot_IF(Owner);
+		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
 		}
 	}
 }
@@ -456,6 +473,10 @@ void UAnimationManagerComponent::StartTraceAttackLeftFoot_IF_Implementation()
 		{
 			IAnimationManagerInterface::Execute_StartTraceAttackLeftFoot_IF(Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
 	}
 }
 
@@ -466,6 +487,10 @@ void UAnimationManagerComponent::StopTraceAttackLeftFoot_IF_Implementation()
 		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
 		{
 			IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(Owner);
+		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
 		}
 	}
 }
@@ -478,6 +503,10 @@ void UAnimationManagerComponent::SpawnThrowableActor_IF_Implementation()
 		{
 			IAnimationManagerInterface::Execute_SpawnThrowableActor_IF(Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
 	}
 }
 
@@ -488,6 +517,10 @@ void UAnimationManagerComponent::AttachThrowableActor_IF_Implementation()
 		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
 		{
 			IAnimationManagerInterface::Execute_AttachThrowableActor_IF(Owner);
+		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
 		}
 	}
 }
@@ -500,6 +533,10 @@ void UAnimationManagerComponent::AttachLiftingActor_IF_Implementation()
 		{
 			IAnimationManagerInterface::Execute_AttachLiftingActor_IF(Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
 	}
 }
 
@@ -511,6 +548,10 @@ void UAnimationManagerComponent::DetachLiftingActor_IF_Implementation()
 		{
 			IAnimationManagerInterface::Execute_DetachLiftingActor_IF(Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
 	}
 }
 
@@ -521,6 +562,10 @@ void UAnimationManagerComponent::ReportNoise_IF_Implementation()
 		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
 		{
 			IAnimationManagerInterface::Execute_ReportNoise_IF(Owner);
+		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
 		}
 	}
 }

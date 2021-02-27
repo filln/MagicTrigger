@@ -5,6 +5,7 @@
 
 #pragma once
 
+class UAnimationAsset;
 #include "EnemyToBehaviorTreeStruct.generated.h"
 
 USTRUCT(BlueprintType)
@@ -26,5 +27,8 @@ struct FEnemyToBehaviorTreeStruct
 		float PatrolingWaitTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyToBehaviorTreeStruct")
 		FVector SpawnLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyToBehaviorTreeStruct")
+		UAnimationAsset* AnimationRoaring;
+
 
 };

@@ -15,6 +15,9 @@ public class MagicTrigger : ModuleRules
 			"Engine", 
 			"InputCore",
 			"UMG", "Slate", "SlateCore",
+			"AIModule",
+			"GameplayTasks",
+			"NavigationSystem",
 			"TargetSelectionPlugin"
 		});
 

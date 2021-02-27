@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
+#include "MagicTrigger\Data\DebugMessage.h"
 
 class ALiftingItem;
 
@@ -46,19 +47,32 @@ void UUpDownLiftingItemComponent::BeginPlay()
 		{
 			this->OwnersMesh = IPlayerCharacterInterface::Execute_GetMesh_IF(this->Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)")
+		}
 
 		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
 		{
 			this->InterractCollision = IPlayerCharacterInterface::Execute_GetInteractCollision_IF(this->Owner);
 		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)")
+		}
 
+	}
+	else
+	{
+		DEBUGMESSAGE("!this->Owner")
 	}
 }
 
 void UUpDownLiftingItemComponent::DetachLiftingActor()
 {
-	if (!this->LiftUpObject || !this->Owner)
+	if (!this->LiftUpObject)
 	{
+		DEBUGMESSAGE("!this->LiftUpObject");
 		return;
 	}
 
@@ -68,6 +82,11 @@ void UUpDownLiftingItemComponent::DetachLiftingActor()
 	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
 	{
 		PointPutDownTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		return;
 	}
 
 	FVector TargetRelativeLocation = this->DetachLiftingActorTraceOut.Location;
@@ -96,6 +115,11 @@ void UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor()
 	{
 		ILiftingItemInterface::Execute_SetSimulatePhysics_IF(this->LiftUpObject, true);
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		return;
+	}
 
 	this->LiftUpObject->SetActorEnableCollision(true);
 	this->LiftUpObject = nullptr;
@@ -103,21 +127,25 @@ void UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor()
 
 void UUpDownLiftingItemComponent::AttachLiftingActor()
 {
-	if (!this->LiftUpObject || !this->OwnersMesh)
+	if (!this->LiftUpObject)
 	{
+		DEBUGMESSAGE("!this->LiftUpObject");
+		return;
+	}
+	if (!this->OwnersMesh)
+	{
+		DEBUGMESSAGE("!this->OwnersMesh");
+		return;
+	}
+	if (!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
 		return;
 	}
 
+	this->AttachSocket = ILiftingItemInterface::Execute_GetAttachSocket_IF(this->LiftUpObject);
+	ILiftingItemInterface::Execute_SetSimulatePhysics_IF(this->LiftUpObject, false);
 
-	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
-	{
-		this->AttachSocket = ILiftingItemInterface::Execute_GetAttachSocket_IF(this->LiftUpObject);
-	}
-
-	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
-	{
-		ILiftingItemInterface::Execute_SetSimulatePhysics_IF(this->LiftUpObject, false);
-	}
 
 	this->LiftUpObject->SetActorEnableCollision(false);
 
@@ -152,7 +180,7 @@ void UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor()
 
 void UUpDownLiftingItemComponent::LiftUp()
 {
-	if (this->LiftUpObject || !this->Owner)
+	if (this->LiftUpObject)
 	{
 		return;
 	}
@@ -168,10 +196,20 @@ void UUpDownLiftingItemComponent::LiftUp()
 	{
 		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(this->Owner);
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner)");
+		return;
+	}
 
 	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
 	{
 		ILiftingItemInterface::Execute_SetPlayingAnimationLiftUp_IF(this->LiftUpObject, true);
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		return;
 	}
 
 }
@@ -180,6 +218,7 @@ void UUpDownLiftingItemComponent::PutDown()
 {
 	if (!this->LiftUpObject)
 	{
+		DEBUGMESSAGE("!this->LiftUpObject");
 		return;
 	}
 
@@ -197,12 +236,17 @@ void UUpDownLiftingItemComponent::PutDown()
 	{
 		ILiftingItemInterface::Execute_SetPlayingAnimationPutDown_IF(this->LiftUpObject, true);
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+	}
 }
 
 void UUpDownLiftingItemComponent::DestroyLiftingActor()
 {
 	if (!this->LiftUpObject)
 	{
+		DEBUGMESSAGE("!this->LiftUpObject");
 		return;
 	}
 
@@ -211,6 +255,10 @@ void UUpDownLiftingItemComponent::DestroyLiftingActor()
 	{
 		this->LiftUpObject = nullptr;
 	}
+	else
+	{
+		DEBUGMESSAGE("!bDestroyed")
+	}
 }
 
 AActor* UUpDownLiftingItemComponent::FindLifUpObject()
@@ -218,8 +266,14 @@ AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 	AActor* LiftUpObjectTmp = nullptr;
 
 
-	if (!this->InterractCollision || !this->LiftUpClass)
+	if (!this->InterractCollision)
 	{
+		DEBUGMESSAGE("!this->InterractCollision");
+		return LiftUpObjectTmp;
+	}
+	if (!this->LiftUpClass)
+	{
+		DEBUGMESSAGE("!this->LiftUpClass");
 		return LiftUpObjectTmp;
 	}
 
@@ -260,6 +314,10 @@ AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 			{
 				return CurrentActor;
 			}
+			else
+			{
+				DEBUGMESSAGE("!CurrentActor")
+			}
 		}
 	}
 
@@ -268,8 +326,9 @@ AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 
 bool UUpDownLiftingItemComponent::TracePutDownPoint()
 {
-	if (!this->Owner || !GetWorld())
+	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return false;
 	}
 
@@ -279,6 +338,11 @@ bool UUpDownLiftingItemComponent::TracePutDownPoint()
 	{
 		StartTraceTransform = IPlayerCharacterInterface::Execute_GetPointStartTraceToPutDownPointTransform_IF(this->Owner);
 		EndTraceTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		return false;
 	}
 
 	FVector StartTrace = StartTraceTransform.GetLocation();
@@ -313,6 +377,7 @@ bool UUpDownLiftingItemComponent::TraceObstacle()
 {
 	if (!this->Owner)
 	{
+		DEBUGMESSAGE("!this->Owner");
 		return true;
 	}
 
@@ -322,6 +387,11 @@ bool UUpDownLiftingItemComponent::TraceObstacle()
 	{
 		StartTraceObstacleSocketNameTransform = IPlayerCharacterInterface::Execute_GetSocketTransform_IF(this->Owner, this->StartTraceObstacleSocketName);
 		UpDownLiftingArrowForwardVector = IPlayerCharacterInterface::Execute_GetUpDownLiftingArrowForwardVector_IF(this->Owner);
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		return true;
 	}
 
 	FVector StartTrace = StartTraceObstacleSocketNameTransform.GetLocation();

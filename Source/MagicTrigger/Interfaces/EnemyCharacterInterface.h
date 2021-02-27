@@ -51,5 +51,5 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "EnemyCharacterInterface")
-		void StopFindPlayer_IF(); 
+		void LosePlayer_IF(); 
 };

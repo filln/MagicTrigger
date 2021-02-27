@@ -14,6 +14,7 @@
 #include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
 #include "MagicTrigger\Items\ThrowableRock.h"
 #include "MagicTrigger\AttackAbilities\SevenfoldShere.h"
+#include "MagicTrigger\Data\DebugMessage.h"
 #include "TargetSelectionComponent.h"
 
 #include "MagicTrigger\Interfaces\HUDInterface.h"
@@ -110,6 +111,10 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	{
 		GetMesh()->SetSkeletalMesh(MeshObj.Object);
 	}
+	else
+	{
+		DEBUGMESSAGE("!MeshObj.Succeeded()")
+	}
 
 
 	MeleeAttackComponent = CreateDefaultSubobject<UMeleeAttackComponent>(TEXT("MeleeAttackComponent"));
@@ -199,6 +204,10 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	{
 		ScreenShotComponent->TextureTarget = RenderTargetObject.Object;
 	}
+	else
+	{
+		DEBUGMESSAGE("!RenderTargetObject.Succeeded()")
+	}
 
 }
 
@@ -214,8 +223,16 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 		{
 			this->HUD = PlayerController->GetHUD();
 		}
+		else
+		{
+			DEBUGMESSAGE("!this->PlayerController")
+		}
 
 		this->GameMode = UGameplayStatics::GetGameMode(GetWorld());
+	}
+	else
+	{
+		DEBUGMESSAGE("!GetWorld()")
 	}
 
 	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
@@ -228,7 +245,8 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 {
 	if (!PlayerInputComponent)
 	{
-		return;
+		DEBUGMESSAGE("!PlayerInputComponent")
+			return;
 	}
 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -275,7 +293,8 @@ void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
 {
 	if (!this->PlayerController)
 	{
-		return;
+		DEBUGMESSAGE("!this->PlayerController")
+			return;
 	}
 
 	float ScaleAxisValue = CalcScaleMovementInput(AxisValue);
@@ -296,7 +315,8 @@ void APlayerCharacterMagicTrigger::MoveRight_InAx(float AxisValue)
 {
 	if (!this->PlayerController)
 	{
-		return;
+		DEBUGMESSAGE("!this->PlayerController")
+			return;
 	}
 
 	float ScaleAxisValue = CalcScaleMovementInput(AxisValue);
@@ -462,6 +482,10 @@ void APlayerCharacterMagicTrigger::Throw_InAct()
 	{
 		this->AnimationManagerComponent->ThrowAnimation();
 	}
+	else
+	{
+		DEBUGMESSAGE("!Cast<AThrowableItem>(this->UpDownLiftingItemComponent->LiftUpObject)")
+	}
 }
 
 void APlayerCharacterMagicTrigger::ShowGameMenu_InAct()
@@ -469,6 +493,10 @@ void APlayerCharacterMagicTrigger::ShowGameMenu_InAct()
 	if (IsInterfaceImplementedBy<IHUDInterface>(this->HUD))
 	{
 		IHUDInterface::Execute_PauseOrUnpauseGame_IF(this->HUD, true, nullptr);
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(this->HUD)")
 	}
 }
 
@@ -479,11 +507,15 @@ void APlayerCharacterMagicTrigger::UseSevenfoldSphereAbility_InAct()
 
 void APlayerCharacterMagicTrigger::AutoRunning_InAct()
 {
+	if (!GetWorld())
+	{
+		DEBUGMESSAGE("!GetWorld()");
+		return;
+	}
 	if (
 		this->MovementStatus == EMovementStatus::EMM_Running
 		|| this->MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| !this->AnimationManagerComponent->bCanRun
-		|| !GetWorld()
 		)
 	{
 		return;
@@ -549,6 +581,11 @@ void APlayerCharacterMagicTrigger::WatchEnemies_InAct(FKey InputKey)
 			return;
 		}
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->TargetSelectionComponent->GetObservedActor())");
+		return;
+	}
 
 	this->AnimationManagerComponent->bWatchingNow = this->TargetSelectionComponent->GetIsWatchingNow();
 
@@ -596,6 +633,7 @@ void APlayerCharacterMagicTrigger::Interact_InAct()
 	}
 	else
 	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IInteractionInterface>(FirstActor)");
 		return;
 	}
 
@@ -608,12 +646,19 @@ void APlayerCharacterMagicTrigger::AutoRunning()
 
 void APlayerCharacterMagicTrigger::ShowOrHideInteractionText(bool bShow, AActor* InteractionActor)
 {
-	if (
-		!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor)
-		|| !IsInterfaceImplementedBy<IHUDInterface>(this->HUD)
-		|| !this->PlayerController
-		)
+	if (!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor))
 	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor)");
+		return;
+	}
+	if (!IsInterfaceImplementedBy<IHUDInterface>(this->HUD))
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(this->HUD)");
+		return;
+	}
+	if (!this->PlayerController)
+	{
+		DEBUGMESSAGE("!this->PlayerController");
 		return;
 	}
 
@@ -630,12 +675,18 @@ void APlayerCharacterMagicTrigger::ShowOrHideInteractionText(bool bShow, AActor*
 
 void APlayerCharacterMagicTrigger::GetDamage(bool bGetDamage, float Damage, AController* EnemyController)
 {
-	this->AnimationManagerComponent->bGettingDamage = bGetDamage;
-
 	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState()))
 	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
 		return;
 	}
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EnemyController))
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EnemyController)");
+		return;
+	}
+
+	this->AnimationManagerComponent->bGettingDamage = bGetDamage;
 
 	if (!bGetDamage)
 	{
@@ -648,7 +699,7 @@ void APlayerCharacterMagicTrigger::GetDamage(bool bGetDamage, float Damage, ACon
 	if (CurrentDefence > 1)
 	{
 		CurrentLife = LifeBeforeDamage - (Damage / CurrentDefence);
-	} 
+	}
 	else
 	{
 		CurrentLife = LifeBeforeDamage - Damage;
@@ -662,14 +713,8 @@ void APlayerCharacterMagicTrigger::GetDamage(bool bGetDamage, float Damage, ACon
 	else
 	{
 		IPlayerStateInterface::Execute_SetLife_IF(GetPlayerState(), 0);
-
-		if (IsInterfaceImplementedBy<IEnemyCharacterInterface>(EnemyController))
-		{
-			IEnemyCharacterInterface::Execute_StopFindPlayer_IF(EnemyController);
-		}
-
+		IEnemyCharacterInterface::Execute_LosePlayer_IF(EnemyController);
 		this->AnimationManagerComponent->bDying = true;
-
 		this->GetCharacterMovement()->DisableMovement();
 		SetLifeSpan(this->LifeSpan);
 	}
@@ -706,6 +751,7 @@ void APlayerCharacterMagicTrigger::SpawnThrowableRock(AThrowableRock* ThrowableR
 {
 	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return;
 	}
 
@@ -730,12 +776,13 @@ void APlayerCharacterMagicTrigger::SpawnThrowableRock(AThrowableRock* ThrowableR
 		bool bCalcVelocitySuccessful = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, NewRock->GetActorLocation(), this->TargetSelectionComponent->GetObservedActor()->GetActorLocation(), 0, ThrowableRock->ArcParam);
 		if (!bCalcVelocitySuccessful)
 		{
+			DEBUGMESSAGE("!bCalcVelocitySuccessful");
 			return;
 		}
 
 		NewRock->ProjectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
 
-	} 
+	}
 	else
 	{
 		FVector UnitRockVelocity = UKismetMathLibrary::VLerp(GetActorForwardVector(), GetActorUpVector(), ThrowableRock->ArcAlpha);
@@ -752,6 +799,7 @@ UTextureRenderTarget2D* APlayerCharacterMagicTrigger::CreateScreenShot()
 {
 	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return nullptr;
 	}
 	UTextureRenderTarget2D* TextureTarget = UKismetRenderingLibrary::CreateRenderTarget2D(GetWorld());
@@ -786,6 +834,10 @@ float APlayerCharacterMagicTrigger::GetDamage() const
 	{
 		Damage = IPlayerStateInterface::Execute_GetDamage_IF(GetPlayerState());
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
+	}
 
 	return Damage;
 }
@@ -796,6 +848,10 @@ float APlayerCharacterMagicTrigger::GetMultiplierOfDamage() const
 	if (IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState()))
 	{
 		MultiplierOfDamage = IPlayerStateInterface::Execute_GetMultiplierOfDamage_IF(GetPlayerState());
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
 	}
 
 	return MultiplierOfDamage;
@@ -808,6 +864,10 @@ float APlayerCharacterMagicTrigger::GetDefence()
 	{
 		Defence = IPlayerStateInterface::Execute_GetDefence_IF(GetPlayerState());
 	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
+	}
 
 	return Defence;
 }
@@ -818,6 +878,10 @@ float APlayerCharacterMagicTrigger::GetLife()
 	if (IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState()))
 	{
 		Life = IPlayerStateInterface::Execute_GetLife_IF(GetPlayerState());
+	}
+	else
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
 	}
 
 	return Life;
@@ -884,6 +948,7 @@ void APlayerCharacterMagicTrigger::ReportNoise_IF_Implementation()
 {
 	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return;
 	}
 
@@ -913,10 +978,14 @@ void APlayerCharacterMagicTrigger::SpawnThrowableActor_IF_Implementation()
 	if (Rock)
 	{
 		SpawnThrowableRock(Rock);
-	} 
-	if(Sphere)
+	}
+	if (Sphere)
 	{
 		this->SevenfoldSphereComponent->UseSevenfoldSphereAbility();
+	}
+	if (!Rock && !Sphere)
+	{
+		DEBUGMESSAGE("!Rock && !Sphere");
 	}
 }
 
@@ -929,6 +998,7 @@ void APlayerCharacterMagicTrigger::StartTraceAttackLeftFoot_IF_Implementation()
 {
 	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return;
 	}
 
@@ -944,6 +1014,7 @@ void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot_IF_Implementation()
 {
 	if (!GetWorld())
 	{
+		DEBUGMESSAGE("!GetWorld()");
 		return;
 	}
 
