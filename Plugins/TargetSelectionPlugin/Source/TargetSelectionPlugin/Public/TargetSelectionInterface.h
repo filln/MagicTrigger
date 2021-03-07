@@ -24,11 +24,11 @@ class TARGETSELECTIONPLUGIN_API ITargetSelectionInterface
 public:
 
 	/*Called from the actor when the actor begins to observe.*/
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TargetSelectionInterface")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "TargetSelectionInterface")
 		void IsObserved();
 
 	/*Called from the actor when the actor finishes observing.*/
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TargetSelectionInterface")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "TargetSelectionInterface")
 		void IsNotObserved();
 
 };

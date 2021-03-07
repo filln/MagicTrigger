@@ -67,19 +67,19 @@ public:
 	/**
 	* Для начальной точки трейса к точке установки поднимаемого актора.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointStartTraceToPutDownPoint;
 
 	/**
 	*
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UUpDownLiftingItemComponent* UpDownLiftingItemComponent;
 
 	/**
 	* Для трейса препятствия поставить поднимаемый актор.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* UpDownLiftingArrow;
 
 	/**
@@ -103,37 +103,37 @@ public:
 	/**
 	* Для генерации шума шагов.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
 
 	/**
 	* Для скриншота сохраненной игры.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneCaptureComponent2D* ScreenShotComponent;
 
 	/**
 	* Для трейса атаки.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* ArrowRightFoot;
 
 	/**
 	* Для трейса атаки.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* ArrowLeftFoot;
 
 	/**
 	* Для точки аттача поднимаемого актора.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointCarryUp;
 
 	/**
 	* Для трейса точки опускания поднятого актора.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointPutDown;
 
 	/**
@@ -151,7 +151,7 @@ public:
 	/**
 	* Для камеры.
 	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USpringArmComponent* SpringArm;
 
 	/**
@@ -291,7 +291,7 @@ public:
 
 	void AutoRunning();
 	void ShowOrHideInteractionText(bool bShow, AActor* InteractionActor);
-	void GetDamage(bool bGetDamage, float Damage, AController* EnemyController);
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	void RotateToTarget();
 
 	/**

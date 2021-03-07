@@ -32,3 +32,13 @@ void UFireBallComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
+void UFireBallComponent::CreateFireBall(USkeletalMeshComponent* OwnersMesh)
+{
+
+}
+
+void UFireBallComponent::MoveFireBallToTarget(AController* OwnersController, AActor* BallsTarget)
+{
+
+}
+

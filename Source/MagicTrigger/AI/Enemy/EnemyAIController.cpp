@@ -7,18 +7,25 @@
 
 #include "EnemyAIController.h"
 #include "Kismet/GameplayStatics.h"
+
 #include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
+
 #include "UObject/ConstructorHelpers.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception\AISenseConfig_Sight.h"
 #include "Perception\AISenseConfig_Hearing.h"
+
  //#include "BrainComponent.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardData.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
 #include "NavMesh\RecastNavMesh.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "NavAreas\NavArea_Obstacle.h"
+#include "Components\SphereComponent.h"
 
 class UAISense_Sight;
 
@@ -31,6 +38,17 @@ AEnemyAIController::AEnemyAIController()
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
 
+	RunAISphere = CreateDefaultSubobject<USphereComponent>(TEXT("RunAISphere"));
+	SetRootComponent(RunAISphere);
+	RunAISphere->AreaClass = UNavArea_Obstacle::StaticClass();
+	RunAISphere->SetNotifyRigidBodyCollision(false);
+	RunAISphere->SetGenerateOverlapEvents(true);
+	RunAISphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	RunAISphere->SetCollisionObjectType(ECC_WorldDynamic);
+	RunAISphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	RunAISphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	RunAISphereRadius = 5000;
+	RunAISphere->SetSphereRadius(RunAISphereRadius, false);
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/MagicTrigger/AI/Enemy/BT_Enemy"));
 	if (BTObject.Succeeded())
@@ -78,9 +96,92 @@ void AEnemyAIController::BeginPlay()
 		DEBUGMESSAGE("!this->Enemy")
 	}
 
-	StopLogic();
+	if (this->RunAISphere)
+	{
+		this->RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAIController::OnRunAI);
+		this->RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyAIController::OnStopAI);
+	}
+	else
+	{
+		DEBUGMESSAGE("!RunAISphere");
+	}
+	
+	/////////////////////////////////////////////////////////
+	/**
+	 * Поиск перса и останока логики, если перс не найден.
+	 */
+	TSubclassOf<ACharacter> ClassFilter;
+	TArray<AActor*> OverlappingActors;
+	bool bPlayerCharacterFound = false;
+	this->RunAISphere->GetOverlappingActors(OverlappingActors, ClassFilter);
+	if (!OverlappingActors.Num())
+	{
+		StopLogic();
+	}
+	else
+	{
+		for (const auto &OverlappingActor : OverlappingActors)
+		{
+			ACharacter* OverlappingCharacter = Cast<ACharacter>(OverlappingActor);
+			if (OverlappingCharacter == this->PlayerCharacter)
+			{
+				bPlayerCharacterFound = true;
+				break;
+			}
+		}
+		if (!bPlayerCharacterFound)
+		{
+			StopLogic();
+		}
+	}
+	/////////////////////////////////////////////////////////
+
 
 	StartBeginPlayTimer_IF_Implementation();
+}
+
+void AEnemyAIController::OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	DEBUGMESSAGE("RunAISphere overlap something.");
+
+	if (!this->PlayerCharacter)
+	{
+		DEBUGMESSAGE("!this->PlayerCharacter");
+		return;
+	}
+	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
+	if (!OverlapPlayerCharacter)
+	{
+		return;
+	}
+	if (OverlapPlayerCharacter != this->PlayerCharacter)
+	{
+		return;
+	}
+
+	DEBUGMESSAGE("RunAISphere overlap PlayerCharacter.")
+
+	StartLogic();
+}
+
+void AEnemyAIController::OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (!this->PlayerCharacter)
+	{
+		DEBUGMESSAGE("!this->PlayerCharacter");
+		return;
+	}
+	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
+	if (!OverlapPlayerCharacter)
+	{
+		return;
+	}
+	if (OverlapPlayerCharacter != this->PlayerCharacter)
+	{
+		return;
+	}
+
+	StopLogic();
 }
 
 void AEnemyAIController::StartLogic()
@@ -193,6 +294,7 @@ void AEnemyAIController::LosePlayer()
 	this->Enemy->StopRoaring();
 
 }
+
 
 void AEnemyAIController::TargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimulus)
 {

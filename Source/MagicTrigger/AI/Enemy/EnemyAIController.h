@@ -24,12 +24,15 @@ class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class APawn;
 class ARecastNavMesh;
+class USphereComponent;
 
 /**
  *
  */
 UCLASS()
-class MAGICTRIGGER_API AEnemyAIController : public AAIController, public IEnemyCharacterInterface, public IBeginPlayInterface
+class MAGICTRIGGER_API AEnemyAIController : public AAIController, 
+	public IEnemyCharacterInterface, 
+	public IBeginPlayInterface
 {
 	GENERATED_BODY()
 
@@ -65,6 +68,9 @@ public:
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController")
 		float DeltaAttackRadius;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController")
+		float RunAISphereRadius;
 	/**
 	 *
 	 */
@@ -81,6 +87,12 @@ public:
 	 */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
 		UBlackboardComponent* BlackboardComponent;
+
+	/**
+	 *
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
+		USphereComponent* RunAISphere;
 
 	/**
 	 *
@@ -102,7 +114,7 @@ private:
 		FTimerHandle BeginPlayTimer;
 	float BeginPlayTimerTime;
 	UPROPERTY()
-	TArray<AActor*> NavMeshArray;
+		TArray<AActor*> NavMeshArray;
 
 
 	/**
@@ -110,6 +122,16 @@ private:
 	 */
 
 public:
+	/**
+	 *Запуск ИИ, когда перс оверлапится с коллизией RunAISphere.
+	 */
+	UFUNCTION()
+		void OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	/**
+	 * Остановка ИИ, когда перс вышел из коллизии RunAISphere.
+	 */
+	UFUNCTION()
+		void OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	/**
 	 *
 	 */

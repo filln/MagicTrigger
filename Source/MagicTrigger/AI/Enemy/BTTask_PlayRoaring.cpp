@@ -149,7 +149,7 @@ void UBTTask_PlayRoaring::CleanUp(UBehaviorTreeComponent& OwnerComp)
 		DEBUGMESSAGE("!this->CachedSkelMesh");
 		return;
 	}
-	if (his->PreviousAnimationMode == EAnimationMode::AnimationBlueprint)
+	if (this->PreviousAnimationMode == EAnimationMode::AnimationBlueprint)
 	{
 		this->CachedSkelMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	}

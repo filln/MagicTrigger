@@ -1,5 +1,123 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
+/**
+ * Враг перса Демон.
+ */
 
 
 #include "DemonCharacter.h"
+#include "MagicTrigger\AttackAbilities\FireBallComponent.h"
+#include "MagicTrigger\Data\DebugMessage.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "GameFramework\CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
+class UAnimInstance;
+class UAnimationAsset;
+
+ADemonCharacter::ADemonCharacter()
+{
+	GetCapsuleComponent()->SetWorldScale3D(FVector(2));
+	GetCapsuleComponent()->SetCapsuleHalfHeight(100, false);
+	GetCapsuleComponent()->SetCapsuleRadius(50, false);
+
+	FHitResult HitResultTmp = FHitResult();
+
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -99.5), false, &HitResultTmp, ETeleportType::None);
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(TEXT("/Game/MagicTrigger/Meshes/Enemy/SK_Demon"));
+	if (MeshObj.Succeeded())
+	{
+		GetMesh()->SetSkeletalMesh(MeshObj.Object);
+	}
+	else
+	{
+		DEBUGMESSAGE("!MeshObj.Succeeded()")
+	}
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimationClass(TEXT("/Game/MagicTrigger/Animations/Enemy/Demon/ABP_Demon"));
+	if (AnimationClass.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(AnimationClass.Class);
+	}
+	else
+	{
+		DEBUGMESSAGE("!AnimationClass.Succeeded()")
+	}
+
+	GetCharacterMovement()->MaxAcceleration = 500;
+	GetCharacterMovement()->MaxCustomMovementSpeed = 450;
+
+	FireBallComponent = CreateDefaultSubobject<UFireBallComponent>(TEXT("FireBallComponent"));
+
+	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName", "Demon");
+	if (Name.IsEmpty())
+	{
+		DEBUGMESSAGE("Name.IsEmpty()");
+
+	}
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> IconObj(TEXT("/Game/MagicTrigger/Textures/Enemy/Demon/T_DemonIcon_D"));
+	if (IconObj.Succeeded())
+	{
+		Icon = IconObj.Object;
+	}
+	else
+	{
+		DEBUGMESSAGE("!IconObj.Succeeded()")
+	}
+
+	EnemyToBehaviorTreeStruct.FindPlayerRadius = 1000;
+	EnemyToBehaviorTreeStruct.MoveAndAttackRadius = 700;
+	EnemyToBehaviorTreeStruct.AttackRadius = 400;
+	EnemyToBehaviorTreeStruct.PatrolingRadius = 700;
+	EnemyToBehaviorTreeStruct.PatrolingWaitTime = 5;
+	static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimationRoaringObj(TEXT("/Game/MagicTrigger/Animations/Enemy/Demon/AS_Demon_Standing_Taunt_Battlecry"));
+	if (AnimationRoaringObj.Succeeded())
+	{
+		EnemyToBehaviorTreeStruct.AnimationRoaring = AnimationRoaringObj.Object;
+	}
+	else
+	{
+		DEBUGMESSAGE("!AnimationRoaringObj.Succeeded()")
+	}
+}
+
+float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
+{
+	if (this->Defence > 1)
+	{
+		this->Life = this->Life - (DamageAmount / this->Defence);
+	}
+	else
+	{
+		this->Life = this->Life - DamageAmount;
+	}
+
+	if (this->Life <= 0)
+	{
+		Die();
+	}
+
+	return DamageAmount;
+}
+
+void ADemonCharacter::CreateFireBall()
+{
+	this->FireBallComponent->CreateFireBall(GetMesh());
+}
+
+void ADemonCharacter::MoveFireBallToTarget()
+{
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (!PlayerCharacter)
+	{
+		DEBUGMESSAGE("!PlayerCharacter");
+		return;
+	}
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+
+	this->FireBallComponent->MoveFireBallToTarget(GetController(), PlayerCharacter);
+}

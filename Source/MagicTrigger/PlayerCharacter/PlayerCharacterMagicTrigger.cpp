@@ -32,6 +32,7 @@
 #include "Components/ArrowComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components\SceneCaptureComponent2D.h"
+#include "Animation\AnimInstance.h"
 
 #include "Perception\AIPerceptionStimuliSourceComponent.h"
 #include "Camera\CameraComponent.h"
@@ -116,6 +117,15 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 		DEBUGMESSAGE("!MeshObj.Succeeded()")
 	}
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimationClass(TEXT("/Game/MagicTrigger/Animations/PlayerCharacter/ABP_PlayerCharacter"));
+	if (AnimationClass.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(AnimationClass.Class);
+	}
+	else
+	{
+		DEBUGMESSAGE("!AnimationClass.Succeeded()")
+	}
 
 	MeleeAttackComponent = CreateDefaultSubobject<UMeleeAttackComponent>(TEXT("MeleeAttackComponent"));
 	UpDownLiftingItemComponent = CreateDefaultSubobject<UUpDownLiftingItemComponent>(TEXT("UpDownLiftingItemComponent"));
@@ -208,7 +218,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	{
 		DEBUGMESSAGE("!RenderTargetObject.Succeeded()")
 	}
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -673,36 +683,32 @@ void APlayerCharacterMagicTrigger::ShowOrHideInteractionText(bool bShow, AActor*
 	}
 }
 
-void APlayerCharacterMagicTrigger::GetDamage(bool bGetDamage, float Damage, AController* EnemyController)
+float APlayerCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
+
 	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState()))
 	{
 		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
-		return;
+		return 0;
 	}
-	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EnemyController))
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EventInstigator))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EnemyController)");
-		return;
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EventInstigator)");
+		return 0;
 	}
 
-	this->AnimationManagerComponent->bGettingDamage = bGetDamage;
-
-	if (!bGetDamage)
-	{
-		return;
-	}
+	this->AnimationManagerComponent->bGettingDamage = true;
 
 	float LifeBeforeDamage = GetLife();
 	float CurrentDefence = GetDefence();
 	float CurrentLife;
 	if (CurrentDefence > 1)
 	{
-		CurrentLife = LifeBeforeDamage - (Damage / CurrentDefence);
+		CurrentLife = LifeBeforeDamage - (DamageAmount / CurrentDefence);
 	}
 	else
 	{
-		CurrentLife = LifeBeforeDamage - Damage;
+		CurrentLife = LifeBeforeDamage - DamageAmount;
 	}
 
 
@@ -713,11 +719,13 @@ void APlayerCharacterMagicTrigger::GetDamage(bool bGetDamage, float Damage, ACon
 	else
 	{
 		IPlayerStateInterface::Execute_SetLife_IF(GetPlayerState(), 0);
-		IEnemyCharacterInterface::Execute_LosePlayer_IF(EnemyController);
+		IEnemyCharacterInterface::Execute_LosePlayer_IF(EventInstigator);
 		this->AnimationManagerComponent->bDying = true;
 		this->GetCharacterMovement()->DisableMovement();
 		SetLifeSpan(this->LifeSpan);
 	}
+
+	return DamageAmount;
 }
 
 void APlayerCharacterMagicTrigger::RotateToTarget()

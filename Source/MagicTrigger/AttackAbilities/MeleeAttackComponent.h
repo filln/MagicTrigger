@@ -96,7 +96,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MeleeAttackComponent")
 		void StopAttackTimer();
 
-private:
 	/**
 	 * Вычисляет данные для трейса и делает трейс.
 	 */

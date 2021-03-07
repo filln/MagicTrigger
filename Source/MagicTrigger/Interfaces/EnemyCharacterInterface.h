@@ -34,7 +34,7 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "EnemyCharacterInterface|Getters")
-		AActor* GetEnemy_IF() const;
+		AActor* GetEnemy_IF();
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "EnemyCharacterInterface|Getters")
 		float GetLife_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "EnemyCharacterInterface|Getters")

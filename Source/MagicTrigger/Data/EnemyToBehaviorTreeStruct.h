@@ -30,5 +30,17 @@ struct FEnemyToBehaviorTreeStruct
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyToBehaviorTreeStruct")
 		UAnimationAsset* AnimationRoaring;
 
+	FEnemyToBehaviorTreeStruct()
+	{
+		WaitTimeOfAnimationRoaring = 0;
+		FindPlayerRadius = 0;
+		MoveAndAttackRadius = 0;
+		AttackRadius = 0;
+		PatrolingRadius = 0;
+		PatrolingWaitTime = 0;
+		SpawnLocation = FVector(0);
+		AnimationRoaring = nullptr;
+	}
+
 
 };
