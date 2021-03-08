@@ -3,7 +3,6 @@
  * Враг перса Демон.
  */
 
-
 #include "DemonCharacter.h"
 #include "MagicTrigger\AttackAbilities\FireBallComponent.h"
 #include "MagicTrigger\Data\DebugMessage.h"

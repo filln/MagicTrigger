@@ -771,10 +771,17 @@ void APlayerCharacterMagicTrigger::SpawnThrowableRock(AThrowableRock* ThrowableR
 	SpawnTransform.SetRotation(SocketTransform.GetRotation());
 	SpawnTransform.SetScale3D(ThrowableRock->GetActorScale3D());
 	FActorSpawnParameters ActorSpawnParameters;
+	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	this->UpDownLiftingItemComponent->DestroyLiftingActor();
 
 	AThrowableRock* NewRock = GetWorld()->SpawnActor<AThrowableRock>(RockClass, SpawnTransform, ActorSpawnParameters);
+
+	if (!NewRock)
+	{
+		DEBUGMESSAGE("!NewRock");
+		return;
+	}
 
 	NewRock->Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
@@ -906,8 +913,7 @@ void APlayerCharacterMagicTrigger::TraceAttackRightFoot()
 		IgnoredActors,
 		BaseDamage,
 		this->PlayerController,
-		this,
-		nullptr
+		this
 	);
 }
 
@@ -922,8 +928,7 @@ void APlayerCharacterMagicTrigger::TraceAttackLeftFoot()
 		IgnoredActors,
 		BaseDamage,
 		this->PlayerController,
-		this,
-		nullptr
+		this
 	);
 }
 

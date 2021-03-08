@@ -29,7 +29,7 @@ struct FFireBallMoveToTargetInputsStruct
         AActor* Target;
     //Используется в ApplyDamage()
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FireBallMoveToTargetInputsStruct")
-        UDamageType* DamageTypeClass;
+        TSubclassOf<UDamageType> DamageTypeClass;
     //Повреждение, которое наносит абилка FireBall.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FireBallMoveToTargetInputsStruct")
         float Damage;

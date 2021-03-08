@@ -3,9 +3,6 @@
  * Родительский класс врагов.
  */
 
-#pragma once
-
-
 #include "EnemyCharacterMagicTrigger.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"

@@ -91,7 +91,8 @@ void UUpDownLiftingItemComponent::DetachLiftingActor()
 
 	FVector TargetRelativeLocation = this->DetachLiftingActorTraceOut.Location;
 	FRotator TargetRelativeRotation = PointPutDownTransform.Rotator();
-	FLatentActionInfo LatentInfo;
+	FLatentActionInfo LatentInfo = FLatentActionInfo();
+	LatentInfo.CallbackTarget = this;
 
 	UKismetSystemLibrary::MoveComponentTo
 	(

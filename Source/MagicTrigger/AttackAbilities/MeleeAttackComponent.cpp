@@ -22,11 +22,11 @@ UMeleeAttackComponent::UMeleeAttackComponent()
 	bTraceComplex = false;
 	bDrawDebugTrace = false;
 	AttackTimerDeltaTime = 0.017;
-
+	DamageTypeClass = nullptr;
 }
 
 
-void UMeleeAttackComponent::DoAttack(const FVector& StartTrace, const FVector& EndTraceUnit, const TArray<AActor*>& IgnoredActors, const float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<UDamageType> DamageTypeClass)
+void UMeleeAttackComponent::DoAttack(const FVector& StartTrace, const FVector& EndTraceUnit, const TArray<AActor*>& IgnoredActors, const float BaseDamage, AController* EventInstigator, AActor* DamageCauser)
 {
 	FHitResult TraceAttackHitResult;
 	bool bTraceResult = TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit, IgnoredActors);
@@ -35,7 +35,7 @@ void UMeleeAttackComponent::DoAttack(const FVector& StartTrace, const FVector& E
 	{
 		StopAttackTimer();
 
-		UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), BaseDamage, EventInstigator, DamageCauser, DamageTypeClass);
+		UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), BaseDamage, EventInstigator, DamageCauser, this->DamageTypeClass);
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "Components/ActorComponent.h"
 #include "MeleeAttackComponent.generated.h"
 
+class UDamageType;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Category = "MeleeAttackComponent")
 class MAGICTRIGGER_API UMeleeAttackComponent : public UActorComponent
@@ -68,6 +69,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
 		float AttackTimerDeltaTime;
 
+	/**
+	 *
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
+		TSubclassOf<UDamageType> DamageTypeClass;
 
 	/**
 	 * Methods
@@ -86,8 +92,7 @@ public:
 			const TArray<AActor*>& IgnoredActors,
 			float BaseDamage,
 			AController* EventInstigator,
-			AActor* DamageCauser,
-			TSubclassOf<UDamageType> DamageTypeClass
+			AActor* DamageCauser
 		);
 
 	/**

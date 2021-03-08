@@ -3,6 +3,7 @@
  * Враг перса Мутант.
  */
 
+#pragma once
 
 #include "MutantCharacter.h"
 #include "Components/CapsuleComponent.h"
@@ -154,7 +155,7 @@ void AMutantCharacter::TraceAttack(bool bRightHand)
 	}
 
 	this->MeleeAttackComponent->StopAttackTimer();
-	UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), this->Damage, GetController(), this, nullptr);
+	UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), this->Damage, GetController(), this, this->MeleeAttackComponent->DamageTypeClass);
 }
 
 void AMutantCharacter::Stunning_IF_Implementation()
