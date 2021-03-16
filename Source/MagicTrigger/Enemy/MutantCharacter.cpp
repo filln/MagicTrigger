@@ -82,11 +82,15 @@ AMutantCharacter::AMutantCharacter()
 	Defence = MaxDefence;
 	Damage = MaxDamage;
 
-	EnemyToBehaviorTreeStruct.FindPlayerRadius = 3000;
+	EnemyToBehaviorTreeStruct.WaitTimeOfAnimationRoaring = 2.52;
+	EnemyToBehaviorTreeStruct.FindPlayerRadius = 2000;
+	EnemyToBehaviorTreeStruct.SightRadius = 2500;
+	EnemyToBehaviorTreeStruct.LoseSightRadius = 2000;
+	EnemyToBehaviorTreeStruct.HearingRange = 700;
 	EnemyToBehaviorTreeStruct.MoveAndAttackRadius = 600;
 	EnemyToBehaviorTreeStruct.AttackRadius = 90;
 	EnemyToBehaviorTreeStruct.PatrolingRadius = 700;
-	EnemyToBehaviorTreeStruct.PatrolingWaitTime = 5;
+	EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime = 10;
 	static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimationRoaringObj(TEXT("/Game/MagicTrigger/Animations/Enemy/Mutant/AS_Mutant_Roaring"));
 	if (AnimationRoaringObj.Succeeded())
 	{

@@ -76,8 +76,6 @@ void UFireBallComponent::CreateFireBall(USkeletalMeshComponent* InOwnersMesh)
 		this->FireBallInHands = nullptr;
 	}
 
-
-	TSubclassOf<AFireBall> FireBallClass;
 	FTransform SocketTransform = this->OwnersMesh->GetSocketTransform(this->OwnersAttachSocket);
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketTransform.GetLocation());
@@ -85,7 +83,7 @@ void UFireBallComponent::CreateFireBall(USkeletalMeshComponent* InOwnersMesh)
 	SpawnTransform.SetScale3D(FVector(1));
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	this->FireBallInHands = GetWorld()->SpawnActor<AFireBall>(FireBallClass, SpawnTransform, ActorSpawnParameters);
+	this->FireBallInHands = GetWorld()->SpawnActor<AFireBall>(AFireBall::StaticClass(), SpawnTransform, ActorSpawnParameters);
 	if (!this->FireBallInHands)
 	{
 		DEBUGMESSAGE("!this->FireBallInHands");
@@ -140,11 +138,10 @@ void UFireBallComponent::MoveFireBallToTarget(AController* OwnersController, AAc
 	this->FireBallMoveToTargetInputsStruct.Damage = FireBallStruct.Damage * FireBallStruct.MultiplierOfDamage;
 	this->FireBallMoveToTargetInputsStruct.SpeedOfMoveToTarget = FireBallStruct.SpeedOfMoveToTarget;
 
-	TSubclassOf<AFireBall> FireBallClass;
 	FTransform SpawnTransform = this->FireBallInHands->GetActorTransform();
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	this->FireBallInFly = GetWorld()->SpawnActor<AFireBall>(FireBallClass, SpawnTransform, ActorSpawnParameters);
+	this->FireBallInFly = GetWorld()->SpawnActor<AFireBall>(AFireBall::StaticClass(), SpawnTransform, ActorSpawnParameters);
 	if (!this->FireBallInFly)
 	{
 		DEBUGMESSAGE("!this->FireBallInFly");
@@ -199,8 +196,16 @@ UMaterialInstanceDynamic* UFireBallComponent::CreateMaterialFireBall(AFireBall* 
 
 void UFireBallComponent::ScaleAndEmissive()
 {
+	if (!this->FireBallInHands)
+	{
+		//DEBUGMESSAGE("!this->FireBallInHands");
+		GetWorld()->GetTimerManager().ClearTimer(this->ScaleAndEmissiveTimer);
+		return;
+	}
 	this->FireBallInHands->CurrentMultiplierOfScale += this->DeltaMultiplierOfScaleEveryTick;
+	//DEBUGSTRING(FString::SanitizeFloat(this->FireBallInHands->CurrentMultiplierOfScale));
 	FVector ScaleVector = this->FireBallInHands->GetInitialScale() * this->FireBallInHands->CurrentMultiplierOfScale;
+
 	this->FireBallInHands->SetActorScale3D(ScaleVector);
 
 	this->FireBallInHands->CurrentMultiplierOfEmissive += this->DeltaMultiplierOfEmissiveEveryTick;

@@ -38,15 +38,9 @@ EBTNodeResult::Type UBTTask_PlayRoaring::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 	AEnemyCharacterMagicTrigger* Enemy = EnemyAIController->GetEnemy();
-	UBlackboardComponent* Blackboard = EnemyAIController->BlackboardComponent;
 	if (!Enemy)
 	{
 		DEBUGMESSAGE("!Enemy");
-		return EBTNodeResult::Failed;
-	}
-	if (!Blackboard)
-	{
-		DEBUGMESSAGE("!Blackboard");
 		return EBTNodeResult::Failed;
 	}
 
@@ -80,7 +74,7 @@ EBTNodeResult::Type UBTTask_PlayRoaring::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 
-	const float FinishDelay = this->AnimationToPlay->GetMaxCurrentTime();
+	const float FinishDelay = Enemy->EnemyToBehaviorTreeStruct.WaitTimeOfAnimationRoaring;
 	if (FinishDelay <= 0)
 	{
 		DEBUGMESSAGE("FinishDelay <= 0");
@@ -90,7 +84,6 @@ EBTNodeResult::Type UBTTask_PlayRoaring::ExecuteTask(UBehaviorTreeComponent& Own
 	this->PreviousAnimationMode = SkelMesh->GetAnimationMode();
 	this->CachedSkelMesh = SkelMesh;
 	SkelMesh->PlayAnimation(this->AnimationToPlay, false);
-	Blackboard->SetValueAsBool(this->BBKeys.bRoaring, false);
 	MyController->GetWorld()->GetTimerManager().SetTimer(this->TimerHandle, this->TimerDelegate, FinishDelay, /*bLoop=*/false);
 	return EBTNodeResult::InProgress;
 
@@ -133,8 +126,30 @@ void UBTTask_PlayRoaring::OnAnimationTimerDone()
 {
 	if (this->MyOwnerComp)
 	{
+
+		AAIController* const MyController = this->MyOwnerComp->GetAIOwner();
+		if (!MyController)
+		{
+			DEBUGMESSAGE("!MyController");
+			return;
+		}
+		AEnemyAIController* EnemyAIController = Cast<AEnemyAIController>(MyController);
+		if (!EnemyAIController)
+		{
+			DEBUGMESSAGE("!EnemyAIController");
+			return;
+		}
+
+		UBlackboardComponent* Blackboard = EnemyAIController->BlackboardComponent;
+		if (!Blackboard)
+		{
+			DEBUGMESSAGE("!Blackboard");
+			return;
+		}
 		CleanUp(*this->MyOwnerComp);
 		FinishLatentTask(*this->MyOwnerComp, EBTNodeResult::Succeeded);
+		Blackboard->SetValueAsBool(this->BBKeys.bRoaring, false);
+
 	}
 	else
 	{

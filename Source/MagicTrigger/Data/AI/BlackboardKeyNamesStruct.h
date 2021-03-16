@@ -17,26 +17,17 @@ struct FBlackboardKeyNamesStruct
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
 		FName bRoaring;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
-		FName bCanAttack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
 		FName bCanMoveToPlayer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
-		FName bCanMoveAndAttack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
 		FName AcceptanceRadius;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BlackboardKeyNamesStruct")
-		FName bPlayerFound;
 public:
 
 	FBlackboardKeyNamesStruct()
 	{
 		TargetPlayer = FName(TEXT("TargetPlayer"));
 		bRoaring = FName(TEXT("bRoaring"));
-		bCanAttack = FName(TEXT("bCanAttack"));
 		bCanMoveToPlayer = FName(TEXT("bCanMoveToPlayer"));
-		bCanMoveAndAttack = FName(TEXT("bCanMoveAndAttack"));
 		AcceptanceRadius = FName(TEXT("AcceptanceRadius"));
-		bPlayerFound = FName(TEXT("bPlayerFound"));
 	}
 
 };

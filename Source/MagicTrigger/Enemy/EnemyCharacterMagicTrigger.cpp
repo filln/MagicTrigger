@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NavAreas\NavArea_Obstacle.h"
 #include "Components/CapsuleComponent.h"
+#include "Components\SphereComponent.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include "GameFramework\HUD.h"
 
@@ -24,7 +25,6 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	AIControllerClass = AEnemyAIController::StaticClass();
-	InitialLifeSpan = 120;
 
 	GetCapsuleComponent()->AreaClass = UNavArea_Obstacle::StaticClass();
 	GetCapsuleComponent()->bVisibleInReflectionCaptures = 0;
@@ -60,13 +60,23 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	GetCharacterMovement()->JumpZVelocity = 500;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
+	RunAISphere = CreateDefaultSubobject<USphereComponent>(TEXT("RunAISphere"));
+	RunAISphere->SetupAttachment(GetRootComponent());
+	RunAISphere->AreaClass = UNavArea_Obstacle::StaticClass();
+	RunAISphere->SetNotifyRigidBodyCollision(false);
+	RunAISphere->SetGenerateOverlapEvents(true);
+	RunAISphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	RunAISphere->SetCollisionObjectType(ECC_WorldDynamic);
+	RunAISphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	RunAISphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	RunAISphere->SetSphereRadius(5000, false);
+
 	bGetDamage = false;
 	bAttack = false;
 	bObserved = false;
 	bDying = false;
 	bStunning = false;
 	bStunningAfterGetDamage = false;
-	bRoaring = false;
 	EnemyToBehaviorTreeStruct = FEnemyToBehaviorTreeStruct();
 	Name = FText::FromString(TEXT("NoSpecifiedEnemyName"));
 	Icon = nullptr;
@@ -85,6 +95,8 @@ void AEnemyCharacterMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 
+	this->RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnRunAI);
+	this->RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnStopAI);
 }
 
 void AEnemyCharacterMagicTrigger::StartAttack()
@@ -103,14 +115,75 @@ void AEnemyCharacterMagicTrigger::StopAttack()
 	}
 }
 
-void AEnemyCharacterMagicTrigger::StartRoaring()
+void AEnemyCharacterMagicTrigger::OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	this->bRoaring = true;
+	//DEBUGMESSAGE("RunAISphere overlap something.");
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (!PlayerCharacter)
+	{
+		DEBUGMESSAGE("!PlayerCharacter");
+		return;
+	}
+	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
+	if (!OverlapPlayerCharacter)
+	{
+		return;
+	}
+	if (OverlapPlayerCharacter != PlayerCharacter)
+	{
+		return;
+	}
+
+	//DEBUGMESSAGE("RunAISphere begin overlap PlayerCharacter.")
+
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+	
+	EnemyController->OnRunAI();
 }
 
-void AEnemyCharacterMagicTrigger::StopRoaring()
+void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	this->bRoaring = false;
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (!PlayerCharacter)
+	{
+		DEBUGMESSAGE("!PlayerCharacter");
+		return;
+	}
+	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
+	if (!OverlapPlayerCharacter)
+	{
+		return;
+	}
+	if (OverlapPlayerCharacter != PlayerCharacter)
+	{
+		return;
+	}
+
+	//DEBUGMESSAGE("RunAISphere end overlap PlayerCharacter.")
+
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+
+	EnemyController->OnStopAI();
 }
 
 float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
@@ -208,7 +281,7 @@ void AEnemyCharacterMagicTrigger::Die()
 	}
 
 	IOwnerTargetSelectionInterface::Execute_RemoveAndSwitchActors_IF(PlayerCharacter, this);
-	EnemyController->StopLogic();
+	EnemyController->OnStopAI();
 	this->Life = 0;
 	bDying = true;
 	GetCharacterMovement()->DisableMovement();

@@ -51,14 +51,19 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 
 	float DistanceToPlayer = Enemy->GetDistanceTo(PlayerCharacter);
 
+	//Lose player.
+	if (DistanceToPlayer > Enemy->EnemyToBehaviorTreeStruct.FindPlayerRadius)
+	{
+		EnemyAIController->LosePlayer();
+	}
 	//Move to player
 	if (
 		DistanceToPlayer <= Enemy->EnemyToBehaviorTreeStruct.FindPlayerRadius
 		&& DistanceToPlayer > Enemy->EnemyToBehaviorTreeStruct.MoveAndAttackRadius
 		)
 	{
+		//DEBUGMESSAGE("Move to player");
 		Enemy->StopAttack();
-		Blackboard->ClearValue(this->BBKeys.bCanAttack);
 		Blackboard->SetValueAsBool(this->BBKeys.bCanMoveToPlayer, true);
 	}
 	//Move and attack
@@ -67,8 +72,9 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 		&& DistanceToPlayer > Enemy->EnemyToBehaviorTreeStruct.AttackRadius
 		)
 	{
+		//DEBUGMESSAGE("Move and attack");
 		Blackboard->SetValueAsBool(this->BBKeys.bCanMoveToPlayer, true);
-		Blackboard->SetValueAsBool(this->BBKeys.bCanAttack, true);
+		Enemy->StartAttack();
 	} 
 	//Attack
 	else if (
@@ -76,9 +82,10 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 		&& DistanceToPlayer > 0
 		)
 	{
+		//DEBUGMESSAGE("Attack");
 		EnemyAIController->StopMovement();
-		Blackboard->SetValueAsBool(this->BBKeys.bCanMoveToPlayer, false);
-		Blackboard->SetValueAsBool(this->BBKeys.bCanAttack, true);
+		Blackboard->ClearValue(this->BBKeys.bCanMoveToPlayer);
+		Enemy->StartAttack();
 	}
 }
 

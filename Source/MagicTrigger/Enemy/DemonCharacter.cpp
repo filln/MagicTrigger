@@ -7,6 +7,7 @@
 #include "MagicTrigger\AttackAbilities\FireBallComponent.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "Components/CapsuleComponent.h"
+#include "Components\SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -64,11 +65,18 @@ ADemonCharacter::ADemonCharacter()
 		DEBUGMESSAGE("!IconObj.Succeeded()")
 	}
 
-	EnemyToBehaviorTreeStruct.FindPlayerRadius = 1000;
-	EnemyToBehaviorTreeStruct.MoveAndAttackRadius = 700;
-	EnemyToBehaviorTreeStruct.AttackRadius = 400;
-	EnemyToBehaviorTreeStruct.PatrolingRadius = 700;
-	EnemyToBehaviorTreeStruct.PatrolingWaitTime = 5;
+	RunAISphere->SetSphereRadius(5000, false);
+
+	EnemyToBehaviorTreeStruct.WaitTimeOfAnimationRoaring = 2.83;
+	EnemyToBehaviorTreeStruct.FindPlayerRadius = 4000;
+	EnemyToBehaviorTreeStruct.SightRadius = 3700; //Примерная диагональ замка.
+	EnemyToBehaviorTreeStruct.LoseSightRadius = 4000;
+	EnemyToBehaviorTreeStruct.HearingRange = 1300;
+	EnemyToBehaviorTreeStruct.MoveAndAttackRadius = 1300;
+	EnemyToBehaviorTreeStruct.AttackRadius = 1100;	
+	EnemyToBehaviorTreeStruct.PatrolingRadius = 1400; //Примерная половина длины или ширины замка.
+	EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime = 10;
+
 	static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimationRoaringObj(TEXT("/Game/MagicTrigger/Animations/Enemy/Demon/AS_Demon_Standing_Taunt_Battlecry"));
 	if (AnimationRoaringObj.Succeeded())
 	{

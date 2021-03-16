@@ -58,7 +58,7 @@ EBTNodeResult::Type UBTTask_Enemy_Patroling::ExecuteTask(UBehaviorTreeComponent&
 
 	if (!bPointFound)
 	{
-		DEBUGMESSAGE("!bPointFound");
+		//DEBUGMESSAGE("!bPointFound");
 		return EBTNodeResult::Failed;
 	}
 

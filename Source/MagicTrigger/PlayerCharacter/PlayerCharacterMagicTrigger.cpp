@@ -23,18 +23,19 @@
 #include "MagicTrigger\Interfaces\PlayerStateInterface.h"
 #include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
 
-#include "Components\BoxComponent.h"
 #include "GameFramework\ProjectileMovementComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/TextureRenderTarget2D.h"
 
 #include "Components\SceneComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components\BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components\SceneCaptureComponent2D.h"
 #include "Animation\AnimInstance.h"
 
-#include "Perception\AIPerceptionStimuliSourceComponent.h"
 #include "Camera\CameraComponent.h"
 
 #include "GameFramework\SpringArmComponent.h"
@@ -45,8 +46,8 @@
 
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Engine/TextureRenderTarget2D.h"
+#include "Perception\AIPerceptionStimuliSourceComponent.h"
+
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -218,7 +219,10 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	{
 		DEBUGMESSAGE("!RenderTargetObject.Succeeded()")
 	}
-	
+
+	AIPerceptionStimuliSourceComponent->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	AIPerceptionStimuliSourceComponent->RegisterForSense(TSubclassOf<UAISense_Hearing>());
+
 }
 
 // Called when the game starts or when spawned
@@ -247,6 +251,7 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 
 	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
 	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap);
+
 
 }
 
@@ -318,6 +323,14 @@ void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
 	/*Move to Direction in X axe.*/
 	AddMovementInput(Direction, ScaleAxisValue);
 
+	//if (
+	//	this->MovementStatus != EMovementStatus::EMM_ShortWalking
+	//	&& this->MovementStatus != EMovementStatus::EMM_Stop
+	//	)
+	//{
+	//	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), 1, this);
+	//}
+
 	RotateToTarget();
 }
 
@@ -338,6 +351,14 @@ void APlayerCharacterMagicTrigger::MoveRight_InAx(float AxisValue)
 
 	/*Move to Direction in Y axe.*/
 	AddMovementInput(Direction, ScaleAxisValue);
+
+	//if (
+	//	this->MovementStatus != EMovementStatus::EMM_ShortWalking
+	//	&& this->MovementStatus != EMovementStatus::EMM_Stop
+	//	)
+	//{
+	//	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), 1, this);
+	//}
 
 	RotateToTarget();
 }

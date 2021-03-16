@@ -21,7 +21,7 @@ AFireBall::AFireBall()
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SetRootComponent(SphereCollision);
-	SphereCollision->SetSphereRadius(160);
+	SphereCollision->SetSphereRadius(8);
 	SphereCollision->SetEnableGravity(false);
 	SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SphereCollision->SetCollisionObjectType(ECC_AttackAbility);
@@ -30,7 +30,7 @@ AFireBall::AFireBall()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(GetRootComponent());
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObject(TEXT("/Game/MagisTrigger/Meshes/AttackAbilities/SM_AttackAbilitySphere"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObject(TEXT("/Game/MagicTrigger/Meshes/AttackAbilities/SM_AttackAbilitySphere"));
 	if (MeshObject.Succeeded())
 	{
 		Mesh->SetStaticMesh(MeshObject.Object);

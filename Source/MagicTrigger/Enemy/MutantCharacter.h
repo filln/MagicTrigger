@@ -57,16 +57,18 @@ public:
 	/**
 	 *
 	 */
-	void StartTraceAttack(bool bRightHand);
+	UFUNCTION(BlueprintCallable, Category = "MutantCharacter")
+		void StartTraceAttack(bool bRightHand);
 	/**
 	 *
 	 */
-	void StopTraceAttack();
+	UFUNCTION(BlueprintCallable, Category = "MutantCharacter")
+		void StopTraceAttack();
 	/**
 	 *
 	 */
 	UFUNCTION()
-	void TraceAttack(bool bRightHand);
+		void TraceAttack(bool bRightHand);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "TrowableRockResponseInterface")
 		void Stunning_IF();

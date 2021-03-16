@@ -13,7 +13,7 @@
 #include "EnemyCharacterMagicTrigger.generated.h"
 
 class UTexture2D;
-class AEnemyAIController;
+class USphereComponent;
 
 UCLASS()
 class MAGICTRIGGER_API AEnemyCharacterMagicTrigger : public ACharacter,
@@ -49,11 +49,6 @@ public:
 		bool bStunning;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")
 		bool bStunningAfterGetDamage;
-	/**
-	 * Рычание, т.е. реакция на встречу с персом.
-	 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")
-		bool bRoaring;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|Settings")
 		FEnemyToBehaviorTreeStruct EnemyToBehaviorTreeStruct;
@@ -78,6 +73,11 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger")
 		TEnumAsByte<EMovementMode> InitialMovementMode;
 
+	/**
+	 *
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|Components")
+		USphereComponent* RunAISphere;
 
 
 	/**
@@ -92,25 +92,30 @@ public:
 	 *
 	 */
 	void StopAttack();
+
 	/**
-	 * Не исп.
+	 *Запуск ИИ, когда перс оверлапится с коллизией RunAISphere.
 	 */
-	void StartRoaring();
+	UFUNCTION()
+		void OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	/**
-	 *Не исп.
+	 * Остановка ИИ, когда перс вышел из коллизии RunAISphere.
 	 */
-	void StopRoaring();
+	UFUNCTION()
+		void OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/**
 	 *
 	 */
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 
-	void DoAfterEndAnimationTakeDamage();
+	UFUNCTION(BlueprintCallable, Category = "EnemyCharacterMagicTrigger")
+		void DoAfterEndAnimationTakeDamage();
 	/**
 	 *
 	 */
-	void Stunning(bool bInStunning);
+	UFUNCTION(BlueprintCallable, Category = "EnemyCharacterMagicTrigger")
+		void Stunning(bool bInStunning);
 	/**
 	*
 	*/
@@ -121,14 +126,14 @@ public:
 	/**
 	 * Interface metods
 	 */
-	/////////////////////////////////////////////////////////////////////
-	 /**
-	  * TargetSelectionInterface
-	  */
-
+	 /////////////////////////////////////////////////////////////////////
 	  /**
-	   *
+	   * TargetSelectionInterface
 	   */
+
+	   /**
+		*
+		*/
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "TargetSelectionInterface")
 		void IsObserved();
 	virtual void IsObserved_Implementation() override;

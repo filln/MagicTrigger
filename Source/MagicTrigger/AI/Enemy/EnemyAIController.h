@@ -9,7 +9,7 @@
 #include "AIController.h"
 #include "MagicTrigger\Interfaces\EnemyCharacterInterface.h"
 #include "MagicTrigger\Interfaces\BeginPlayInterface.h"
-#include "AIModule\Classes\Perception\AIPerceptionTypes.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "MagicTrigger\Data\AI\BlackboardKeyNamesStruct.h"
 #include "EnemyAIController.generated.h"
 
@@ -30,8 +30,8 @@ class USphereComponent;
  *
  */
 UCLASS()
-class MAGICTRIGGER_API AEnemyAIController : public AAIController, 
-	public IEnemyCharacterInterface, 
+class MAGICTRIGGER_API AEnemyAIController : public AAIController,
+	public IEnemyCharacterInterface,
 	public IBeginPlayInterface
 {
 	GENERATED_BODY()
@@ -69,10 +69,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController")
 		float DeltaAttackRadius;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController")
-		float RunAISphereRadius;
 	/**
-	 *
+	 * this->AISightConfig->SightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.SightRadius;
+	 * this->AISightConfig->LoseSightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.LoseSightRadius;
+	 * this->AIHearingConfig->HearingRange = ControlledEnemy->EnemyToBehaviorTreeStruct.HearingRange;
 	 */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
 		UAIPerceptionComponent* AIPerceptionComponent;
@@ -87,12 +87,6 @@ public:
 	 */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
 		UBlackboardComponent* BlackboardComponent;
-
-	/**
-	 *
-	 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
-		USphereComponent* RunAISphere;
 
 	/**
 	 *
@@ -123,16 +117,6 @@ private:
 
 public:
 	/**
-	 *Запуск ИИ, когда перс оверлапится с коллизией RunAISphere.
-	 */
-	UFUNCTION()
-		void OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	/**
-	 * Остановка ИИ, когда перс вышел из коллизии RunAISphere.
-	 */
-	UFUNCTION()
-		void OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	/**
 	 *
 	 */
 	UFUNCTION()
@@ -140,7 +124,7 @@ public:
 	/**
 	 *
 	 */
-	void FindPlayer();
+	void FindPlayer(AActor* PlayerActor);
 	/**
 	 *
 	 */
@@ -148,11 +132,11 @@ public:
 	/**
 	 *
 	 */
-	void StartLogic();
+	void OnRunAI();
 	/**
 	 *
 	 */
-	void StopLogic();
+	void OnStopAI();
 
 private:
 

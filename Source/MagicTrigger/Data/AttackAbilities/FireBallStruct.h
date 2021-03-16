@@ -29,7 +29,7 @@ struct FFireBallStruct
 	FFireBallStruct()
 	{
 		TimeInOwnersHand = 1.18;
-		MaxMultiplierOfScaleInOwnersHand = 2.5;
+		MaxMultiplierOfScaleInOwnersHand = 4.5;
 		MaxEmissiveMultiplierInOwnersHand = 100;
 		Damage = 400;
 		MultiplierOfDamage = 1;

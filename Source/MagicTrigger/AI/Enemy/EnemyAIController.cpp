@@ -11,13 +11,14 @@
 #include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception\AISenseConfig_Sight.h"
 #include "Perception\AISenseConfig_Hearing.h"
+#include "Perception/AISense_Hearing.h"
 
- //#include "BrainComponent.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardData.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -37,18 +38,6 @@ AEnemyAIController::AEnemyAIController()
 
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
-
-	RunAISphere = CreateDefaultSubobject<USphereComponent>(TEXT("RunAISphere"));
-	SetRootComponent(RunAISphere);
-	RunAISphere->AreaClass = UNavArea_Obstacle::StaticClass();
-	RunAISphere->SetNotifyRigidBodyCollision(false);
-	RunAISphere->SetGenerateOverlapEvents(true);
-	RunAISphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	RunAISphere->SetCollisionObjectType(ECC_WorldDynamic);
-	RunAISphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	RunAISphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	RunAISphereRadius = 5000;
-	RunAISphere->SetSphereRadius(RunAISphereRadius, false);
 
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("/Game/MagicTrigger/AI/Enemy/BT_Enemy"));
 	if (BTObject.Succeeded())
@@ -72,7 +61,12 @@ AEnemyAIController::AEnemyAIController()
 	DeltaAttackRadius = 20;
 	BeginPlayTimerTime = 0.2;
 
+	SetPerceptionComponent(*AIPerceptionComponent);
+
 	ConfigureAIPerception();
+
+	//нужно биндить как можно раньше, т.к. OnTargetPerceptionUpdated.Broadcast() при нахождении перса в начале игры может произойти раньше бинда.
+	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIController::TargetPerceptionUpdate);
 
 }
 
@@ -80,152 +74,34 @@ void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetWorld())
-	{
-		this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-		UAIPerceptionSystem::RegisterPerceptionStimuliSource(GetWorld(), this->AISightConfig->GetSenseImplementation(), this->PlayerCharacter);
-		UAIPerceptionSystem::RegisterPerceptionStimuliSource(GetWorld(), this->AIHearingConfig->GetSenseImplementation(), this->PlayerCharacter);
-	}
-	else
-	{
-		DEBUGMESSAGE("!GetWorld()")
-	}
-	this->Enemy = GetPawn<AEnemyCharacterMagicTrigger>();
-	if (!this->Enemy)
-	{
-		DEBUGMESSAGE("!this->Enemy")
-	}
-
-	if (this->RunAISphere)
-	{
-		this->RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAIController::OnRunAI);
-		this->RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyAIController::OnStopAI);
-	}
-	else
-	{
-		DEBUGMESSAGE("!RunAISphere");
-	}
-	
-	/////////////////////////////////////////////////////////
-	/**
-	 * Поиск перса и останока логики, если перс не найден.
-	 */
-	TSubclassOf<ACharacter> ClassFilter;
-	TArray<AActor*> OverlappingActors;
-	bool bPlayerCharacterFound = false;
-	this->RunAISphere->GetOverlappingActors(OverlappingActors, ClassFilter);
-	if (!OverlappingActors.Num())
-	{
-		StopLogic();
-	}
-	else
-	{
-		for (const auto &OverlappingActor : OverlappingActors)
-		{
-			ACharacter* OverlappingCharacter = Cast<ACharacter>(OverlappingActor);
-			if (OverlappingCharacter == this->PlayerCharacter)
-			{
-				bPlayerCharacterFound = true;
-				break;
-			}
-		}
-		if (!bPlayerCharacterFound)
-		{
-			StopLogic();
-		}
-	}
-	/////////////////////////////////////////////////////////
-
-
 	StartBeginPlayTimer_IF_Implementation();
 }
 
-void AEnemyAIController::OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AEnemyAIController::OnRunAI()
 {
-	DEBUGMESSAGE("RunAISphere overlap something.");
 
-	if (!this->PlayerCharacter)
-	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
-		return;
-	}
-	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
-	if (!OverlapPlayerCharacter)
-	{
-		return;
-	}
-	if (OverlapPlayerCharacter != this->PlayerCharacter)
-	{
-		return;
-	}
-
-	DEBUGMESSAGE("RunAISphere overlap PlayerCharacter.")
-
-	StartLogic();
-}
-
-void AEnemyAIController::OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (!this->PlayerCharacter)
-	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
-		return;
-	}
-	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
-	if (!OverlapPlayerCharacter)
-	{
-		return;
-	}
-	if (OverlapPlayerCharacter != this->PlayerCharacter)
-	{
-		return;
-	}
-
-	StopLogic();
-}
-
-void AEnemyAIController::StartLogic()
-{
-	if (GetWorld())
-	{
-		this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-		if (!this->PlayerCharacter)
-		{
-			DEBUGMESSAGE("!this->PlayerCharacter");
-			return;
-		}
-	}
-	else
-	{
-		DEBUGMESSAGE("!GetWorld()");
-		return;
-	}
-
-	this->AIPerceptionComponent->Activate();
-	this->AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIController::TargetPerceptionUpdate);
-	this->Enemy = GetPawn<AEnemyCharacterMagicTrigger>();
-	if (!this->Enemy)
-	{
-		DEBUGMESSAGE("!this->Enemy");
-		return;
-	}
-
-	//GetBrainComponent()->StartLogic();
+	//DEBUGMESSAGE("OnRunAI");
+	GetPerceptionComponent()->Activate();
 	this->BehaviorTreeComponent->StartLogic();
 }
 
-void AEnemyAIController::StopLogic()
+void AEnemyAIController::OnStopAI()
 {
-	this->AIPerceptionComponent->Deactivate();
+	//DEBUGMESSAGE("OnStopAI");
+	GetPerceptionComponent()->Deactivate();
 	FString Reason;
-	//GetBrainComponent()->StopLogic(Reason);
 	this->BehaviorTreeComponent->StopLogic(Reason);
 }
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	//ConfigureAIPerception();
+
+	this->Enemy = GetPawn<AEnemyCharacterMagicTrigger>();
+
+	this->AISightConfig->SightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.SightRadius;
+	this->AISightConfig->LoseSightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.LoseSightRadius;
+	this->AIHearingConfig->HearingRange = GetEnemy()->EnemyToBehaviorTreeStruct.HearingRange;
 
 	bool bInitializeBB = this->BlackboardComponent->InitializeBlackboard(*this->BlackboardAsset);
 	if (!bInitializeBB)
@@ -233,15 +109,51 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 		DEBUGMESSAGE("!bInitializeBB");
 		return;
 	}
+
 	this->BehaviorTreeComponent->StartTree(*this->BehaviorTreeAsset);
+
+
+	/////////////////////////////////////////////////////////
+	/**
+	 * Поиск перса и остановка логики, если перс не найден.
+	 */
+	TSubclassOf<ACharacter> ClassFilter;
+	TArray<AActor*> OverlappingActors;
+	bool bPlayerCharacterFound = false;
+
+
+	this->Enemy->RunAISphere->GetOverlappingActors(OverlappingActors, ClassFilter);
+	if (!OverlappingActors.Num())
+	{
+		//DEBUGMESSAGE("!OverlappingActors.Num()")
+		OnStopAI();
+	}
+	else
+	{
+		for (const auto& OverlappingActor : OverlappingActors)
+		{
+			if (Cast<APlayerCharacterMagicTrigger>(OverlappingActor))
+			{
+				bPlayerCharacterFound = true;
+				break;
+			}
+		}
+		if (!bPlayerCharacterFound)
+		{
+			//DEBUGMESSAGE("!bPlayerCharacterFound")
+			OnStopAI();
+		}
+	}
+	/////////////////////////////////////////////////////////
+
 
 }
 
-void AEnemyAIController::FindPlayer()
+void AEnemyAIController::FindPlayer(AActor* PlayerActor)
 {
-	if (!this->Enemy)
+	if (!GetEnemy())
 	{
-		DEBUGMESSAGE("!this->Enemy");
+		DEBUGMESSAGE("!GetEnemy()");
 		return;
 	}
 	if (!this->BlackboardComponent)
@@ -249,20 +161,9 @@ void AEnemyAIController::FindPlayer()
 		DEBUGMESSAGE("!this->BlackboardComponent");
 		return;
 	}
-	if (!this->PlayerCharacter)
-	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
-		return;
-	}
 
-	UObject* TargetPlayer = this->BlackboardComponent->GetValueAsObject(this->BBKeys.TargetPlayer);
-
-	if (TargetPlayer)
-	{
-		return;
-	}
-
-	this->BlackboardComponent->SetValueAsObject(this->BBKeys.TargetPlayer, this->PlayerCharacter);
+	//DEBUGMESSAGE("FindPlayer");
+	this->BlackboardComponent->SetValueAsObject(this->BBKeys.TargetPlayer, PlayerActor);
 	StopMovement();
 	this->BlackboardComponent->SetValueAsBool(this->BBKeys.bRoaring, true);
 
@@ -285,39 +186,43 @@ void AEnemyAIController::LosePlayer()
 		DEBUGMESSAGE("!this->PlayerCharacter");
 		return;
 	}
-
+	//DEBUGMESSAGE("LosePlayer");
 	this->Enemy->StopAttack();
 	StopMovement();
 	this->BlackboardComponent->ClearValue(this->BBKeys.bCanMoveToPlayer);
 	this->BlackboardComponent->ClearValue(this->BBKeys.TargetPlayer);
 	this->BlackboardComponent->ClearValue(this->BBKeys.bRoaring);
-	this->Enemy->StopRoaring();
 
 }
 
 
 void AEnemyAIController::TargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (!this->PlayerCharacter)
+	//DEBUGMESSAGE("TargetPerceptionUpdate");
+	//FString ActorName = Actor->GetName();
+	//DEBUGSTRING(ActorName);
+
+	//Не используем GetPlayerCharacter(), т.к. в начале игры может дать невалидную ссылку.
+	if (!Cast<APlayerCharacterMagicTrigger>(Actor))
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!Cast<APlayerCharacterMagicTrigger>(Actor)");
 		return;
 	}
 
-	if (Actor != this->PlayerCharacter)
+	UObject* TargetPlayer = this->BlackboardComponent->GetValueAsObject(this->BBKeys.TargetPlayer);
+
+	if (TargetPlayer)
 	{
+		//DEBUGMESSAGE("TargetPlayer");
 		return;
 	}
 
 	bool bFindPlayer = Stimulus.WasSuccessfullySensed();
-
+	//DEBUGMESSAGE("TargetPerceptionUpdate");
 	if (bFindPlayer)
 	{
-		FindPlayer();
-	}
-	else
-	{
-		LosePlayer();
+		//DEBUGMESSAGE("bFindPlayer");
+		FindPlayer(Actor);
 	}
 
 }
@@ -328,17 +233,16 @@ void AEnemyAIController::ConfigureAIPerception()
 	this->AISightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	this->AISightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	this->AISightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-
-	this->AIHearingConfig->HearingRange = 600;
 	this->AIHearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	this->AIHearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	this->AIHearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
-	this->AIPerceptionComponent->ConfigureSense(*this->AISightConfig);
-	this->AIPerceptionComponent->ConfigureSense(*this->AIHearingConfig);
+	GetPerceptionComponent()->ConfigureSense(*this->AISightConfig);
+	GetPerceptionComponent()->ConfigureSense(*this->AIHearingConfig);
 
-	this->AIPerceptionComponent->SetDominantSense(this->AISightConfig->GetSenseImplementation());
+	GetPerceptionComponent()->SetDominantSense(this->AISightConfig->GetSenseImplementation());
 }
+
 
 ACharacter* AEnemyAIController::GetPlayerCharacter() const
 {
@@ -355,6 +259,7 @@ AEnemyCharacterMagicTrigger* AEnemyAIController::GetEnemy() const
 	{
 		DEBUGMESSAGE("!this->Enemy");
 	}
+
 	return this->Enemy;
 }
 
@@ -369,11 +274,13 @@ void AEnemyAIController::LosePlayer_IF_Implementation()
  ///////////////////////////////////////////////////////////////////////////////////////
 bool AEnemyAIController::CheckReferences_IF_Implementation()
 {
+	ACharacter* PlayerCharacterTmp = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARecastNavMesh::StaticClass(), this->NavMeshArray);
 	if (
 		!this->NavMeshArray.Num()
 		|| !this->NavMeshArray[0]
 		|| !Cast<ARecastNavMesh>(this->NavMeshArray[0])
+		|| !PlayerCharacterTmp
 		)
 	{
 		return false;
@@ -385,6 +292,7 @@ bool AEnemyAIController::CheckReferences_IF_Implementation()
 void AEnemyAIController::DoBeginPlay_IF_Implementation()
 {
 	this->NavMesh = Cast<ARecastNavMesh>(this->NavMeshArray[0]);
+	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 }
 
 void AEnemyAIController::StartBeginPlayTimer_IF_Implementation()

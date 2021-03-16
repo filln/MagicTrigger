@@ -1,6 +1,6 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Начать атаку и запретить повтор команды на атаку, т.к. анимация атаки циклична
+ * Начать атаку.
  */
 
 #pragma once
@@ -38,9 +38,8 @@ EBTNodeResult::Type UBTTask_Enemy_Attack::ExecuteTask(UBehaviorTreeComponent& Ow
 		DEBUGMESSAGE("!Blackboard");
 		return EBTNodeResult::Failed;
 	}
-
+	//DEBUGMESSAGE("StartAttack");
 	Enemy->StartAttack();
-	Blackboard->SetValueAsBool(this->BBKeys.bCanAttack, false);
 
 	return EBTNodeResult::Succeeded;
 }

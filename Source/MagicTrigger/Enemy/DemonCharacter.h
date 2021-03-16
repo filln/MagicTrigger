@@ -23,7 +23,7 @@ public:
 
 	ADemonCharacter();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ADemonCharacter|Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DemonCharacter|Components")
 		UFireBallComponent* FireBallComponent;
 
 	/**
@@ -34,10 +34,12 @@ public:
 	/**
 	 * Создать файрбол.
 	 */
-	void CreateFireBall();
+	UFUNCTION(BlueprintCallable, Category = "DemonCharacter")
+		void CreateFireBall();
 
 	/**
 	 * Переместить файрбол к персу.
 	 */
-	void MoveFireBallToTarget();
+	UFUNCTION(BlueprintCallable, Category = "DemonCharacter")
+		void MoveFireBallToTarget();
 };

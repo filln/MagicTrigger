@@ -10,6 +10,7 @@
 #include "MagicTrigger\AI\Enemy\EnemyAIController.h"
 #include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
+#include <stdlib.h> //rand()
 
 UBTTask_WaitPatroling::UBTTask_WaitPatroling(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -32,7 +33,11 @@ EBTNodeResult::Type UBTTask_WaitPatroling::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	this->WaitTime = Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitTime;
+	//this->WaitTime = RandRange(0, Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime);
+	//InMin + (InMax - InMin) * FRand();
+	//Rand() / (float)RAND_MAX
+
+	this->WaitTime = Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime * rand() / (float)RAND_MAX;
 
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }
