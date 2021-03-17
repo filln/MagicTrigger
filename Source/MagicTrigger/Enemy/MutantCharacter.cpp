@@ -101,6 +101,8 @@ AMutantCharacter::AMutantCharacter()
 		DEBUGMESSAGE("!AnimationRoaringObj.Succeeded()")
 	}
 
+	MeleeAttackComponent->AttackLengthTrace = 170;
+
 }
 
 void AMutantCharacter::BeginPlay()
@@ -148,13 +150,13 @@ void AMutantCharacter::TraceAttack(bool bRightHand)
 	bool bTraceResult = this->MeleeAttackComponent->TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit, IgnoredActors);
 	if (!bTraceResult)
 	{
-		DEBUGMESSAGE("!bTraceResult");
+		//DEBUGMESSAGE("!bTraceResult");
 		return;
 	}
 	AEnemyCharacterMagicTrigger* HitEnemy = Cast<AEnemyCharacterMagicTrigger>(TraceAttackHitResult.GetActor());
 	if (HitEnemy)
 	{
-		DEBUGMESSAGE("HitEnemy");
+		//DEBUGMESSAGE("HitEnemy");
 		return;
 	}
 

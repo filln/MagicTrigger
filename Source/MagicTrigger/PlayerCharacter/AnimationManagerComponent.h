@@ -66,6 +66,8 @@ public:
 		bool bCarrying;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bJumping;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
+		bool bShortWalk;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|CanDo")
 		bool bCanJump;
@@ -227,6 +229,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
 		bool GetCarrying_IF() const;
 	virtual bool GetCarrying_IF_Implementation() const override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
+		bool GetShortWalk_IF() const;
+	virtual bool GetShortWalk_IF_Implementation() const override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
 		float GetPlayRateLiftingThrowingObject_IF() const;

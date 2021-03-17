@@ -15,7 +15,7 @@
 #pragma once
 
 //Trace channel
-#define ECC_Attack ECC_GameTraceChannel2
+#define ECC_Attack						ECC_GameTraceChannel2
 
 //Collision channel
 #define ECC_ThrowableObject             ECC_GameTraceChannel1

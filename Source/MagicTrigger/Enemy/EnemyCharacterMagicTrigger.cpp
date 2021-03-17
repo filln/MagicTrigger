@@ -147,7 +147,7 @@ void AEnemyCharacterMagicTrigger::OnRunAI(UPrimitiveComponent* OverlappedCompone
 		DEBUGMESSAGE("!EnemyController");
 		return;
 	}
-	
+
 	EnemyController->OnRunAI();
 }
 
@@ -156,7 +156,7 @@ void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedCompon
 	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!PlayerCharacter");
+		//DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
 	ACharacter* OverlapPlayerCharacter = Cast<ACharacter>(OtherActor);
@@ -201,15 +201,8 @@ float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamage
 
 	if (this->Life > 0)
 	{
-		if (GetCharacterMovement()->GetGroundMovementMode() == EMovementMode::MOVE_None)
-		{
-			this->InitialMovementMode = EMovementMode::MOVE_Walking;
-		}
-		else
-		{
-			this->InitialMovementMode = GetCharacterMovement()->GetGroundMovementMode();
-		}
-
+		//this->InitialMovementMode = EMovementMode::MOVE_Walking;
+		this->bGetDamage = true;
 		GetCharacterMovement()->DisableMovement();
 	}
 	else
@@ -221,10 +214,14 @@ float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamage
 
 void AEnemyCharacterMagicTrigger::DoAfterEndAnimationTakeDamage()
 {
-	GetCharacterMovement()->SetGroundMovementMode(this->InitialMovementMode);
+	//GetCharacterMovement()->SetGroundMovementMode(this->InitialMovementMode);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	//DEBUGMESSAGE("DoAfterEndAnimationTakeDamage");
+	this->bGetDamage = false;
 
 	if (bStunningAfterGetDamage)
 	{
+		//DEBUGMESSAGE("bStunningAfterGetDamage");
 		Stunning(bStunningAfterGetDamage);
 	}
 }
@@ -233,20 +230,12 @@ void AEnemyCharacterMagicTrigger::Stunning(bool bInStunning)
 {
 	if (bInStunning)
 	{
-		if (GetCharacterMovement()->GetGroundMovementMode() == EMovementMode::MOVE_None)
-		{
-			this->InitialMovementMode = EMovementMode::MOVE_Walking;
-		}
-		else
-		{
-			this->InitialMovementMode = GetCharacterMovement()->GetGroundMovementMode();
-		}
-
+		//this->InitialMovementMode = EMovementMode::MOVE_Walking;
 		GetCharacterMovement()->DisableMovement();
 	}
 	else
 	{
-		GetCharacterMovement()->SetGroundMovementMode(this->InitialMovementMode);
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		this->bStunningAfterGetDamage = false;
 	}
 
@@ -305,7 +294,7 @@ void AEnemyCharacterMagicTrigger::IsObserved_Implementation()
 		}
 
 		IOwnerTargetSelectionInterface::Execute_RemoveAndSwitchActors_IF(PlayerCharacter, this);
-	} 
+	}
 	else
 	{
 		//APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -357,7 +346,7 @@ void AEnemyCharacterMagicTrigger::IsNotObserved_Implementation()
 	GetMesh()->SetRenderCustomDepth(this->bObserved);
 }
 
-AActor* AEnemyCharacterMagicTrigger::GetEnemy_IF_Implementation() 
+AActor* AEnemyCharacterMagicTrigger::GetEnemy_IF_Implementation()
 {
 	return this;
 }

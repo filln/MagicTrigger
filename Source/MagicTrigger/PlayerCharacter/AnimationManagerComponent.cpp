@@ -28,6 +28,7 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	bWatchingNow = false;
 	bCarrying = false;
 	bJumping = false;
+	bShortWalk = false;
 
 	bCanJump = true;
 	bCanAttack = true;
@@ -415,6 +416,11 @@ bool UAnimationManagerComponent::GetDying_IF_Implementation() const
 bool UAnimationManagerComponent::GetCarrying_IF_Implementation() const
 {
 	return this->bCarrying;
+}
+
+bool UAnimationManagerComponent::GetShortWalk_IF_Implementation() const
+{
+	return this->bShortWalk;
 }
 
 float UAnimationManagerComponent::GetPlayRateLiftingThrowingObject_IF_Implementation() const

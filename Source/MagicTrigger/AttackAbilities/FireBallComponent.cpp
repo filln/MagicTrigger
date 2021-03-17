@@ -148,6 +148,8 @@ void UFireBallComponent::MoveFireBallToTarget(AController* OwnersController, AAc
 		return;
 	}
 
+	this->FireBallInFly->CurrentMultiplierOfEmissive = this->FireBallInHands->CurrentMultiplierOfEmissive;
+
 	this->FireBallInFlyMaterial = CreateMaterialFireBall(this->FireBallInFly);
 	this->FireBallInHands->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
 	bool bDestroyed = this->FireBallInHands->Destroy();

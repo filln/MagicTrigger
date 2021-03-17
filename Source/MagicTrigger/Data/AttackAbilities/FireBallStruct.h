@@ -33,7 +33,7 @@ struct FFireBallStruct
 		MaxEmissiveMultiplierInOwnersHand = 100;
 		Damage = 400;
 		MultiplierOfDamage = 1;
-		SpeedOfMoveToTarget = 5200;
+		SpeedOfMoveToTarget = 4200;
 	}
 
 

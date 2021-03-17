@@ -18,8 +18,7 @@ UMeleeAttackComponent::UMeleeAttackComponent()
 
 	AttackLengthTrace = 100;
 	TraceSphereRadius = 50;
-	TraceCollisionChannel = ECC_Attack;
-	bTraceComplex = false;
+	TraceCollisionChannel = ECollisionChannel::ECC_Attack;
 	bDrawDebugTrace = false;
 	AttackTimerDeltaTime = 0.017;
 	DamageTypeClass = nullptr;
@@ -66,10 +65,9 @@ bool UMeleeAttackComponent::TraceAttack(FHitResult& OutHit, const FVector& Start
 		GetWorld()->DebugDrawTraceTag = FName();
 	}
 
-	FHitResult HitResultTmp;
 	FQuat QuatTmp = FQuat();
 	FCollisionShape CollisionShape = FCollisionShape::MakeSphere(this->TraceSphereRadius);
-	bool bTraceResult = GetWorld()->SweepSingleByChannel(HitResultTmp, StartTrace, EndTrace, QuatTmp, this->TraceCollisionChannel, CollisionShape, CollisionQueryParams, CollisionResponseParams);
+	bool bTraceResult = GetWorld()->SweepSingleByChannel(OutHit, StartTrace, EndTrace, QuatTmp, this->TraceCollisionChannel, CollisionShape, CollisionQueryParams, CollisionResponseParams);
 
 	return bTraceResult;
 }

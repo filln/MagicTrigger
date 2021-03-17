@@ -46,9 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
 		float GetMultiplierOfDamage_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetBeginGamePlayerState_IF() const;
+		FPlayerStateMagicTriggerStruct GetBeginGameStates_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetPlayerState_IF() const;
+		FPlayerStateMagicTriggerStruct GetStates_IF() const;
 
 	/**
 	 * Setters
@@ -69,9 +69,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
 		void SetMultiplierOfDamage_IF(float MultiplierOfDamage);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetBeginGamePlayerState_IF(FPlayerStateMagicTriggerStruct BeginGamePlayerState);
+		void SetBeginGameStates_IF(FPlayerStateMagicTriggerStruct BeginGamePlayerState);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetPlayerState_IF(FPlayerStateMagicTriggerStruct PlayerState);
+		void SetStates_IF(FPlayerStateMagicTriggerStruct PlayerState);
 
 
 

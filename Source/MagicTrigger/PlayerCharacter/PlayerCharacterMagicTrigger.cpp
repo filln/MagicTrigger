@@ -438,6 +438,7 @@ void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
 
 	this->AxisValueMovementCoeff = AxisValueShortWalkingCoeff;
 	this->MovementStatus = EMovementStatus::EMM_ShortWalking;
+	this->AnimationManagerComponent->bShortWalk = true;
 
 }
 
@@ -454,7 +455,7 @@ void APlayerCharacterMagicTrigger::StopShortWalking_InAct()
 
 	this->AxisValueMovementCoeff = AxisValueWalkingCoeff;
 	this->MovementStatus = EMovementStatus::EMM_Walking;
-
+	this->AnimationManagerComponent->bShortWalk = false;
 }
 
 void APlayerCharacterMagicTrigger::StartJump_InAct()
@@ -714,7 +715,7 @@ float APlayerCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamag
 	}
 	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EventInstigator))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EventInstigator)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(EventInstigator)");
 		return 0;
 	}
 

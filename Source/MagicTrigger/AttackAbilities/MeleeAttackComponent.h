@@ -46,12 +46,6 @@ public:
 		TEnumAsByte<ECollisionChannel> TraceCollisionChannel;
 
 	/**
-	 * Комплексный или простой трейс.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")
-		bool bTraceComplex;
-
-	/**
 	 * Показывать ли дебаг-линию трейса.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MeleeAttackComponent")

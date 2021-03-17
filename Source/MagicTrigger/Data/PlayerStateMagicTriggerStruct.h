@@ -12,7 +12,7 @@ struct FPlayerStateMagicTriggerStruct
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
 		float Life;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
 		float Defence;
@@ -30,11 +30,31 @@ struct FPlayerStateMagicTriggerStruct
 	FPlayerStateMagicTriggerStruct()
 	{
 		Life = 100;
-		Defence = 10;
-		Damage = 80;
+		Defence = 100;
+		Damage = 100;
 		MaxLife = 100;
 		MaxDefence = 100;
 		MaxDamage = 100;
 		MultiplierOfDamage = 1;
+	}
+
+	FPlayerStateMagicTriggerStruct
+	(
+		float InLife,
+		float InDefence,
+		float InDamage,
+		float InMaxLife,
+		float InMaxDefence,
+		float InMaxDamage,
+		float InMultiplierOfDamage
+	)
+	{
+		Life = InLife;
+		Defence = InDefence;
+		Damage = InDamage;
+		MaxLife = InMaxLife;
+		MaxDefence = InMaxDefence;
+		MaxDamage = InMaxDamage;
+		MultiplierOfDamage = InMultiplierOfDamage;
 	}
 };
