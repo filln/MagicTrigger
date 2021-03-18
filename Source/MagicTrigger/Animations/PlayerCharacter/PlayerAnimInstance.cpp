@@ -66,6 +66,10 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		this->bMoving = true;
 	}
+	else
+	{
+		this->bMoving = false;
+	}
 	this->bInAir = PawnOwner->GetMovementComponent()->IsFalling();
 
 	this->bAttacking = IAnimationManagerInterface::Execute_GetAttacking_IF(this->AnimationManagerComponent);
@@ -86,37 +90,31 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 bool UPlayerAnimInstance::GetAndCheckReferences()
 {
 	this->PawnOwner = TryGetPawnOwner();
-	if (this->PawnOwner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner))
-		{
-			this->AnimationManagerComponent = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(this->PawnOwner);
-
-			if (!this->AnimationManagerComponent)
-			{
-				DEBUGMESSAGE("!this->AnimationManagerComponent");
-				return false;
-			}
-			if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent))
-			{
-				DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent)");
-				return false;
-			}
-			return true;
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner)");
-			return false;
-		}
-		return false;
-	}
-	else
+	if (!this->PawnOwner)
 	{
 		DEBUGMESSAGE("!this->PawnOwner");
 		return false;
 	}
-	return false;
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner))
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner)");
+		return false;
+	}
+
+	this->AnimationManagerComponent = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(this->PawnOwner);
+
+	if (!this->AnimationManagerComponent)
+	{
+		DEBUGMESSAGE("!this->AnimationManagerComponent");
+		return false;
+	}
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent))
+	{
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent)");
+		return false;
+	}
+
+	return true;
 }
 
 void UPlayerAnimInstance::PutDownThrowingObject()
@@ -208,7 +206,7 @@ void UPlayerAnimInstance::StopTraceAttackRightFoot()
 
 void UPlayerAnimInstance::EndAttack()
 {
-	IAnimationManagerInterface::Execute_SetPlayingAnimationAttack_IF(this->AnimationManagerComponent, false);	
+	IAnimationManagerInterface::Execute_SetPlayingAnimationAttack_IF(this->AnimationManagerComponent, false);
 }
 
 void UPlayerAnimInstance::EndAnimationThrow()

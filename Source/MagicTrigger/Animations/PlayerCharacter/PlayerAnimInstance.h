@@ -1,5 +1,9 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved.
 
+/**
+ * Анимации для перса.
+ */
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -27,37 +31,37 @@ public:
 		UActorComponent* AnimationManagerComponent;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerAnimInstance")
 		APawn* PawnOwner;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		float Speed;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		float PlayRateLiftingThrowingObject;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		float StartPositionLiftingThrowingObject;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bMoving;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bInAir;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bAttacking;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bShortWalk;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bWatchingNow;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bLiftingUp2Hands;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bLiftingUp1Hand;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bPutingDown1Hand;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bThrowing;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bGettingDamage;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bDying;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bFightingIdle;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bCarrying;
 
 	/**
@@ -79,45 +83,45 @@ public:
 	/**
 	 * Methods for AnimNotifies.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void PutDownThrowingObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void LiftUpThrowingObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void EndAnimationLiftingCarriedObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void EndAnimationLiftingThrowingObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void StartAnimationLiftingCarriedObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void EndAnimationPutDownCarriedObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void EndAnimationPutDownThrowingObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void LiftUpCarriedObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|LiftUpPutDown")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
 		void PutDownCarriedObject();
 
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|TraceAttack")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|TraceAttack")
 		void StartTraceAttackLeftFoot();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|TraceAttack")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|TraceAttack")
 		void StartTraceAttackRightFoot();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|TraceAttack")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|TraceAttack")
 		void StopTraceAttackLeftFoot();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies|TraceAttack")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|TraceAttack")
 		void StopTraceAttackRightFoot();
 
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAttack();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAnimationThrow();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void ThrowObject();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAnimationHitReaction();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAnimationJump();
-	UFUNCTION(BlueprintCallable, Category = "AnimNotifies")
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void ReportNoise();
 
 

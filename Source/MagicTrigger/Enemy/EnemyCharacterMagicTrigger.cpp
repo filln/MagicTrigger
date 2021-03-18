@@ -71,8 +71,8 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	RunAISphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	RunAISphere->SetSphereRadius(5000, false);
 
-	bGetDamage = false;
-	bAttack = false;
+	bGettingDamage = false;
+	bAttacking = false;
 	bObserved = false;
 	bDying = false;
 	bStunning = false;
@@ -101,17 +101,17 @@ void AEnemyCharacterMagicTrigger::BeginPlay()
 
 void AEnemyCharacterMagicTrigger::StartAttack()
 {
-	if (!this->bAttack)
+	if (!this->bAttacking)
 	{
-		this->bAttack = true;
+		this->bAttacking = true;
 	}
 }
 
 void AEnemyCharacterMagicTrigger::StopAttack()
 {
-	if (this->bAttack)
+	if (this->bAttacking)
 	{
-		this->bAttack = false;
+		this->bAttacking = false;
 	}
 }
 
@@ -173,7 +173,7 @@ void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedCompon
 
 	if (!GetController())
 	{
-		DEBUGMESSAGE("!GetController()");
+		//DEBUGMESSAGE("!GetController()");
 		return;
 	}
 	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
@@ -202,7 +202,7 @@ float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamage
 	if (this->Life > 0)
 	{
 		//this->InitialMovementMode = EMovementMode::MOVE_Walking;
-		this->bGetDamage = true;
+		this->bGettingDamage = true;
 		GetCharacterMovement()->DisableMovement();
 	}
 	else
@@ -217,7 +217,7 @@ void AEnemyCharacterMagicTrigger::DoAfterEndAnimationTakeDamage()
 	//GetCharacterMovement()->SetGroundMovementMode(this->InitialMovementMode);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	//DEBUGMESSAGE("DoAfterEndAnimationTakeDamage");
-	this->bGetDamage = false;
+	this->bGettingDamage = false;
 
 	if (bStunningAfterGetDamage)
 	{

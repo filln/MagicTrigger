@@ -38,9 +38,9 @@ protected:
 public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")
-		bool bGetDamage;
+		bool bGettingDamage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")
-		bool bAttack;
+		bool bAttacking;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")
 		bool bObserved;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|AnimationStates")

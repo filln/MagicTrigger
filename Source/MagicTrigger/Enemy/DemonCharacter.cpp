@@ -109,6 +109,11 @@ float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const&
 
 void ADemonCharacter::CreateFireBall()
 {
+	//if (!this->FireBallComponent)
+	//{
+	//	DEBUGMESSAGE("!this->FireBallComponent");
+	//	return;
+	//}
 	this->FireBallComponent->CreateFireBall(GetMesh());
 }
 
@@ -125,6 +130,10 @@ void ADemonCharacter::MoveFireBallToTarget()
 		DEBUGMESSAGE("!GetController()");
 		return;
 	}
-
+	//if (!this->FireBallComponent)
+	//{
+	//	DEBUGMESSAGE("!this->FireBallComponent");
+	//	return;
+	//}
 	this->FireBallComponent->MoveFireBallToTarget(GetController(), PlayerCharacter);
 }
