@@ -524,7 +524,7 @@ void APlayerCharacterMagicTrigger::ShowGameMenu_InAct()
 {
 	if (IsInterfaceImplementedBy<IHUDInterface>(this->HUD))
 	{
-		IHUDInterface::Execute_PauseOrUnpauseGame_IF(this->HUD, true, nullptr);
+		IHUDInterface::Execute_SetPauseGame_IF(this->HUD, true, nullptr);
 	}
 	else
 	{

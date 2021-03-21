@@ -35,4 +35,6 @@ public:
 		FGameSettingsStruct GetGameSettingsStruct_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void SetGameSettingsStruct_IF(FGameSettingsStruct GameSettingsStruct);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void SetMouseSensitivity_IF(float MouseSensitivity);
 };

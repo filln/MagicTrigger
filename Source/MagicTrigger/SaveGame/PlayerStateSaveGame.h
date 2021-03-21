@@ -6,6 +6,8 @@
 #include "GameFramework/SaveGame.h"
 #include "PlayerStateSaveGame.generated.h"
 
+class UTextureRenderTarget2D;
+
 /**
  * 
  */
@@ -14,4 +16,7 @@ class MAGICTRIGGER_API UPlayerStateSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+	UTextureRenderTarget2D* ScreenShot;
+
 };

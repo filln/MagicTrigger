@@ -44,7 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideObserveEnemyWidget_IF();
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
-		void PauseOrUnpauseGame_IF(bool bPause, UUserWidget* HiddenWidget);
+		void SetPauseGame_IF(bool bPause, UUserWidget* HiddenWidget);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void ShowInteractionWidget_IF(FText& InteractionText);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
