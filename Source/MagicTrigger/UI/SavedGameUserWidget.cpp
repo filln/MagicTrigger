@@ -2,4 +2,9 @@
 
 
 #include "SavedGameUserWidget.h"
+#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
 
+void USavedGameUserWidget::OnCheckStateChangedSavedGameCheckBox(bool bChecked)
+{
+	this->HUDMagicTrigger->SwitchSavedGames(bChecked, this);
+}

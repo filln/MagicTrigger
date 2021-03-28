@@ -8,8 +8,8 @@
 
 APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 {
-	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	InputYawScale = 2.5;
 	InputPitchScale = -2.5;

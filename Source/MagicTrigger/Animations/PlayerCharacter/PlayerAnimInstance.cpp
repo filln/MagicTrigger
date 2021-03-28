@@ -38,10 +38,10 @@ void UPlayerAnimInstance::NativeBeginPlay()
 
 void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	//if (!GetAndCheckReferences())
-	//{
-	//	return;
-	//}
+	if (!GetAndCheckReferences())
+	{
+		return;
+	}
 
 	if (!this->PawnOwner)
 	{

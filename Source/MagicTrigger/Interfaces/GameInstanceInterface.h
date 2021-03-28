@@ -1,4 +1,4 @@
-// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
+	// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
  * Интерфейс для класса GameInstanceMagicTrigger. Используется для вызова методов класса, получения и определения переменных.
  */
@@ -37,4 +37,16 @@ public:
 		void SetGameSettingsStruct_IF(FGameSettingsStruct GameSettingsStruct);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void SetMouseSensitivity_IF(float MouseSensitivity);
-};
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void LoadGamesList_IF(TArray<FString>& InGamesList);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void MainLoadGame_IF(FString& InNameOfLoadGame);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void MainSaveGame_IF(FString& InNameOfSaveGame);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void MainDeleteGame_IF(FString& InNameOfDeleteGame);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void BeginNewGame_IF();
+
+
+};	

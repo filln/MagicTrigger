@@ -61,6 +61,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<USaveGameMenuUserWidget> SaveGameMenuUserWidgetClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
+		TSubclassOf<USavedGameUserWidget> SavedGameUserWidgetClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<ULoadGameMenuUserWidget> LoadGameMenuUserWidgetClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<USettingsMenuUserWidget> SettingsMenuUserWidgetClass;
@@ -107,8 +109,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUDMagicTrigger")
 		bool bShowingHints;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger")
+		FText InteractionText;
 private:
-	FText InteractionText;
 	FTimerHandle BeginPlayTimer;
 	float BeginPlayTimerTime;
 
@@ -135,7 +138,7 @@ public:
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-		void SetShowInteractionWidget(bool bShow, FText InteractionText);
+		void SetShowInteractionWidget(bool bShow, FText InInteractionText);
 	/**
 	 *
 	 */
@@ -146,11 +149,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
 		void SwitchWidgets(UUserWidget* TurnOffWidget, UUserWidget* TurnOnWidget);
-	/**
-	 *
-	 */
-	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-		void PrepareSaveGameMenuWidget();
 	/**
 	 *
 	 */
@@ -167,11 +165,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
 		void SetScreenShotToImageWidget(UTextureRenderTarget2D* InScreenShot, UImage* InImage);
-	/**
-	 *Refresh()
-	 */
-	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-		void PrepareLoadGameMenuWidget();
 	/**
 	 *При выходе в меню после первого начала игры показать кнопки для сохранения и продолжения игры
 	 */

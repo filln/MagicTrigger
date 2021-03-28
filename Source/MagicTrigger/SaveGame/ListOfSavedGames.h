@@ -14,4 +14,7 @@ class MAGICTRIGGER_API UListOfSavedGames : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+
+	TArray<FString> ListOfSavedGames;
 };

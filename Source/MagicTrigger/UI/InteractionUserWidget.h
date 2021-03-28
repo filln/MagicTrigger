@@ -13,4 +13,8 @@ class MAGICTRIGGER_API UInteractionUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 	
+public:
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "InteractionUserWidget")
+		FText GetInteractionText();
 };

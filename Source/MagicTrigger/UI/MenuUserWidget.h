@@ -9,18 +9,51 @@ class UButton;
 class USpacer;
 
 /**
- * 
+ *
  */
 UCLASS()
 class MAGICTRIGGER_API UMenuUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
-	
 
 
+
+		/**
+		 * Variables
+		 */
+public:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* ResumeButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* SaveGameMenuButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* ExitButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* LoadGameMenuButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* NewGameButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		UButton* SettingsButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		USpacer* SpacerSave;
+
+	/**
+	 * Methods
+	 */
 public:
 
-	UButton* ResumeButton;
-	UButton* SaveGameMenuButton;
-	USpacer* SpacerSave;
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedResumeButton();
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedExitButton();
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedNewGameButton();
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedSaveGameMenuButton();
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedSettingsButton();
+	UFUNCTION(BlueprintCallable, Category = "MenuUserWidget")
+		void OnPressedLoadGameMenuButton();
+
+
 };

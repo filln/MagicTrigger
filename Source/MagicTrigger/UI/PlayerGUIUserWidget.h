@@ -13,4 +13,10 @@ class MAGICTRIGGER_API UPlayerGUIUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 	
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "PlayerGUIUserWidget")
+		float GetLife();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "PlayerGUIUserWidget")
+		FText GetTextLife();
 };

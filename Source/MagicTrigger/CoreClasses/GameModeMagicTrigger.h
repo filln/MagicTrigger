@@ -4,14 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "MagicTrigger\Interfaces\GameModeInterface.h"
 #include "GameModeMagicTrigger.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MAGICTRIGGER_API AGameModeMagicTrigger : public AGameModeBase
+class MAGICTRIGGER_API AGameModeMagicTrigger : public AGameModeBase, public IGameModeInterface
 {
 	GENERATED_BODY()
 	
+public:
+	AGameModeMagicTrigger();
+
+
+
 };

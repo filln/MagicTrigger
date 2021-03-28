@@ -6,22 +6,25 @@
 #include "ListOfSavedGamesUserWidget.generated.h"
 
 class UImage;
+class UScrollBox;
 
 /**
- * 
+ *
  */
 UCLASS()
 class MAGICTRIGGER_API UListOfSavedGamesUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
-	
+
 
 public:
-	UImage* ScreenShotImage;
-
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ListOfSavedGamesUserWidget")
+		UImage* ScreenShotImage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ListOfSavedGamesUserWidget")
+		UScrollBox* ListOfSavedGamesScrollBox;
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "ListOfSavedGamesUserWidget")
-	void Refresh();
+		void Refresh();
 
 };

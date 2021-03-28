@@ -205,7 +205,7 @@ void AEnemyAIController::TargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimu
 	//Не используем GetPlayerCharacter(), т.к. в начале игры может дать невалидную ссылку.
 	if (!Cast<APlayerCharacterMagicTrigger>(Actor))
 	{
-		DEBUGMESSAGE("!Cast<APlayerCharacterMagicTrigger>(Actor)");
+		//DEBUGMESSAGE("!Cast<APlayerCharacterMagicTrigger>(Actor)");
 		return;
 	}
 

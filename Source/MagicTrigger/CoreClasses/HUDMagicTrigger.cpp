@@ -3,7 +3,7 @@
 
 #include "HUDMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
+
 #include "MagicTrigger\Interfaces\GameInstanceInterface.h"
 #include "MagicTrigger\SaveGame\PlayerStateSaveGame.h"
 
@@ -18,13 +18,19 @@
 #include "MagicTrigger\UI\SavedGameUserWidget.h"
 #include "MagicTrigger\UI\Settings\SettingsMenuUserWidget.h"
 #include "MagicTrigger\UI\Settings\ControlUserWidget.h"
-#include "MagicTrigger\UI\ListOfSavedGamesUserWidget.h"
+#include "MagicTrigger\UI\ListOfSavedGamesUserWidget.h" //SwitchSavedGames()
 
 #include "Kismet\GameplayStatics.h"
 #include "Kismet\KismetMathLibrary.h"
 #include "Kismet\KismetMaterialLibrary.h"
-#include "GameFramework/Character.h"
-#include "Components\EditableTextBox.h"
+
+#include "Components\CheckBox.h"
+#include "Components\TextBlock.h"
+#include "Components\Button.h"
+#include "Components\Spacer.h"
+#include "Components\Image.h"	//SwitchSavedGames()
+#include "Engine\TextureRenderTarget2D.h"
+
 
 
 AHUDMagicTrigger::AHUDMagicTrigger()
@@ -38,6 +44,7 @@ AHUDMagicTrigger::AHUDMagicTrigger()
 	MenuUserWidgetClass = UMenuUserWidget::StaticClass();
 	InteractionUserWidgetClass = UInteractionUserWidget::StaticClass();
 	SaveGameMenuUserWidgetClass = USaveGameMenuUserWidget::StaticClass();
+	SavedGameUserWidgetClass = USavedGameUserWidget::StaticClass();
 	LoadGameMenuUserWidgetClass = ULoadGameMenuUserWidget::StaticClass();
 	SettingsMenuUserWidgetClass = USettingsMenuUserWidget::StaticClass();
 	ControlUserWidgetClass = UControlUserWidget::StaticClass();
@@ -200,20 +207,6 @@ void AHUDMagicTrigger::SwitchWidgets(UUserWidget* TurnOffWidget, UUserWidget* Tu
 	SetShowWidget(true, TurnOnWidget, 1);
 }
 
-void AHUDMagicTrigger::PrepareSaveGameMenuWidget()
-{
-	this->SaveGameMenuUserWidget->ListOfSavedGamesUserWidget->Refresh();
-	if (!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->PlayerCharacter))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->PlayerCharacter)");
-		return;
-	}
-
-	UTextureRenderTarget2D* ScreenShot = IPlayerCharacterInterface::Execute_CreateScreenShot_IF(this->PlayerCharacter);
-	UImage* Image = this->SaveGameMenuUserWidget->ScreenShotOfCurrentSaveGame;
-	SetScreenShotToImageWidget(ScreenShot, Image);
-	this->SaveGameMenuUserWidget->NameOfCurrentSaveGame->SetText(this->CurrentDateTime);
-}
 
 FText AHUDMagicTrigger::GetCurrentDateTime()
 {
@@ -230,7 +223,7 @@ FText AHUDMagicTrigger::GetCurrentDateTime()
 	FString Time = Hour.Append("_").Append(Minute).Append("_").Append(Second);
 	FString DateTime = Date.Append("__").Append(Time);
 
-	return FText.AsCultureInvariant(DateTime);
+	return FText::FromString(DateTime);
 }
 
 void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSavedGameUserWidget)
@@ -254,7 +247,7 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 		//Загрузка и показ скриншота игры. Ссылка на скриншот из сохраненной игры невалидна после перезапуска игры
 		FText TextOfLoadingGame = InSavedGameUserWidget->NameOfSavedGame->GetText();
 		FString StringOfLoadingGame = TextOfLoadingGame.ToString();
-		UPlayerStateSaveGame* PlayerStateSaveGame = IGameInstanceInterface::LoadGamesData_IF(this->GameInstance, StringOfLoadingGame);
+		UPlayerStateSaveGame* PlayerStateSaveGame = IGameInstanceInterface::Execute_LoadGamesData_IF(this->GameInstance, StringOfLoadingGame);
 		if (!PlayerStateSaveGame)
 		{
 			DEBUGMESSAGE("!PlayerStateSaveGame");
@@ -290,11 +283,6 @@ void AHUDMagicTrigger::SetScreenShotToImageWidget(UTextureRenderTarget2D* InScre
 	UMaterialInstanceDynamic* ScreenShotMaterialDynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), this->ScreenShotMaterial); 
 	ScreenShotMaterialDynamic->SetTextureParameterValue(FName(TEXT("Texture")), InScreenShot);
 	InImage->Brush.SetResourceObject(ScreenShotMaterialDynamic);
-}
-
-void AHUDMagicTrigger::PrepareLoadGameMenuWidget()
-{
-	this->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget->Refresh();
 }
 
 void AHUDMagicTrigger::SetVisibleToButtons()
@@ -346,6 +334,7 @@ void AHUDMagicTrigger::ShowPlayerGUIWidget()
 
 void AHUDMagicTrigger::SetEnemy_IF_Implementation(AActor* InEnemy)
 {
+	this->Enemy = InEnemy;
 }
 
 AActor* AHUDMagicTrigger::GetEnemy_IF_Implementation() const

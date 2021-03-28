@@ -7,7 +7,7 @@
 #include "GameModeInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(Blueprintable, Category = "GameModeInterface")
 class UGameModeInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -22,4 +22,7 @@ class MAGICTRIGGER_API IGameModeInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameModeInterface")
+
 };

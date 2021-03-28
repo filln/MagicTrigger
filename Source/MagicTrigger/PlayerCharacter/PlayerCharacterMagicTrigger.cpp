@@ -61,6 +61,10 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
+	AutoReceiveInput = EAutoReceiveInput::Player0;
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	AIControllerClass = nullptr;
 
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
@@ -595,7 +599,7 @@ void APlayerCharacterMagicTrigger::WatchEnemies_InAct(FKey InputKey)
 	TArray<TSubclassOf<AActor>> ClassesFilter;
 	ClassesFilter.Add(AEnemyCharacterMagicTrigger::StaticClass());
 	TArray<TSubclassOf<AActor>> ClassesFilterException;
-	TSubclassOf<UTargetSelectionInterface> InterfaceFilter;
+	TSubclassOf<UTargetSelectionInterface> InterfaceFilter = UTargetSelectionInterface::StaticClass();
 
 	this->TargetSelectionComponent->WatchActors(ClassesFilter, ClassesFilterException, InterfaceFilter, InputKey);
 
@@ -615,7 +619,7 @@ void APlayerCharacterMagicTrigger::WatchEnemies_InAct(FKey InputKey)
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->TargetSelectionComponent->GetObservedActor())");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->TargetSelectionComponent->GetObservedActor())");
 		return;
 	}
 

@@ -297,8 +297,7 @@ void AEnemyCharacterMagicTrigger::IsObserved_Implementation()
 	}
 	else
 	{
-		//APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		APlayerController* PlayerController = GetController<APlayerController>();
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (!PlayerController)
 		{
 			DEBUGMESSAGE("!PlayerController");

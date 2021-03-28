@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
 #include "PlayerStateSaveGame.generated.h"
 
 class UTextureRenderTarget2D;
@@ -18,5 +19,22 @@ class MAGICTRIGGER_API UPlayerStateSaveGame : public USaveGame
 	
 public:
 	UTextureRenderTarget2D* ScreenShot;
+	FVector PlayerLocation;
+	FName LevelName;
+	FPlayerStateMagicTriggerStruct StatesStruct;
 
+
+public:
+	/**
+	 * 
+	 */
+	void SetStates(FVector InPlayerLocation, UTextureRenderTarget2D* InScreenShot, FName InLevelName, FPlayerStateMagicTriggerStruct InStatesStruct);
+	/**
+	 * 
+	 */
+	FPlayerStateMagicTriggerStruct GetStates() const;
+	/**
+	 * 
+	 */
+	FVector GetPlayerLocation() const;
 };

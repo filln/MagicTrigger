@@ -10,16 +10,33 @@ class UButton;
 class USpacer;
 
 /**
- * 
+ *
  */
 UCLASS()
 class MAGICTRIGGER_API ULoadGameMenuUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
-	
+
 public:
-	UListOfSavedGamesUserWidget* ListOfSavedGamesUserWidget;
-	UButton* ResumeButton;
-	USpacer* ResumeGameSpacer0;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LoadGameMenuUserWidget")
+		UListOfSavedGamesUserWidget* ListOfSavedGamesUserWidget;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LoadGameMenuUserWidget")
+		UButton* ResumeButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LoadGameMenuUserWidget")
+		UButton* BackMenuButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LoadGameMenuUserWidget")
+		UButton* LoadButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LoadGameMenuUserWidget")
+		USpacer* ResumeGameSpacer0;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "LoadGameMenuUserWidget")
+		bool CheckLastSavedGame();
+	UFUNCTION(BlueprintCallable, Category = "LoadGameMenuUserWidget")
+		void OnPressedBackMenuButton();
+	UFUNCTION(BlueprintCallable, Category = "LoadGameMenuUserWidget")
+		void OnPressedResumeButton();
+	UFUNCTION(BlueprintCallable, Category = "LoadGameMenuUserWidget")
+		void OnPressedLoadButton();
 
 };
