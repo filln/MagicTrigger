@@ -6,7 +6,6 @@
 #include "MagicTrigger\UI\MenuUserWidget.h"
 #include "MagicTrigger\UI\Settings\ControlUserWidget.h"
 
-
 void USettingsMenuUserWidget::OnPressedBackMenuButton()
 {
 	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->MenuUserWidget);
@@ -19,5 +18,6 @@ void USettingsMenuUserWidget::OnPressedResumeButton()
 
 void USettingsMenuUserWidget::OnPressedControlButton()
 {
+	this->HUDMagicTrigger->ControlUserWidget->SetSliderValue();
 	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->ControlUserWidget);
 }

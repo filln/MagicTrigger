@@ -15,6 +15,9 @@ class MAGICTRIGGER_API USavedGameUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 
+protected:
+
+	virtual void NativeOnInitialized() override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SavedGameUserWidget")

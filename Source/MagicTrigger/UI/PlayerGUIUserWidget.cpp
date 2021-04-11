@@ -11,6 +11,16 @@
 
 float UPlayerGUIUserWidget::GetLife()
 {
+	if (!this->HUDMagicTrigger)
+	{
+		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		return 0;
+	}
+	if (!this->HUDMagicTrigger->PlayerCharacter)
+	{
+		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerCharacter");
+		return 0;
+	}
 	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
 	{
 		//DEBUGMESSAGE("!IsInterfaceImplementedBy(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState())");
@@ -30,6 +40,16 @@ float UPlayerGUIUserWidget::GetLife()
 
 FText UPlayerGUIUserWidget::GetTextLife()
 {
+	if (!this->HUDMagicTrigger)
+	{
+		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		return FText();
+	}
+	if (!this->HUDMagicTrigger->PlayerCharacter)
+	{
+		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerCharacter");
+		return FText();
+	}
 	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
 	{
 		//DEBUGMESSAGE("!IsInterfaceImplementedBy(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState())");

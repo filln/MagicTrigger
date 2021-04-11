@@ -16,8 +16,9 @@ class MAGICTRIGGER_API UMenuUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 
-
-
+protected:
+	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 		/**
 		 * Variables
 		 */
@@ -36,7 +37,11 @@ public:
 		UButton* SettingsButton;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
 		USpacer* SpacerSave;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "MenuUserWidget")
+		USpacer* SpacerLoad;
 
+private:
+	FTimerHandle CheckHUDTimer;
 	/**
 	 * Methods
 	 */

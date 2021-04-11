@@ -11,10 +11,12 @@
 #include "MagicTrigger\PlayerCharacter\UpDownLiftingItemComponent.h"
 #include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger\Data\DebugMessage.h"
 #include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
 #include "MagicTrigger\Items\ThrowableRock.h"
 #include "MagicTrigger\AttackAbilities\SevenfoldShere.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger\SaveGame\SaveGameManager.h"
+#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
 #include "TargetSelectionComponent.h"
 
 #include "MagicTrigger\Interfaces\HUDInterface.h"
@@ -233,7 +235,15 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 void APlayerCharacterMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->SaveGameManager->PlayerCharacter = this;
+	}
+	else
+	{
+		DEBUGMESSAGE("!GameInstance");
+	}
 	if (GetWorld())
 	{
 		this->PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);

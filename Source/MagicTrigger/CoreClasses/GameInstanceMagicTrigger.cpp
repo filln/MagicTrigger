@@ -5,79 +5,76 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
+//#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
 
-#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
-#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
-#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
+//#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
+//#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
 #include "MagicTrigger\Interfaces\HUDInterface.h"
 
 #include "MagicTrigger\SaveGame\ListOfSavedGames.h"
-#include "MagicTrigger\SaveGame\PlayerStateSaveGame.h"
-
+#include "MagicTrigger\SaveGame\SaveGameMT.h"
+#include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
+#include "MagicTrigger\SaveGame\SaveGameManager.h"
+#include "MagicTrigger\UI\LoadingUserWidget.h"
 #include "GameFramework\PlayerController.h"
-#include "GameFramework\Character.h"
-#include "GameFramework\PlayerState.h"
+//#include "GameFramework\Character.h"
+//#include "GameFramework\PlayerState.h"
 #include "GameFramework\HUD.h"
+//#include "GameFramework\GameMode.h"
 
-class UTextureRenderTarget2D;
+//class UTextureRenderTarget2D;
 
 UGameInstanceMagicTrigger::UGameInstanceMagicTrigger()
 {
 	GamesListName = FString(TEXT("DefaultGamesListName170520191208"));
-	GameSettingsStruct.MouseSensitivity = 1.1;
-	SaveGameClass = UPlayerStateSaveGame::StaticClass();
+	GameSettingsName = FString(TEXT("DefaultGameSettingsSaveName01042021"));
+	GameSettingsStruct = FGameSettingsStruct();
+
+
+	LoadingUserWidgetClass = ULoadingUserWidget::StaticClass();
+}
+
+void UGameInstanceMagicTrigger::Init()
+{
+	Super::Init();
+	SaveGameManager = NewObject<USaveGameManager>(this, USaveGameManager::StaticClass(), FName(TEXT("SaveGameManager")));
+	SaveGameManager->GameInstance = this;
+	this->LoadingUserWidget = CreateWidget<ULoadingUserWidget>(this, LoadingUserWidgetClass, FName(TEXT("LoadingUserWidget")));
+	//DEBUGMESSAGE("Init()");
+}
+
+void UGameInstanceMagicTrigger::Shutdown()
+{
+	SaveGameSettings();
+	//DEBUGMESSAGE("Shutdown()");
+	Super::Shutdown();
 }
 
 bool UGameInstanceMagicTrigger::SaveCurrentGame(const FString& NameOfSaveGame)
 {
-	//////////////////////////////////////////////////////////////////////////Check
-	ACharacter* PlayerCharacterTmp = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!PlayerCharacterTmp)
-	{
-		DEBUGMESSAGE("!PlayerCharacterTmp");
-		return false;
-	}
-	APlayerState* PlayerStateTmp = PlayerCharacterTmp->GetPlayerState();
-	if (!PlayerStateTmp)
-	{
-		DEBUGMESSAGE("!PlayerStateTmp");
-		return false;
-	}
-	if (!IsInterfaceImplementedBy<IPlayerCharacterInterface>(PlayerCharacterTmp))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(PlayerCharacterTmp)");
-		return false;
-	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerStateTmp))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerStateTmp)");
-		return false;
-	}
-	//////////////////////////////////////////////////////////////////////////
-
 	if (UGameplayStatics::DoesSaveGameExist(NameOfSaveGame, 0))
 	{
 		DEBUGMESSAGE("UGameplayStatics::DoesSaveGameExist(). Игра с таким именем уже существует.");
 		return false;
 	}
 
-	UPlayerStateSaveGame* SaveGameTmp = Cast<UPlayerStateSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+	USaveGameMT* SaveGameTmp = Cast<USaveGameMT>(UGameplayStatics::CreateSaveGameObject(USaveGameMT::StaticClass()));
 	if (!SaveGameTmp)
 	{
 		DEBUGMESSAGE("!SaveGameTmp");
 		return false;
 	}
-	FPlayerStateMagicTriggerStruct StatesTmp = IPlayerStateInterface::Execute_GetStates_IF(PlayerStateTmp);
-	UTextureRenderTarget2D* ScreenShotTmp = IPlayerCharacterInterface::Execute_CreateScreenShot_IF(PlayerCharacterTmp);
-	SaveGameTmp->SetStates(PlayerCharacterTmp->GetActorLocation(), ScreenShotTmp, GetNameOfCurrentLevel(), StatesTmp);
+	this->SaveGameManager->SaveAll(SaveGameTmp);
+
 	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, NameOfSaveGame, 0);
 
 	return bGameSaved;
 }
 
-bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGame)
+bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGame, TArray<FString>& InGamesList)
 {
+	//DEBUGSTRING(NameOfSaveGame);
+	bool bGameSaved;
 	if (UGameplayStatics::DoesSaveGameExist(this->GamesListName, 0))
 	{
 		USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GamesListName, 0);
@@ -88,8 +85,11 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 			return false;
 		}
 		ListTmp->ListOfSavedGames.Add(NameOfSaveGame);
-		bool bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
-		return bGameSaved;
+		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+		if (bGameSaved)
+		{
+			InGamesList = ListTmp->ListOfSavedGames;
+		}
 	}
 	else
 	{
@@ -102,12 +102,16 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 		TArray<FString> NamesListTmp;
 		NamesListTmp.Add(NameOfSaveGame);
 		ListTmp->ListOfSavedGames = NamesListTmp;
-		bool bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
-		return bGameSaved;
+		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+		if (bGameSaved)
+		{
+			InGamesList = NamesListTmp;
+		}
 	}
 
-	return false;
+	return bGameSaved;
 }
+
 
 bool UGameInstanceMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList)
 {
@@ -124,13 +128,17 @@ bool UGameInstanceMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGames
 		DEBUGMESSAGE("!ListTmp");
 		return false;
 	}
-
+	if (!(ListTmp->ListOfSavedGames).Num())
+	{
+		DEBUGMESSAGE("!(ListTmp->ListOfSavedGames).Num()");
+		return false;
+	}
 	InSavedGamesNamesList = ListTmp->ListOfSavedGames;
 
 	return true;
 }
 
-UPlayerStateSaveGame* UGameInstanceMagicTrigger::LoadGamesData(const FString& NameOfLoadGame)
+USaveGameMT* UGameInstanceMagicTrigger::LoadGamesData(const FString& NameOfLoadGame)
 {
 	if (!UGameplayStatics::DoesSaveGameExist(NameOfLoadGame, 0))
 	{
@@ -138,14 +146,14 @@ UPlayerStateSaveGame* UGameInstanceMagicTrigger::LoadGamesData(const FString& Na
 		return nullptr;
 	}
 	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(NameOfLoadGame, 0);
-	UPlayerStateSaveGame* StatesTmp = Cast<UPlayerStateSaveGame>(SaveGameTmp);
-	if (!StatesTmp)
+	USaveGameMT* SaveGameMTTmp = Cast<USaveGameMT>(SaveGameTmp);
+	if (!SaveGameMTTmp)
 	{
-		DEBUGMESSAGE("!StatesTmp");
+		DEBUGMESSAGE("!SaveGameMTTmp");
 		return nullptr;
 	}
 
-	return StatesTmp;
+	return SaveGameMTTmp;
 }
 
 FName UGameInstanceMagicTrigger::GetNameOfCurrentLevel()
@@ -188,6 +196,12 @@ FString UGameInstanceMagicTrigger::ReplaceSpecSymbols(const FString& NameOfSaveG
 
 bool UGameInstanceMagicTrigger::DeleteSaveGame(const FString& NameOfDeleteGame)
 {
+	if (!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0))
+	{
+		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0)");
+		return false;
+	}
+
 	bool bDeleted = UGameplayStatics::DeleteGameInSlot(NameOfDeleteGame, 0);
 	if (!bDeleted)
 	{
@@ -196,13 +210,8 @@ bool UGameInstanceMagicTrigger::DeleteSaveGame(const FString& NameOfDeleteGame)
 	return bDeleted;
 }
 
-bool UGameInstanceMagicTrigger::DeleteNameFromGamesList(const FString& NameOfDeleteGame)
+bool UGameInstanceMagicTrigger::DeleteNameFromGamesList(const FString& NameOfDeleteGame, TArray<FString>& InGamesList)
 {
-	if (!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0))
-	{
-		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0)");
-		return false;
-	}
 	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GamesListName, 0);
 	UListOfSavedGames* ListTmp = Cast<UListOfSavedGames>(SaveGameTmp);
 	if (!ListTmp)
@@ -218,25 +227,31 @@ bool UGameInstanceMagicTrigger::DeleteNameFromGamesList(const FString& NameOfDel
 	}
 
 	bool bSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+	if (bSaved)
+	{
+		InGamesList = ListTmp->ListOfSavedGames;
+	}
 
 	return bSaved;
 }
 
-void UGameInstanceMagicTrigger::MainSaveGame(const FString& NameOfSaveGame)
+bool UGameInstanceMagicTrigger::MainSaveGame(const FString& NameOfSaveGame, TArray<FString>& InGamesList)
 {
-	FString ReplacedName = ReplaceSpecSymbols(NameOfSaveGame);
-	bool bSavedGame = SaveCurrentGame(NameOfSaveGame);
+	FString ReplacedName = ReplaceSpecSymbols(NameOfSaveGame);//NameOfSaveGame;
+	bool bSavedGame = SaveCurrentGame(ReplacedName);
 	if (!bSavedGame)
 	{
 		DEBUGMESSAGE("!bSavedGame");
-		return;
+		return false;
 	}
-	bool bSavedGameName = SaveNameToGamesList(NameOfSaveGame);
+	bool bSavedGameName = SaveNameToGamesList(ReplacedName, InGamesList);
 	if (!bSavedGameName)
 	{
 		DEBUGMESSAGE("!bSavedGameName");
-		return;
+		return false;
 	}
+
+	return true;
 }
 
 void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
@@ -254,46 +269,40 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 		DEBUGMESSAGE("!HUD");
 		return;
 	}
-	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!PlayerCharacter)
-	{
-		DEBUGMESSAGE("!PlayerCharacter");
-		return;
-	}
-	APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
-	if (!PlayerState)
-	{
-		DEBUGMESSAGE("!PlayerState");
-		return;
-	}
 	if (!IsInterfaceImplementedBy<IHUDInterface>(HUD))
 	{
 		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerState))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerState)");
-		return;
-	}
 	//////////////////////////////////////////////////////////////////////////
-
-	this->CurrentStateOfPlayersSaveGame = nullptr;
-	this->CurrentStateOfPlayersSaveGame = LoadGamesData(NameOfLoadGame);
-	if (!this->CurrentStateOfPlayersSaveGame)
+	this->CurrentLoadingGame = LoadGamesData(NameOfLoadGame);
+	if (!CurrentLoadingGame)
 	{
-		DEBUGMESSAGE("!this->CurrentStateOfPlayersSaveGame");
+		DEBUGMESSAGE("!CurrentLoadingGame");
 		return;
 	}
 
 	IHUDInterface::Execute_HideLoadGameMenuWidget_IF(HUD);
-	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level1")), true, FString());
-	FPlayerStateMagicTriggerStruct States = this->CurrentStateOfPlayersSaveGame->GetStates();
-	FVector PlayerLocation = this->CurrentStateOfPlayersSaveGame->GetPlayerLocation();
-	IPlayerStateInterface::Execute_SetStates_IF(PlayerState, States);
-	FHitResult OutSweepHitResult;
-	PlayerCharacter->SetActorLocation(PlayerLocation, false, &OutSweepHitResult, ETeleportType::None);
-	IHUDInterface::Execute_HideLoadingWidget_IF(HUD);
+	UGameplayStatics::OpenLevel(GetWorld(), this->CurrentLoadingGame->LevelName);
+	FTimerHandle* TmpTimer = &(this->LoadingGameTimer);
+	FTimerDelegate TmpDelegate;
+	USaveGameManager* SaveGameManagerLoc = this->SaveGameManager;
+	bool* bLevelLoadedRef = &(this->bLevelLoaded);
+	USaveGameMT* LoadingGameTmp = this->CurrentLoadingGame;
+	TmpDelegate.BindLambda
+	(
+		[=]
+	()
+	{
+		if (*bLevelLoadedRef)
+		{
+			SaveGameManagerLoc->LoadAll(LoadingGameTmp);
+			*bLevelLoadedRef = false;
+			GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(this->LoadingGameTimer, TmpDelegate, 0.1, true, 3);
 }
 
 void UGameInstanceMagicTrigger::BeginNewGame()
@@ -311,53 +320,152 @@ void UGameInstanceMagicTrigger::BeginNewGame()
 		DEBUGMESSAGE("!HUD");
 		return;
 	}
-	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!PlayerCharacter)
-	{
-		DEBUGMESSAGE("!PlayerCharacter");
-		return;
-	}
-	APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
-	if (!PlayerState)
-	{
-		DEBUGMESSAGE("!PlayerState");
-		return;
-	}
 	if (!IsInterfaceImplementedBy<IHUDInterface>(HUD))
 	{
 		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerState))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerState)");
-		return;
-	}
 	//////////////////////////////////////////////////////////////////////////
 
 	IHUDInterface::Execute_HideMenuWidget_IF(HUD);
-	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level1")), true, FString());
-	FPlayerStateMagicTriggerStruct States = IPlayerStateInterface::Execute_GetBeginGameStates_IF(PlayerState);
-	IPlayerStateInterface::Execute_SetStates_IF(PlayerState, States);
+	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level1")));
+	//FPlayerStateMagicTriggerStruct States = IPlayerStateInterface::Execute_GetBeginGameStates_IF(PlayerState);
+	//IPlayerStateInterface::Execute_SetStates_IF(PlayerState, States);
+
+	FTimerHandle* TmpTimer = &(this->BeginNewGameTimer);
+	ULoadingUserWidget* LoadingUserWidgetTmp = this->LoadingUserWidget;
+	FTimerDelegate TmpDelegate;
+	bool* bLevelLoadedRef = &(this->bLevelLoaded);
+	TmpDelegate.BindLambda
+	(
+		[=]
+	()
+	{
+		if (*bLevelLoadedRef)
+		{
+			if (GetWorld())
+			{
+				APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+				if (PlayerController)
+				{
+					AHUD* HUD = PlayerController->GetHUD();
+					if (HUD)
+					{
+						if (IsInterfaceImplementedBy<IHUDInterface>(HUD))
+						{
+							//DEBUGMESSAGE("IsInterfaceImplementedBy<IHUDInterface>(HUD)");
+							if (LoadingUserWidgetTmp)
+							{
+								LoadingUserWidgetTmp->RemoveFromParent();
+							}
+							IHUDInterface::Execute_ShowPlayerGUIWidget_IF(HUD);
+							IHUDInterface::Execute_SetInputMode_IF(HUD, EInputMode::EIM_GameOnly);
+
+							*bLevelLoadedRef = false;
+						}
+						else
+						{
+							DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
+						}
+					}
+					else
+					{
+						DEBUGMESSAGE("!HUD");
+					}
+				}
+				else
+				{
+					DEBUGMESSAGE("!PlayerController");
+				}
+			}
+			else
+			{
+				DEBUGMESSAGE("!GetWorld()");
+			}
+			*bLevelLoadedRef = false;
+			GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
+		}
+	}
+	);
+
+	GetWorld()->GetTimerManager().SetTimer(this->BeginNewGameTimer, TmpDelegate, 0.1, true, 3);
 }
 
-void UGameInstanceMagicTrigger::MainDeleteGame(const FString& NameOfDeleteGame)
+bool UGameInstanceMagicTrigger::MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList)
 {
 	bool bGameDeleted = DeleteSaveGame(NameOfDeleteGame);
 	if (!bGameDeleted)
 	{
 		DEBUGMESSAGE("!bGameDeleted");
-		return;
+		return false;
 	}
-	bool bNameDeleted = DeleteNameFromGamesList(NameOfDeleteGame);
+	bool bNameDeleted = DeleteNameFromGamesList(NameOfDeleteGame, InGamesList);
 	if (!bNameDeleted)
 	{
 		DEBUGMESSAGE("!bNameDeleted");
-		return;
+		return false;
 	}
+	return true;
 }
 
-UPlayerStateSaveGame* UGameInstanceMagicTrigger::LoadGamesData_IF_Implementation(FString& NameOfLoadGame)
+void UGameInstanceMagicTrigger::SaveGameSettings()
+{
+	if (UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0))
+	{
+		bool bDeleted = UGameplayStatics::DeleteGameInSlot(this->GameSettingsName, 0);
+		if (!bDeleted)
+		{
+			DEBUGMESSAGE("!bDeleted");
+			return;
+		}
+	}
+
+	UGameSettingsSaveGameMT* SaveGameTmp = Cast<UGameSettingsSaveGameMT>(UGameplayStatics::CreateSaveGameObject(UGameSettingsSaveGameMT::StaticClass()));
+	if (!SaveGameTmp)
+	{
+		DEBUGMESSAGE("!SaveGameTmp");
+		return;
+	}
+	this->SaveGameManager->SaveGameSettings(SaveGameTmp);
+	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, this->GameSettingsName, 0);
+
+	if (!bGameSaved)
+	{
+		DEBUGMESSAGE("!bGameSaved");
+	}
+
+}
+
+void UGameInstanceMagicTrigger::LoadGameSettings()
+{
+	if (!UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0))
+	{
+		//DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0)");
+		ResetGameSettings();
+		return;
+	}
+	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GameSettingsName, 0);
+	UGameSettingsSaveGameMT* SaveGameMTTmp = Cast<UGameSettingsSaveGameMT>(SaveGameTmp);
+	if (!SaveGameMTTmp)
+	{
+		DEBUGMESSAGE("!SaveGameMTTmp");
+		return;
+	}
+	if (!this->SaveGameManager)
+	{
+		DEBUGMESSAGE("!this->SaveGameManager");
+		return;
+	}
+	this->SaveGameManager->LoadGameSettings(SaveGameMTTmp);
+
+}
+
+void UGameInstanceMagicTrigger::ResetGameSettings()
+{
+	this->SaveGameManager->ResetGameSettings();
+}
+
+USaveGameMT* UGameInstanceMagicTrigger::LoadGamesData_IF_Implementation(FString& NameOfLoadGame)
 {
 	return LoadGamesData(NameOfLoadGame);
 }
@@ -377,9 +485,9 @@ void UGameInstanceMagicTrigger::SetMouseSensitivity_IF_Implementation(float Mous
 	this->GameSettingsStruct.MouseSensitivity = MouseSensitivity;
 }
 
-void UGameInstanceMagicTrigger::LoadGamesList_IF_Implementation(TArray<FString>& InGamesList)
+bool UGameInstanceMagicTrigger::LoadGamesList_IF_Implementation(TArray<FString>& InGamesList)
 {
-	LoadGamesNamesList(InGamesList);
+	return LoadGamesNamesList(InGamesList);
 }
 
 void UGameInstanceMagicTrigger::MainLoadGame_IF_Implementation(FString& InNameOfLoadGame)
@@ -387,17 +495,82 @@ void UGameInstanceMagicTrigger::MainLoadGame_IF_Implementation(FString& InNameOf
 	MainLoadGame(InNameOfLoadGame);
 }
 
-void UGameInstanceMagicTrigger::MainSaveGame_IF_Implementation(FString& InNameOfSaveGame)
+bool UGameInstanceMagicTrigger::MainSaveGame_IF_Implementation(FString& InNameOfSaveGame, TArray<FString>& InGamesList)
 {
-	MainSaveGame(InNameOfSaveGame);
+	return MainSaveGame(InNameOfSaveGame, InGamesList);
 }
 
-void UGameInstanceMagicTrigger::MainDeleteGame_IF_Implementation(FString& InNameOfDeleteGame)
+bool UGameInstanceMagicTrigger::MainDeleteGame_IF_Implementation(FString& InNameOfDeleteGame, TArray<FString>& InGamesList)
 {
-	MainDeleteGame(InNameOfDeleteGame);
+	return MainDeleteGame(InNameOfDeleteGame, InGamesList);
 }
 
 void UGameInstanceMagicTrigger::BeginNewGame_IF_Implementation()
 {
 	BeginNewGame();
+}
+
+void UGameInstanceMagicTrigger::SetLevelLoadedTrue_IF_Implementation()
+{
+	this->bLevelLoaded = true;
+}
+
+void UGameInstanceMagicTrigger::SaveGameSettings_IF_Implementation()
+{
+	SaveGameSettings();
+}
+
+void UGameInstanceMagicTrigger::ResetGameSettings_IF_Implementation()
+{
+	ResetGameSettings();
+}
+
+void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
+{
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		DEBUGMESSAGE("!World");
+	}
+
+	FTimerDelegate TmpDelegate;
+	FTimerHandle* TmpTimer = &(this->BeginNewGameTimer);
+	TmpDelegate.BindLambda
+	(
+		[=]
+	()
+	{
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
+		if (PlayerController)
+		{
+			AHUD* HUD = PlayerController->GetHUD();
+			if (IsInterfaceImplementedBy<IHUDInterface>(HUD))
+			{
+				if (IHUDInterface::Execute_CheckMenuUserWidget_IF(HUD))
+				{
+					IHUDInterface::Execute_ShowGameMenu_IF(HUD);
+					GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
+				}
+			}
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(this->BeginNewGameTimer, TmpDelegate, 0.1, true);
+}
+
+FString UGameInstanceMagicTrigger::GetGamesListName_IF_Implementation()
+{
+	return this->GamesListName;
+}
+
+void UGameInstanceMagicTrigger::ShowLoadingUserWidget_IF_Implementation()
+{
+	if (this->LoadingUserWidget)
+	{
+		this->LoadingUserWidget->AddToViewport(0);
+	}
+	else
+	{
+		DEBUGMESSAGE("!this->LoadingUserWidget");
+	}
 }

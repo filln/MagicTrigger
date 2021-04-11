@@ -1,6 +1,6 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Для настроек игры и их сохранения.
+ * Для настроек игры и их сохранения. Используется в GameInstance для сохранения дефолтных настроек.
  */
 
 #pragma once

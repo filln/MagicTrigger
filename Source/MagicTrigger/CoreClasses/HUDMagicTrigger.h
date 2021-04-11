@@ -11,7 +11,6 @@
 
 class UPlayerGUIUserWidget;
 class UObserveEnemyUserWidget;
-class ULoadingUserWidget;
 class UMenuUserWidget;
 class UInteractionUserWidget;
 class USaveGameMenuUserWidget;
@@ -53,8 +52,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<UObserveEnemyUserWidget> ObserveEnemyUserWidgetClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
-		TSubclassOf<ULoadingUserWidget> LoadingUserWidgetClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<UMenuUserWidget> MenuUserWidgetClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 		TSubclassOf<UInteractionUserWidget> InteractionUserWidgetClass;
@@ -77,8 +74,6 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 		UObserveEnemyUserWidget* ObserveEnemyUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
-		ULoadingUserWidget* LoadingUserWidget;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 		UMenuUserWidget* MenuUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 		UInteractionUserWidget* InteractionUserWidget;
@@ -92,6 +87,7 @@ public:
 		USettingsMenuUserWidget* SettingsMenuUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 		UControlUserWidget* ControlUserWidget;
+	//////////////////////////////////////////////////////////////////////////
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|CoreClasses")
 		APlayerController* PlayerController;
@@ -174,11 +170,6 @@ public:
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-		void HideLoadingWidget();
-	/**
-	 *
-	 */
-	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
 		void HideLoadGameMenuWidget();
 	/**
 	 *
@@ -216,9 +207,6 @@ public:
 		AActor* GetEnemy_IF() const;
 	virtual AActor* GetEnemy_IF_Implementation() const override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
-		void HideLoadingWidget_IF();
-	virtual void HideLoadingWidget_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideLoadGameMenuWidget_IF();
 	virtual void HideLoadGameMenuWidget_IF_Implementation() override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
@@ -239,6 +227,18 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideInteractionWidget_IF();
 	virtual void HideInteractionWidget_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void SetInputMode_IF(EInputMode InInputMode);
+	virtual void SetInputMode_IF_Implementation(EInputMode InInputMode) override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void ShowGameMenu_IF();
+	virtual void ShowGameMenu_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		bool CheckMenuUserWidget_IF();
+	virtual bool CheckMenuUserWidget_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void ShowPlayerGUIWidget_IF();
+	virtual void ShowPlayerGUIWidget_IF_Implementation() override;
 
 	/**
 	 * BeginplayInterface

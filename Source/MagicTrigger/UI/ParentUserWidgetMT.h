@@ -18,7 +18,7 @@ class MAGICTRIGGER_API UParentUserWidgetMT : public UUserWidget
 	
 public:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParentUserWidgetMT")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ParentUserWidgetMT")
 		AHUDMagicTrigger* HUDMagicTrigger;
 
 public:

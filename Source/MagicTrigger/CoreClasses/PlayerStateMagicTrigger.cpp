@@ -5,6 +5,11 @@
 
 
 #include "PlayerStateMagicTrigger.h"
+#include "MagicTrigger\SaveGame\SaveGameManager.h"
+#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
+#include "MagicTrigger\Data\DebugMessage.h"
+#include "Kismet\GameplayStatics.h"
+
 
 APlayerStateMagicTrigger::APlayerStateMagicTrigger()
 {
@@ -20,6 +25,21 @@ APlayerStateMagicTrigger::APlayerStateMagicTrigger()
 	MultiplierOfDamage = 1;
 
 	BeginGameStates = FPlayerStateMagicTriggerStruct();
+}
+
+void APlayerStateMagicTrigger::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->SaveGameManager->PlayerState = this;
+	}
+	else
+	{
+		DEBUGMESSAGE("!GameInstance");
+	}
 }
 
 FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates() const

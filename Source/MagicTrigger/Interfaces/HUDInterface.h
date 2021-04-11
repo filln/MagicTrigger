@@ -7,12 +7,13 @@
 
 #include "CoreMinimal.h"
 #include "MagicTrigger/Interfaces/InterfaceCheck.h"
+#include "MagicTrigger\Data\InputModeEnum.h"
 #include "HUDInterface.generated.h"
 
 class AActor;
 class UUserWidget;
 
- // This class does not need to be modified.
+// This class does not need to be modified.
 UINTERFACE(Blueprintable, Category = "HUDInterface")
 class UHUDInterface : public UInterface
 {
@@ -34,8 +35,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		AActor* GetEnemy_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
-		void HideLoadingWidget_IF();
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideLoadGameMenuWidget_IF();
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideMenuWidget_IF();
@@ -49,5 +48,13 @@ public:
 		void ShowInteractionWidget_IF(FText& InteractionText);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
 		void HideInteractionWidget_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void SetInputMode_IF(EInputMode InInputMode);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void ShowGameMenu_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		bool CheckMenuUserWidget_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "HUDInterface")
+		void ShowPlayerGUIWidget_IF();
 
 };

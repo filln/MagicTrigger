@@ -8,6 +8,7 @@
 class UButton;
 class USpacer;
 class USlider;
+class UTextBlock;
 
 /**
  *
@@ -24,10 +25,15 @@ public:
 	 * Variables
 	 */
 public:
+	/**
+	 * Множитель на входе нужен для согласования чувствительности с положением слайдера в ControlWidget.
+	 Также для установки максимума чувствительности. Слагаемое на входе - для установки минимальной чувствительности при нулевом положении слайдера.
+	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
 		float MouseSensSliderMultiplier;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
 		float MouseSensSliderAddend;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
 		UButton* ResumeButton;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
@@ -36,15 +42,19 @@ public:
 		USpacer* ResumeGameSpacer0;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
 		USlider* MouseSensSlider;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ControlUserWidget")
+		UTextBlock* MouseSensTextBlock2;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ControlUserWidget")
+		float MouseSensitivity;
 
 	/**
 	 * Methods
 	 */
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ControlUserWidget")
-		FText GetMouseSens();
+		FText ConvertMouseSensToText();
 	UFUNCTION(BlueprintCallable, Category = "ControlUserWidget")
-		void SetMouseSens();
+		void SetSliderValue();
 	UFUNCTION(BlueprintCallable, Category = "ControlUserWidget")
 		void OnPressedResumeButton();
 	UFUNCTION(BlueprintCallable, Category = "ControlUserWidget")

@@ -18,6 +18,16 @@ class UTextureRenderTarget2D;
 
 void USaveGameMenuUserWidget::Prepare()
 {
+	if (!this->ListOfSavedGamesUserWidget)
+	{
+		DEBUGMESSAGE("!this->ListOfSavedGamesUserWidget");
+		return;
+	}
+	if (!this->HUDMagicTrigger)
+	{
+		DEBUGMESSAGE("!this->HUDMagicTrigger");
+		return;
+	}
 	this->ListOfSavedGamesUserWidget->Refresh();
 	if (!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->HUDMagicTrigger->PlayerCharacter))
 	{
@@ -60,8 +70,11 @@ void USaveGameMenuUserWidget::OnClickedSaveButton()
 	}
 
 	FString InNameOfSaveGame = this->NameOfCurrentSaveGame->GetText().ToString();
-	IGameInstanceInterface::Execute_MainSaveGame_IF(this->HUDMagicTrigger->GameInstance, InNameOfSaveGame);
-	this->ListOfSavedGamesUserWidget->Refresh();
+	TArray<FString> GamesList;
+	if (IGameInstanceInterface::Execute_MainSaveGame_IF(this->HUDMagicTrigger->GameInstance, InNameOfSaveGame, GamesList))
+	{
+		this->ListOfSavedGamesUserWidget->RefreshWithoutLoadData(GamesList);
+	}
 }
 
 void USaveGameMenuUserWidget::OnClickedDeleteSaveButton()
@@ -78,7 +91,11 @@ void USaveGameMenuUserWidget::OnClickedDeleteSaveButton()
 		return;
 	}
 	FString InNameOfDeleteGame = this->HUDMagicTrigger->LastSavedGame->NameOfSavedGame->GetText().ToString();
-	IGameInstanceInterface::Execute_MainDeleteGame_IF(this->HUDMagicTrigger->GameInstance, InNameOfDeleteGame);
-	this->ListOfSavedGamesUserWidget->Refresh();
+	TArray<FString> GamesList;
+	if (IGameInstanceInterface::Execute_MainDeleteGame_IF(this->HUDMagicTrigger->GameInstance, InNameOfDeleteGame, GamesList))
+	{
+		this->ListOfSavedGamesUserWidget->RefreshWithoutLoadData(GamesList);
+	}
+	
 }
 

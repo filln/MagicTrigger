@@ -39,6 +39,7 @@ public:
 public:
 	/**
 	 * Обновить список сохраненных игр и заполнить изображение скриншота. Напрямую RenderTarget2D не выводится в виджет, нужно делать материал с параметром MaterialDomain "User Interface"
+	 Вызывается в MenuUserWidget при нажатии кнопки Save game
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SaveGameMenuUserWidget")
 		void Prepare();

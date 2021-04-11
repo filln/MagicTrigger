@@ -5,12 +5,11 @@
 #include "MagicTrigger\Data\DebugMessage.h"
 
 #include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\SaveGame\PlayerStateSaveGame.h"
-
+#include "MagicTrigger\SaveGame\SaveGameMT.h"
+#include "MagicTrigger\SaveGame\SaveGameManager.h"
 
 #include "MagicTrigger\UI\PlayerGUIUserWidget.h"
 #include "MagicTrigger\UI\ObserveEnemyUserWidget.h"
-#include "MagicTrigger\UI\LoadingUserWidget.h"
 #include "MagicTrigger\UI\MenuUserWidget.h"
 #include "MagicTrigger\UI\InteractionUserWidget.h"
 #include "MagicTrigger\UI\SaveGameMenuUserWidget.h"
@@ -19,6 +18,7 @@
 #include "MagicTrigger\UI\Settings\SettingsMenuUserWidget.h"
 #include "MagicTrigger\UI\Settings\ControlUserWidget.h"
 #include "MagicTrigger\UI\ListOfSavedGamesUserWidget.h" //SwitchSavedGames()
+#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
 
 #include "Kismet\GameplayStatics.h"
 #include "Kismet\KismetMathLibrary.h"
@@ -40,7 +40,6 @@ AHUDMagicTrigger::AHUDMagicTrigger()
 
 	PlayerGUIUserWidgetClass = UPlayerGUIUserWidget::StaticClass();
 	ObserveEnemyUserWidgetClass = UObserveEnemyUserWidget::StaticClass();
-	LoadingUserWidgetClass = ULoadingUserWidget::StaticClass();
 	MenuUserWidgetClass = UMenuUserWidget::StaticClass();
 	InteractionUserWidgetClass = UInteractionUserWidget::StaticClass();
 	SaveGameMenuUserWidgetClass = USaveGameMenuUserWidget::StaticClass();
@@ -77,6 +76,16 @@ void AHUDMagicTrigger::DoBeginPlay_IF_Implementation()
 	this->PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	this->GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
+	UGameInstanceMagicTrigger* GameInstanceMT = Cast<UGameInstanceMagicTrigger>(this->GameInstance);
+	if (GameInstanceMT)
+	{
+		GameInstanceMT->SaveGameManager->HUD = this;
+	}
+	else
+	{
+		DEBUGMESSAGE("!GameInstanceMT");
+	}
+
 	CreateWidgets();
 }
 
@@ -85,14 +94,9 @@ void AHUDMagicTrigger::CreateWidgets()
 	this->MenuUserWidget = CreateWidget<UMenuUserWidget>(this->PlayerController, MenuUserWidgetClass, FName(TEXT("MenuUserWidget")));
 	this->MenuUserWidget->HUDMagicTrigger = this;
 
-	this->LoadingUserWidget = CreateWidget<ULoadingUserWidget>(this->PlayerController, LoadingUserWidgetClass, FName(TEXT("LoadingUserWidget")));
-	this->LoadingUserWidget->HUDMagicTrigger = this;
-
 	this->PlayerGUIUserWidget = CreateWidget<UPlayerGUIUserWidget>(this->PlayerController, PlayerGUIUserWidgetClass, FName(TEXT("PlayerGUIUserWidget")));
 	this->PlayerGUIUserWidget->HUDMagicTrigger = this;
 	//Отобразим по таймеру, чтобы не появлялось на экране загрузки.
-	FTimerHandle ShowGUITimer;
-	GetWorldTimerManager().SetTimer(ShowGUITimer, this, &AHUDMagicTrigger::ShowPlayerGUIWidget, 1);
 
 	this->ObserveEnemyUserWidget = CreateWidget<UObserveEnemyUserWidget>(this->PlayerController, ObserveEnemyUserWidgetClass, FName(TEXT("ObserveEnemyUserWidget")));
 	this->ObserveEnemyUserWidget->HUDMagicTrigger = this;
@@ -152,13 +156,12 @@ void AHUDMagicTrigger::SetPauseGame(bool bPause, UUserWidget* TurnOffWidget)
 	}
 	else
 	{
-		if (!UGameplayStatics::IsGamePaused(GetWorld()))
+		if (UGameplayStatics::IsGamePaused(GetWorld()))
 		{
-			return;
+			this->PlayerController->SetPause(false);
 		}
-		this->PlayerController->SetPause(false);
-		SetInputMode(EInputMode::EIM_GameOnly);
 		SetShowWidget(false, TurnOffWidget, 0);
+		SetInputMode(EInputMode::EIM_GameOnly);
 	}
 }
 
@@ -181,6 +184,11 @@ void AHUDMagicTrigger::SetShowInteractionWidget(bool bShow, FText InInteractionT
 
 void AHUDMagicTrigger::SetInputMode(EInputMode InInputMode)
 {
+	if (!this->PlayerController)
+	{
+		DEBUGMESSAGE("!this->PlayerController");
+		return;
+	}
 	switch (InInputMode)
 	{
 	case EInputMode::EIM_UIOnly:
@@ -239,37 +247,45 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 		//Если сейв был выбран ранее.
 		if (this->LastSavedGame)
 		{
-			//Сделать поле сейва невыбранным.
+			//Сделать предыдущее поле сейва невыбранным.
 			this->LastSavedGame->SavedGameCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+			
 		} 
 		//Запомнить новое поле.
 		this->LastSavedGame = InSavedGameUserWidget;
 		//Загрузка и показ скриншота игры. Ссылка на скриншот из сохраненной игры невалидна после перезапуска игры
 		FText TextOfLoadingGame = InSavedGameUserWidget->NameOfSavedGame->GetText();
 		FString StringOfLoadingGame = TextOfLoadingGame.ToString();
-		UPlayerStateSaveGame* PlayerStateSaveGame = IGameInstanceInterface::Execute_LoadGamesData_IF(this->GameInstance, StringOfLoadingGame);
-		if (!PlayerStateSaveGame)
+		//DEBUGSTRING(StringOfLoadingGame);
+		USaveGameMT* SaveGameMT = IGameInstanceInterface::Execute_LoadGamesData_IF(this->GameInstance, StringOfLoadingGame);
+		if (!SaveGameMT)
 		{
-			DEBUGMESSAGE("!PlayerStateSaveGame");
+			DEBUGMESSAGE("!SaveGameMT");
 			return;
 		}
-		if (!PlayerStateSaveGame->ScreenShot)
+		if (!SaveGameMT->ScreenShot)
 		{
-			DEBUGMESSAGE("!PlayerStateSaveGame->ScreenShot");
+			DEBUGMESSAGE("!SaveGameMT->ScreenShot");
 			return;
 		}
 
 		UImage* SaveGameScreenShotImage = this->SaveGameMenuUserWidget->ListOfSavedGamesUserWidget->ScreenShotImage;
-		SetScreenShotToImageWidget(PlayerStateSaveGame->ScreenShot, SaveGameScreenShotImage);
+		SetScreenShotToImageWidget(SaveGameMT->ScreenShot, SaveGameScreenShotImage);
 		SaveGameScreenShotImage->SetVisibility(ESlateVisibility::Visible);
 
 		UImage* LoadGameScreenShotImage = this->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget->ScreenShotImage;
-		SetScreenShotToImageWidget(PlayerStateSaveGame->ScreenShot, LoadGameScreenShotImage);
+		SetScreenShotToImageWidget(SaveGameMT->ScreenShot, LoadGameScreenShotImage);
 		LoadGameScreenShotImage->SetVisibility(ESlateVisibility::Visible);
 	}
 	//деактивация поля сейва.
 	else
 	{
+		//если кликнули по тому же сейву (анчек), то вернуть ему чек.
+		if (this->LastSavedGame == InSavedGameUserWidget)
+		{
+			this->LastSavedGame->SavedGameCheckBox->SetCheckedState(ECheckBoxState::Checked);
+			return;
+		}
 		UImage* SaveGameScreenShotImage = this->SaveGameMenuUserWidget->ListOfSavedGamesUserWidget->ScreenShotImage;
 		SaveGameScreenShotImage->SetVisibility(ESlateVisibility::Hidden);
 
@@ -300,11 +316,6 @@ void AHUDMagicTrigger::SetVisibleToButtons()
 	this->ControlUserWidget->ResumeButton->SetVisibility(ESlateVisibility::Visible);
 	this->ControlUserWidget->ResumeGameSpacer0->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-}
-
-void AHUDMagicTrigger::HideLoadingWidget()
-{
-	SetPauseGame(false, this->LoadingUserWidget);
 }
 
 void AHUDMagicTrigger::HideLoadGameMenuWidget()
@@ -342,11 +353,6 @@ AActor* AHUDMagicTrigger::GetEnemy_IF_Implementation() const
 	return this->Enemy;
 }
 
-void AHUDMagicTrigger::HideLoadingWidget_IF_Implementation()
-{
-	HideLoadingWidget();
-}
-
 void AHUDMagicTrigger::HideLoadGameMenuWidget_IF_Implementation()
 {
 	HideLoadGameMenuWidget();
@@ -380,6 +386,33 @@ void AHUDMagicTrigger::ShowInteractionWidget_IF_Implementation(FText& InInteract
 void AHUDMagicTrigger::HideInteractionWidget_IF_Implementation()
 {
 	SetShowInteractionWidget(false, FText());
+}
+
+void AHUDMagicTrigger::SetInputMode_IF_Implementation(EInputMode InInputMode)
+{
+	SetInputMode(InInputMode);
+}
+
+void AHUDMagicTrigger::ShowGameMenu_IF_Implementation()
+{
+	if (!this->MenuUserWidget)
+	{
+		DEBUGMESSAGE("!this->MenuUserWidget");
+		return;
+	}
+
+	SetShowWidget(true, this->MenuUserWidget, 1);
+	SetInputMode(EInputMode::EIM_UIOnly);
+}
+
+bool AHUDMagicTrigger::CheckMenuUserWidget_IF_Implementation()
+{
+	return !!this->MenuUserWidget;
+}
+
+void AHUDMagicTrigger::ShowPlayerGUIWidget_IF_Implementation()
+{
+	ShowPlayerGUIWidget();
 }
 
 bool AHUDMagicTrigger::CheckReferences_IF_Implementation()

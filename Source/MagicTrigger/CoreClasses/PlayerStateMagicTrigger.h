@@ -20,6 +20,9 @@ class MAGICTRIGGER_API APlayerStateMagicTrigger : public APlayerState, public IP
 	
 public:
 	APlayerStateMagicTrigger();
+	
+protected:
+	virtual void BeginPlay() override;
 
    /**
 	* Variables

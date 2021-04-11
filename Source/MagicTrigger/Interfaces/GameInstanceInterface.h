@@ -10,7 +10,7 @@
 #include "MagicTrigger/Data/GameSettingsStruct.h"
 #include "GameInstanceInterface.generated.h"
 
-class UPlayerStateSaveGame;
+class USaveGameMT;
 
 // This class does not need to be modified.
 UINTERFACE(Blueprintable, Category = "GameInstanceInterface")
@@ -30,7 +30,7 @@ class MAGICTRIGGER_API IGameInstanceInterface
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		UPlayerStateSaveGame* LoadGamesData_IF(FString& NameOfLoadGame);
+		USaveGameMT* LoadGamesData_IF(FString& NameOfLoadGame);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		FGameSettingsStruct GetGameSettingsStruct_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
@@ -38,15 +38,27 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void SetMouseSensitivity_IF(float MouseSensitivity);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void LoadGamesList_IF(TArray<FString>& InGamesList);
+		bool LoadGamesList_IF(TArray<FString>& InGamesList);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void MainLoadGame_IF(FString& InNameOfLoadGame);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void MainSaveGame_IF(FString& InNameOfSaveGame);
+		bool MainSaveGame_IF(FString& InNameOfSaveGame, TArray<FString>& InGamesList);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void MainDeleteGame_IF(FString& InNameOfDeleteGame);
+		bool MainDeleteGame_IF(FString& InNameOfDeleteGame, TArray<FString>& InGamesList);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void BeginNewGame_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void SetLevelLoadedTrue_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void SaveGameSettings_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ResetGameSettings_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ShowGameMenu_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		FString GetGamesListName_IF();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ShowLoadingUserWidget_IF();
 
 
 };	

@@ -7,14 +7,14 @@
 #include "ListOfSavedGames.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class MAGICTRIGGER_API UListOfSavedGames : public USaveGame
 {
 	GENERATED_BODY()
-	
-public:
 
-	TArray<FString> ListOfSavedGames;
+public:
+	UPROPERTY()
+		TArray<FString> ListOfSavedGames;
 };

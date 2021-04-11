@@ -30,6 +30,9 @@ public:
 		USpacer* ResumeGameSpacer0;
 
 public:
+	/**
+	 * Проверяется, была ли выбрана сохраненная игра в меню. Если не была, то возвращает false. При этом кнопка Load неактивна.
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "LoadGameMenuUserWidget")
 		bool CheckLastSavedGame();
 	UFUNCTION(BlueprintCallable, Category = "LoadGameMenuUserWidget")

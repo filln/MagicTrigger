@@ -2,8 +2,9 @@
 
 
 #include "PlayerControllerMagicTrigger.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\Data\GameSettingsStruct.h"
+#include "Kismet/GameplayStatics.h"
+#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
+#include "MagicTrigger\SaveGame\SaveGameManager.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 
 APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
@@ -19,42 +20,46 @@ APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 	InitialInputPitchScale = InputPitchScale;
 	InitialInputRollScale = InputRollScale;
 
-
+	MouseSensitivity = 1.1;
+	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		if (GameInstance->SaveGameManager)
+		{
+			GameInstance->SaveGameManager->PlayerController = this;
+		}
+		else
+		{
+			DEBUGMESSAGE("!GameInstance->SaveGameManager");
+		}
+		GameInstance->LoadGameSettings();
+	}
+	else
+	{
+		DEBUGMESSAGE("!GameInstance");
+	}
 }
 
 void APlayerControllerMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (IsInterfaceImplementedBy<IGameInstanceInterface>(GetGameInstance()))
-	{
-		FGameSettingsStruct GameSettingsStruct = IGameInstanceInterface::Execute_GetGameSettingsStruct_IF(GetGameInstance());
-		SetInputRotationScale(GameSettingsStruct.MouseSensitivity, 1, 0);
-	} 
-	else
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(GetGameInstance())");
-	}
 }
 
-void APlayerControllerMagicTrigger::SetInputRotationScale(float MouseSensBaseValue, float MouseSensMultiplier, float MouseSensAddend)
+void APlayerControllerMagicTrigger::SetInputRotationScale(float InMouseSensitivity)
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(GetGameInstance()))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(GetGameInstance())");
-		return;
-	}
-
-	float MouseSensitivity = MouseSensBaseValue * MouseSensMultiplier + MouseSensAddend;
+	this->MouseSensitivity = InMouseSensitivity;
 	this->InputPitchScale = this->InitialInputPitchScale * MouseSensitivity;
 	this->InputYawScale = this->InitialInputYawScale * MouseSensitivity;
 	this->InputRollScale = this->InitialInputRollScale * MouseSensitivity;
 
-	IGameInstanceInterface::Execute_SetMouseSensitivity_IF(GetGameInstance(), MouseSensitivity);
-
 }
 
-void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(float mouseSensBaseValue, float mouseSensMultiplier, float mouseSensAddend)
+void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(float InMouseSensitivity)
 {
-	SetInputRotationScale(mouseSensBaseValue, mouseSensMultiplier, mouseSensAddend);
+	SetInputRotationScale(InMouseSensitivity);
+}
+
+float APlayerControllerMagicTrigger::GetMouseSensitivity_IF_Implementation()
+{
+	return this->MouseSensitivity;
 }

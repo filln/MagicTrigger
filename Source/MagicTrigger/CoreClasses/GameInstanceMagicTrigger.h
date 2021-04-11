@@ -8,7 +8,9 @@
 #include "MagicTrigger\Data\GameSettingsStruct.h"
 #include "GameInstanceMagicTrigger.generated.h"
 
-class UPlayerStateSaveGame;
+class USaveGameMT;
+class USaveGameManager;
+class ULoadingUserWidget;
 
 /**
  *
@@ -25,18 +27,53 @@ public:
 	 * Variables
 	 */
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger")
-		TSubclassOf<UPlayerStateSaveGame> SaveGameClass;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger")
 		FString GamesListName;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger")
-		UPlayerStateSaveGame* CurrentStateOfPlayersSaveGame;
+		FString GameSettingsName;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger")
 		FGameSettingsStruct GameSettingsStruct;
+	UPROPERTY()
+		USaveGameManager* SaveGameManager;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger|Widgets")
+		ULoadingUserWidget* LoadingUserWidget;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameInstanceMagicTrigger|Widgets")
+		TSubclassOf<ULoadingUserWidget> LoadingUserWidgetClass;
+
+	UPROPERTY()
+		USaveGameMT* CurrentLoadingGame;
+private:
+	/**
+	 * Показывает, что уровень загрузился. Меняется на true в левел-блюпринтах после загрузки стриминг-левелов.
+	 */
+	bool bLevelLoaded;
+	/**
+	 * Для ожидания загрузки уровня.
+	 */
+	FTimerHandle LoadingGameTimer;
+	/**
+	 *
+	 */
+	FTimerHandle BeginNewGameTimer;
+	/**
+	 *
+	 */
+	FTimerHandle ShowGameMenuTimer;
+	/**
+	 *
+	 */
+
 
 	/**
 	 * Methods
 	 */
+
+protected:
+	/** virtual function to allow custom GameInstances an opportunity to set up what it needs */
+	virtual void Init() override;
+	/** virtual function to allow custom GameInstances an opportunity to do cleanup when shutting down */
+	virtual void Shutdown() override;
+
 public:
 	/**
 	 *Не используется?
@@ -47,12 +84,12 @@ public:
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
-		UPlayerStateSaveGame* LoadGamesData(const FString& NameOfLoadGame);
+		USaveGameMT* LoadGamesData(const FString& NameOfLoadGame);
 	/**
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
-		void MainSaveGame(const FString& NameOfSaveGame);
+		bool MainSaveGame(const FString& NameOfSaveGame, TArray<FString>& InGamesList);
 	/**
 	 *
 	 */
@@ -67,7 +104,38 @@ public:
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
-		void MainDeleteGame(const FString& NameOfDeleteGame);
+		bool MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList);
+	/**
+	 * Перенос настроек из виджетов в PlayerController и в сохранение. Вызывается, когда нажимаем кнопку "сохранить настройки".
+	 */
+	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
+		void SaveGameSettings();
+	/**
+	 * Перенос настроек из сохранения в PlayerController и виджеты. Вызывается, когда заходим в игру.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
+		void LoadGameSettings();
+	/**
+	 *Сброс настроек к дефолтным. переносятся все настройки из структуры FGameSettingsStruct в виджеты и PlayerController, применение настроек.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
+		void ResetGameSettings();
+
+	/**
+	 *
+	 */
+	FName GetNameOfCurrentLevel();
+
+	///**
+	// *
+	// */
+	//UFUNCTION()
+	//	void DoAfterBeginNewGame(AHUD* InHUD);
+	///**
+	// *
+	// */
+	//UFUNCTION()
+	//	void DoAfterMainLoadGame(AHUD* InHUD, USaveGameMT* InLoadingGameTmp);
 
 private:
 	/**
@@ -77,7 +145,7 @@ private:
 	/**
 	 *
 	 */
-	bool SaveNameToGamesList(const FString& NameOfSaveGame);
+	bool SaveNameToGamesList(const FString& NameOfSaveGame, TArray<FString>& InGamesList);
 	/**
 	 *
 	 */
@@ -85,16 +153,11 @@ private:
 	/**
 	 *
 	 */
-	bool DeleteNameFromGamesList(const FString& NameOfDeleteGame);
+	bool DeleteNameFromGamesList(const FString& NameOfDeleteGame, TArray<FString>& InGamesList);
 	/**
 	 *
 	 */
-	FName GetNameOfCurrentLevel();
-	/**
-	 * 
-	 */
 	bool SaveCurrentGame(const FString& NameOfSaveGame);
-
 
 
 	/**
@@ -102,8 +165,8 @@ private:
 	 */
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		UPlayerStateSaveGame* LoadGamesData_IF(FString& NameOfLoadGame);
-	virtual UPlayerStateSaveGame* LoadGamesData_IF_Implementation(FString& NameOfLoadGame) override;
+		USaveGameMT* LoadGamesData_IF(FString& NameOfLoadGame);
+	virtual USaveGameMT* LoadGamesData_IF_Implementation(FString& NameOfLoadGame) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		FGameSettingsStruct GetGameSettingsStruct_IF() const;
 	virtual FGameSettingsStruct GetGameSettingsStruct_IF_Implementation() const override;
@@ -114,20 +177,36 @@ public:
 		void SetMouseSensitivity_IF(float MouseSensitivity);
 	virtual void SetMouseSensitivity_IF_Implementation(float MouseSensitivity) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void LoadGamesList_IF(TArray<FString>& InGamesList);
-	virtual void LoadGamesList_IF_Implementation(TArray<FString>& InGamesList) override;
+		bool LoadGamesList_IF(TArray<FString>& InGamesList);
+	virtual bool LoadGamesList_IF_Implementation(TArray<FString>& InGamesList) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void MainLoadGame_IF(FString& InNameOfLoadGame);
 	virtual void MainLoadGame_IF_Implementation(FString& InNameOfLoadGame) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void MainSaveGame_IF(FString& InNameOfSaveGame);
-	virtual void MainSaveGame_IF_Implementation(FString& InNameOfSaveGame) override;
+		bool MainSaveGame_IF(FString& InNameOfSaveGame, TArray<FString>& InGamesList);
+	virtual bool MainSaveGame_IF_Implementation(FString& InNameOfSaveGame, TArray<FString>& InGamesList) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
-		void MainDeleteGame_IF(FString& InNameOfDeleteGame);
-	virtual void MainDeleteGame_IF_Implementation(FString& InNameOfDeleteGame) override;
+		bool MainDeleteGame_IF(FString& InNameOfDeleteGame, TArray<FString>& InGamesList);
+	virtual bool MainDeleteGame_IF_Implementation(FString& InNameOfDeleteGame, TArray<FString>& InGamesList) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void BeginNewGame_IF();
 	virtual void BeginNewGame_IF_Implementation() override;
-
-
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void SetLevelLoadedTrue_IF();
+	virtual void SetLevelLoadedTrue_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void SaveGameSettings_IF();
+	virtual void SaveGameSettings_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ResetGameSettings_IF();
+	virtual void ResetGameSettings_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ShowGameMenu_IF();
+	virtual void ShowGameMenu_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		FString GetGamesListName_IF();
+	virtual FString GetGamesListName_IF_Implementation() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
+		void ShowLoadingUserWidget_IF();
+	virtual void ShowLoadingUserWidget_IF_Implementation() override;
 };

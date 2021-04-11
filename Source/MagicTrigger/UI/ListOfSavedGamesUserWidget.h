@@ -16,6 +16,9 @@ class MAGICTRIGGER_API UListOfSavedGamesUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 
+protected:
+
+	virtual void NativeOnInitialized() override;
 
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ListOfSavedGamesUserWidget")
@@ -26,5 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ListOfSavedGamesUserWidget")
 		void Refresh();
-
+	UFUNCTION(BlueprintCallable, Category = "ListOfSavedGamesUserWidget")
+		void RefreshWithoutLoadData(const TArray<FString>& InGamesList);
 };
