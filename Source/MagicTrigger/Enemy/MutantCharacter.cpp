@@ -59,7 +59,7 @@ AMutantCharacter::AMutantCharacter()
 	ArrowLeftHand->SetupAttachment(GetMesh(), ArrowLeftHandSocketName);
 	ArrowLeftHand->SetRelativeRotation(FRotator(41, 104, 162), false, &HitResultTmp, ETeleportType::None);
 
-	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName", "Mutant");
+	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Mutant");
 	if (Name.IsEmpty())
 	{
 		DEBUGMESSAGE("Name.IsEmpty()");
@@ -110,6 +110,12 @@ void AMutantCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	EnemyToBehaviorTreeStruct.SpawnLocation = GetActorLocation();
+	this->Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Mutant");
+	if (this->Name.IsEmpty())
+	{
+		DEBUGMESSAGE("this->Name.IsEmpty()");
+
+	}
 }
 
 void AMutantCharacter::StartTraceAttack(bool bRightHand)

@@ -76,7 +76,7 @@ public:
 		FName StartTraceObstacleSocketName;
 
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "UpDownLiftingItemComponent")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UpDownLiftingItemComponent")
 		AActor* LiftUpObject;
 
 private:

@@ -8,6 +8,7 @@
 #include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
 #include "MagicTrigger\Interfaces\LiftingItemInterface.h"
 #include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
+#include "MagicTrigger\Items\LiftingItem.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
@@ -27,10 +28,10 @@ UUpDownLiftingItemComponent::UUpDownLiftingItemComponent()
 	DeltaVerticalTraceZ = 20;
 	TraceCollisionChannel = ECollisionChannel::ECC_Visibility;
 	bDrawDebugTrace = false;
-	DetachOverTime = 0.3;
-	AttachOverTime = 0.2;
+	DetachOverTime = 0.5;
+	AttachOverTime = 0.5;
 	StartTraceObstacleSocketName = FName(TEXT("Hips"));
-
+	LiftUpClass = ALiftingItem::StaticClass();
 }
 
 
@@ -70,6 +71,7 @@ void UUpDownLiftingItemComponent::BeginPlay()
 
 void UUpDownLiftingItemComponent::DetachLiftingActor()
 {
+
 	if (!this->LiftUpObject)
 	{
 		DEBUGMESSAGE("!this->LiftUpObject");
@@ -152,8 +154,8 @@ void UUpDownLiftingItemComponent::AttachLiftingActor()
 
 	FVector TargetRelativeLocation = this->OwnersMesh->GetSocketLocation(this->AttachSocket);
 	FRotator TargetRelativeRotation = this->LiftUpObject->GetRootComponent()->GetSocketRotation(this->AttachSocket);
-	FLatentActionInfo LatentInfo;
-
+	FLatentActionInfo LatentInfo = FLatentActionInfo();
+	LatentInfo.CallbackTarget = this;
 	UKismetSystemLibrary::MoveComponentTo
 	(
 		this->LiftUpObject->GetRootComponent(),
@@ -176,6 +178,7 @@ void UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor()
 {
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
 	this->LiftUpObject->AttachToComponent(this->OwnersMesh, AttachmentTransformRules, this->AttachSocket);
+
 }
 
 
@@ -219,7 +222,7 @@ void UUpDownLiftingItemComponent::PutDown()
 {
 	if (!this->LiftUpObject)
 	{
-		DEBUGMESSAGE("!this->LiftUpObject");
+		//DEBUGMESSAGE("!this->LiftUpObject");
 		return;
 	}
 

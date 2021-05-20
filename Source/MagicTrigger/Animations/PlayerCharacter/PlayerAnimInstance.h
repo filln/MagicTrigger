@@ -29,14 +29,12 @@ public:
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerAnimInstance|Components")
 		UActorComponent* AnimationManagerComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PlayerAnimInstance|Animations")
+		UAnimMontage* PlayerFightIdle;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerAnimInstance")
 		APawn* PawnOwner;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		float Speed;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
-		float PlayRateLiftingThrowingObject;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
-		float StartPositionLiftingThrowingObject;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bMoving;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")

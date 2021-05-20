@@ -23,6 +23,12 @@ public:
 
 	ADemonCharacter();
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DemonCharacter|Components")
 		UFireBallComponent* FireBallComponent;
 

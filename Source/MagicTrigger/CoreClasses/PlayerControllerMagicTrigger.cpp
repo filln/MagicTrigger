@@ -21,6 +21,12 @@ APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 	InitialInputRollScale = InputRollScale;
 
 	MouseSensitivity = 1.1;
+
+}
+
+void APlayerControllerMagicTrigger::BeginPlay()
+{
+	Super::BeginPlay();
 	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
@@ -38,11 +44,6 @@ APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 	{
 		DEBUGMESSAGE("!GameInstance");
 	}
-}
-
-void APlayerControllerMagicTrigger::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void APlayerControllerMagicTrigger::SetInputRotationScale(float InMouseSensitivity)

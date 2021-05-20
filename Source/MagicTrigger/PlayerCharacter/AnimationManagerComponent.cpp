@@ -36,9 +36,6 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	bCanInteract = true;
 	bCanRun = true;
 
-	PlayRateLiftingThrowingObject = 1;
-	StartPositionLiftingThrowingObject = 0;
-
 	CheckStopJumpAnimationTimerRate = 1.9;
 	CheckStopAttackAnimationTimerRate = 1.5;
 	CheckStopThrowAnimationTimerRate = 1.1;
@@ -216,8 +213,6 @@ void UAnimationManagerComponent::SetPlayingAnimationLiftUp1Hand(bool bPlaying)
 
 		this->bLiftingUp1Hand = true;
 
-		this->PlayRateLiftingThrowingObject = 2;
-		this->StartPositionLiftingThrowingObject = 0;
 	}
 	else
 	{
@@ -247,7 +242,7 @@ void UAnimationManagerComponent::SetPlayingAnimationLiftUp2Hands(bool bPlaying)
 	else
 	{
 		this->bCanInteract = false;
-		this->bCanRun = false;
+		this->bCanRun = true;
 	}
 }
 
@@ -263,8 +258,6 @@ void UAnimationManagerComponent::SetPlayingAnimationPutDown1Hand(bool bPlaying)
 
 		this->bPutingDown1Hand = true;
 
-		this->PlayRateLiftingThrowingObject = -2;
-		this->StartPositionLiftingThrowingObject = 3;
 	}
 	else
 	{
@@ -422,17 +415,6 @@ bool UAnimationManagerComponent::GetShortWalk_IF_Implementation() const
 {
 	return this->bShortWalk;
 }
-
-float UAnimationManagerComponent::GetPlayRateLiftingThrowingObject_IF_Implementation() const
-{
-	return this->PlayRateLiftingThrowingObject;
-}
-
-float UAnimationManagerComponent::GetStartPositionLiftingThrowingObject_IF_Implementation() const
-{
-	return this->StartPositionLiftingThrowingObject;
-}
-
 
 /**
 * AnimationManagerInterface methods.

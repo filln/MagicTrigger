@@ -48,7 +48,7 @@ ADemonCharacter::ADemonCharacter()
 
 	FireBallComponent = CreateDefaultSubobject<UFireBallComponent>(TEXT("FireBallComponent"));
 
-	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName", "Demon");
+	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Demon");
 	if (Name.IsEmpty())
 	{
 		DEBUGMESSAGE("Name.IsEmpty()");
@@ -88,6 +88,18 @@ ADemonCharacter::ADemonCharacter()
 	}
 }
 
+void ADemonCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	this->Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Demon");
+	if (this->Name.IsEmpty())
+	{
+		DEBUGMESSAGE("this->Name.IsEmpty()");
+
+	}
+}
+
 float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
 	if (this->Defence > 1)
@@ -109,11 +121,6 @@ float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const&
 
 void ADemonCharacter::CreateFireBall()
 {
-	//if (!this->FireBallComponent)
-	//{
-	//	DEBUGMESSAGE("!this->FireBallComponent");
-	//	return;
-	//}
 	this->FireBallComponent->CreateFireBall(GetMesh());
 }
 

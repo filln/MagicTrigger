@@ -80,11 +80,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|CanDo")
 		bool bCanRun;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent")
-		float PlayRateLiftingThrowingObject;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent")
-		float StartPositionLiftingThrowingObject;
-
 private:
 	UPROPERTY()
 		UAnimInstance* AnimInstance;
@@ -233,15 +228,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
 		bool GetShortWalk_IF() const;
 	virtual bool GetShortWalk_IF_Implementation() const override;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
-		float GetPlayRateLiftingThrowingObject_IF() const;
-	virtual float GetPlayRateLiftingThrowingObject_IF_Implementation() const override;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerComponent|AnimationManagerInterface|Getters")
-		float GetStartPositionLiftingThrowingObject_IF() const;
-	virtual float GetStartPositionLiftingThrowingObject_IF_Implementation() const override;
-
 
 
 	/**

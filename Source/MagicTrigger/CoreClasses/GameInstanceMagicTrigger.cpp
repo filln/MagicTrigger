@@ -5,24 +5,15 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "MagicTrigger\Data\DebugMessage.h"
-//#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
-
-//#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
-//#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
 #include "MagicTrigger\Interfaces\HUDInterface.h"
-
 #include "MagicTrigger\SaveGame\ListOfSavedGames.h"
 #include "MagicTrigger\SaveGame\SaveGameMT.h"
 #include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
 #include "MagicTrigger\SaveGame\SaveGameManager.h"
 #include "MagicTrigger\UI\LoadingUserWidget.h"
-#include "GameFramework\PlayerController.h"
-//#include "GameFramework\Character.h"
-//#include "GameFramework\PlayerState.h"
-#include "GameFramework\HUD.h"
-//#include "GameFramework\GameMode.h"
 
-//class UTextureRenderTarget2D;
+#include "GameFramework\PlayerController.h"
+#include "GameFramework\HUD.h"
 
 UGameInstanceMagicTrigger::UGameInstanceMagicTrigger()
 {

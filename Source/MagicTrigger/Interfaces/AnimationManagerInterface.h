@@ -78,10 +78,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Getters")
 		bool GetShortWalk_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Getters")
-		float GetPlayRateLiftingThrowingObject_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Getters")
-		float GetStartPositionLiftingThrowingObject_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Getters")
 		UActorComponent* GetAnimationManagerComponent_IF() const;
 
 	/**

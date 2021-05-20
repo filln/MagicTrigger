@@ -73,7 +73,7 @@ public:
 	/**
 	*
 	*/
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UUpDownLiftingItemComponent* UpDownLiftingItemComponent;
 
 	/**
@@ -293,6 +293,10 @@ public:
 	void ShowOrHideInteractionText(bool bShow, AActor* InteractionActor);
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	void RotateToTarget();
+	UFUNCTION()
+	void InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/**
 	 * Изменяет значение AxisValue для AddMovementInput() при контроле игроком скорости передвижения.

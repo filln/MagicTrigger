@@ -24,6 +24,8 @@ public:
 
 public:
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "ThrowableItem|Components")
+		UProjectileMovementComponent* ProjectileMovementComponent;
 	/**
 	 * Параметр для UGameplayStatics::SuggestProjectileVelocity_CustomArc(), определяет дугу полета. Только если известна цель.
 	 */
@@ -39,8 +41,19 @@ public:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThrowableItem|Settings")
 		float ArcAlpha;
+	/**
+	 * 
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ThrowableItem|Settings")
+		float Damage;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "ThrowableItem")
-		UProjectileMovementComponent* ProjectileMovementComponent;
+public:
+	UFUNCTION()
+		void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+public:
+
+	virtual void SetPlayingAnimationLiftUp_IF_Implementation(bool bPlaying) override;
+	virtual void SetPlayingAnimationPutDown_IF_Implementation(bool bPlaying) override;
 
 };

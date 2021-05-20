@@ -1,5 +1,9 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved.
 
+/**
+ * Родительский класс всех виджетов проекта.
+ */
+
 #pragma once
 
 #include "CoreMinimal.h"

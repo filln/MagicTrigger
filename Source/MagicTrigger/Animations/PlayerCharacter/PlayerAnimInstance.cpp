@@ -10,8 +10,6 @@
 UPlayerAnimInstance::UPlayerAnimInstance()
 {
 	Speed = 0;
-	PlayRateLiftingThrowingObject = 1;
-	StartPositionLiftingThrowingObject = 0;
 	bMoving = false;
 	bInAir = false;
 	bAttacking = false;
@@ -25,6 +23,16 @@ UPlayerAnimInstance::UPlayerAnimInstance()
 	bDying = false;
 	bFightingIdle = false;
 	bCarrying = false;
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> AnimMontageObj(TEXT("/Game/MagicTrigger/Animations/PlayerCharacter/Attack/AM_Player_FightIdle"));
+	if (AnimMontageObj.Succeeded())
+	{
+		PlayerFightIdle = AnimMontageObj.Object;
+	}
+	else
+	{
+		DEBUGMESSAGE("!AnimMontageObj.Succeeded()")
+	}
 }
 
 void UPlayerAnimInstance::NativeBeginPlay()
@@ -80,8 +88,6 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	this->bPutingDown1Hand = IAnimationManagerInterface::Execute_GetPutingDown1Hand_IF(this->AnimationManagerComponent);
 	this->bThrowing = IAnimationManagerInterface::Execute_GetThrowing_IF(this->AnimationManagerComponent);
 	this->bCarrying = IAnimationManagerInterface::Execute_GetCarrying_IF(this->AnimationManagerComponent);
-	this->PlayRateLiftingThrowingObject = IAnimationManagerInterface::Execute_GetPlayRateLiftingThrowingObject_IF(this->AnimationManagerComponent);
-	this->StartPositionLiftingThrowingObject = IAnimationManagerInterface::Execute_GetStartPositionLiftingThrowingObject_IF(this->AnimationManagerComponent);
 	this->bGettingDamage = IAnimationManagerInterface::Execute_GetGettingDamage_IF(this->AnimationManagerComponent);
 	this->bDying = IAnimationManagerInterface::Execute_GetDying_IF(this->AnimationManagerComponent);
 }
@@ -170,7 +176,7 @@ void UPlayerAnimInstance::EndAnimationPutDownThrowingObject()
 {
 	if (this->bPutingDown1Hand)
 	{
-		IAnimationManagerInterface::Execute_DetachLiftingActor_IF(this->AnimationManagerComponent);
+		IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown1Hand_IF(this->AnimationManagerComponent, false);
 	}
 }
 
@@ -207,6 +213,7 @@ void UPlayerAnimInstance::StopTraceAttackRightFoot()
 void UPlayerAnimInstance::EndAttack()
 {
 	IAnimationManagerInterface::Execute_SetPlayingAnimationAttack_IF(this->AnimationManagerComponent, false);
+	Montage_Play(PlayerFightIdle);	
 }
 
 void UPlayerAnimInstance::EndAnimationThrow()

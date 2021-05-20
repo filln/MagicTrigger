@@ -262,6 +262,8 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 	{
 		DEBUGMESSAGE("!GetWorld()")
 	}
+	this->InteractCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap);
+	this->InteractCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::InteractCollisionEndOverlap);
 
 	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
 	this->TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap);
@@ -595,7 +597,7 @@ void APlayerCharacterMagicTrigger::LiftUpLiftingItem_InAct()
 
 void APlayerCharacterMagicTrigger::PutDownLiftingItem_InAct()
 {
-	if (!this->AnimationManagerComponent->bCanInteract)
+	if (!this->AnimationManagerComponent->bCanInteract && !this->AnimationManagerComponent->bCarrying)
 	{
 		return;
 	}
@@ -694,7 +696,7 @@ void APlayerCharacterMagicTrigger::ShowOrHideInteractionText(bool bShow, AActor*
 {
 	if (!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IInteractionInterface>(InteractionActor)");
 		return;
 	}
 	if (!IsInterfaceImplementedBy<IHUDInterface>(this->HUD))
@@ -778,6 +780,16 @@ void APlayerCharacterMagicTrigger::RotateToTarget()
 	FRotator NewRotation = GetActorRotation();
 	NewRotation.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), this->TargetSelectionComponent->GetObservedActor()->GetActorLocation()).Yaw;
 	SetActorRotation(NewRotation);
+}
+
+void APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ShowOrHideInteractionText(true, OtherActor);
+}
+
+void APlayerCharacterMagicTrigger::InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	ShowOrHideInteractionText(false, OtherActor);
 }
 
 float APlayerCharacterMagicTrigger::CalcScaleMovementInput(float AxisValue)
