@@ -14,7 +14,7 @@
 
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\AttackAbilities\MeleeAttackComponent.h"
+#include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
 
 class UAnimInstance;
 class UAnimationAsset;
@@ -110,10 +110,10 @@ void AMutantCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	EnemyToBehaviorTreeStruct.SpawnLocation = GetActorLocation();
-	this->Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Mutant");
-	if (this->Name.IsEmpty())
+	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Mutant");
+	if (Name.IsEmpty())
 	{
-		DEBUGMESSAGE("this->Name.IsEmpty()");
+		DEBUGMESSAGE("Name.IsEmpty()");
 
 	}
 }
@@ -127,12 +127,12 @@ void AMutantCharacter::StartTraceAttack(bool bRightHand)
 	}
 
 	FTimerDelegate TraceAttackDelegate = FTimerDelegate::CreateUObject(this, &AMutantCharacter::TraceAttack, bRightHand);
-	GetWorld()->GetTimerManager().SetTimer(this->MeleeAttackComponent->AttackTimer, TraceAttackDelegate, this->MeleeAttackComponent->AttackTimerDeltaTime, true);
+	GetWorld()->GetTimerManager().SetTimer(MeleeAttackComponent->AttackTimer, TraceAttackDelegate, MeleeAttackComponent->AttackTimerDeltaTime, true);
 }
 
 void AMutantCharacter::StopTraceAttack()
 {
-	this->MeleeAttackComponent->StopAttackTimer();
+	MeleeAttackComponent->StopAttackTimer();
 }
 
 void AMutantCharacter::TraceAttack(bool bRightHand)
@@ -141,19 +141,19 @@ void AMutantCharacter::TraceAttack(bool bRightHand)
 	FVector EndTraceUnit;
 	if (bRightHand)
 	{
-		StartTrace = GetMesh()->GetSocketLocation(this->ArrowRightHandSocketName);
-		EndTraceUnit = this->ArrowRightHand->GetForwardVector();
+		StartTrace = GetMesh()->GetSocketLocation(ArrowRightHandSocketName);
+		EndTraceUnit = ArrowRightHand->GetForwardVector();
 	} 
 	else
 	{
-		StartTrace = GetMesh()->GetSocketLocation(this->ArrowLeftHandSocketName);
-		EndTraceUnit = this->ArrowLeftHand->GetForwardVector();
+		StartTrace = GetMesh()->GetSocketLocation(ArrowLeftHandSocketName);
+		EndTraceUnit = ArrowLeftHand->GetForwardVector();
 	}
 
 	FHitResult TraceAttackHitResult;
 	TArray<AActor*> IgnoredActors;
 
-	bool bTraceResult = this->MeleeAttackComponent->TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit, IgnoredActors);
+	bool bTraceResult = MeleeAttackComponent->TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit, IgnoredActors);
 	if (!bTraceResult)
 	{
 		//DEBUGMESSAGE("!bTraceResult");
@@ -166,11 +166,11 @@ void AMutantCharacter::TraceAttack(bool bRightHand)
 		return;
 	}
 
-	this->MeleeAttackComponent->StopAttackTimer();
-	UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), this->Damage, GetController(), this, this->MeleeAttackComponent->DamageTypeClass);
+	MeleeAttackComponent->StopAttackTimer();
+	UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), Damage, GetController(), this, MeleeAttackComponent->DamageTypeClass);
 }
 
 void AMutantCharacter::Stunning_IF_Implementation()
 {
-	this->bStunningAfterGetDamage = true;
+	bStunningAfterGetDamage = true;
 }

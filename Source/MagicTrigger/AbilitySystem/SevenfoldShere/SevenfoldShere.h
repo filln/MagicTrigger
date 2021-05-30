@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Items\ThrowableItem.h"
+#include "MagicTrigger\AbilitySystem\ThrowableRock\ThrowableItem.h"
 #include "SevenfoldShere.generated.h"
 
 /**

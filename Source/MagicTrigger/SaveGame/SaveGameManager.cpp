@@ -10,7 +10,7 @@
 #include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\UI\LoadingUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\LoadingUserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 USaveGameManager::USaveGameManager()
@@ -22,11 +22,11 @@ USaveGameManager::USaveGameManager()
 void USaveGameManager::LoadAll(USaveGameMT* InLoadingGame)
 {
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->LoadAllTimer);
-	size_t* Count = &(this->CountOfLoadedElements);
-	const size_t* MaxCount = &(this->MaxCountOfLoadedElements);
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
-	AHUDMagicTrigger* HUDLoc = this->HUD;
+	FTimerHandle* TmpTimer = &(LoadAllTimer);
+	size_t* Count = &(CountOfLoadedElements);
+	const size_t* MaxCount = &(MaxCountOfLoadedElements);
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
+	AHUDMagicTrigger* HUDLoc = HUD;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -45,7 +45,7 @@ void USaveGameManager::LoadAll(USaveGameMT* InLoadingGame)
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->LoadAllTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadAllTimer, TmpDelegate, AllTimersDeltaTime, true);
 
 	CheckHUD();
 	LoadPlayerCharacter(InLoadingGame);
@@ -64,10 +64,10 @@ void USaveGameManager::SaveAll(USaveGameMT* InSavingGame)
 void USaveGameManager::CheckHUD()
 {
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->HUDTimer);
-	size_t* Count = &(this->CountOfLoadedElements);
-	AHUDMagicTrigger* HUDLoc = this->HUD;
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
+	FTimerHandle* TmpTimer = &(HUDTimer);
+	size_t* Count = &(CountOfLoadedElements);
+	AHUDMagicTrigger* HUDLoc = HUD;
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -81,20 +81,20 @@ void USaveGameManager::CheckHUD()
 		}
 		else
 		{
-			DEBUGMESSAGE("!this->HUD");
+			DEBUGMESSAGE("!HUD");
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->HUDTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(HUDTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
 void USaveGameManager::LoadPlayerCharacter(USaveGameMT* InLoadingGame)
 {
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->PlayerCharacterTimer);
-	size_t* Count = &(this->CountOfLoadedElements);
-	APlayerCharacterMagicTrigger* PlayerLoc = this->PlayerCharacter;
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
+	FTimerHandle* TmpTimer = &(PlayerCharacterTimer);
+	size_t* Count = &(CountOfLoadedElements);
+	APlayerCharacterMagicTrigger* PlayerLoc = PlayerCharacter;
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -110,32 +110,32 @@ void USaveGameManager::LoadPlayerCharacter(USaveGameMT* InLoadingGame)
 		}
 		else
 		{
-			DEBUGMESSAGE("!this->PlayerCharacter");
+			DEBUGMESSAGE("!PlayerCharacter");
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->PlayerCharacterTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(PlayerCharacterTimer, TmpDelegate, AllTimersDeltaTime, true);
 
 }
 
 void USaveGameManager::SavePlayerCharacter(USaveGameMT* InSavingGame)
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	InSavingGame->PlayerLocation = this->PlayerCharacter->GetActorLocation();
-	InSavingGame->ScreenShot = this->PlayerCharacter->CreateScreenShot();
+	InSavingGame->PlayerLocation = PlayerCharacter->GetActorLocation();
+	InSavingGame->ScreenShot = PlayerCharacter->CreateScreenShot();
 }
 
 void USaveGameManager::LoadPlayerState(USaveGameMT* InLoadingGame)
 {
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->PlayerStateTimer);
-	size_t* Count = &(this->CountOfLoadedElements);
-	APlayerStateMagicTrigger* PlayerStateLoc = this->PlayerState;
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
+	FTimerHandle* TmpTimer = &(PlayerStateTimer);
+	size_t* Count = &(CountOfLoadedElements);
+	APlayerStateMagicTrigger* PlayerStateLoc = PlayerState;
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -149,28 +149,28 @@ void USaveGameManager::LoadPlayerState(USaveGameMT* InLoadingGame)
 		}
 		else
 		{
-			DEBUGMESSAGE("!this->PlayerState");
+			DEBUGMESSAGE("!PlayerState");
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->PlayerStateTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(PlayerStateTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
 void USaveGameManager::SavePlayerState(USaveGameMT* InSavingGame)
 {
-	if (!this->PlayerState)
+	if (!PlayerState)
 	{
-		DEBUGMESSAGE("!this->PlayerState");
+		DEBUGMESSAGE("!PlayerState");
 		return;
 	}
-	InSavingGame->StatesStruct = this->PlayerState->GetStates();
+	InSavingGame->StatesStruct = PlayerState->GetStates();
 }
 
 void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 {
-	if (!this->GameInstance)
+	if (!GameInstance)
 	{
-		DEBUGMESSAGE("!this->GameInstance");
+		DEBUGMESSAGE("!GameInstance");
 		return;
 	}
 	if (!InLoadingGame)
@@ -178,17 +178,17 @@ void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 		DEBUGMESSAGE("!InLoadingGame");
 		return;
 	}
-	if (!this->GameInstance->GetWorld())
+	if (!GameInstance->GetWorld())
 	{
-		DEBUGMESSAGE("!this->GameInstance->GetWorld()");
+		DEBUGMESSAGE("!GameInstance->GetWorld()");
 		return;
 	}
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->LoadSettingsTimer);
+	FTimerHandle* TmpTimer = &(LoadSettingsTimer);
 	//Нужен двойной указатель, т.к. в момент присваивания указатель еще невалиден, в лямбду передается его копия. Передать по ссылке не получится, т.к.
 	//при переходе в лямбду произойдет выход из этой функции и все ее лок. переменные уничтожатся. 
-	APlayerControllerMagicTrigger** PlayerControllerLoc = &(this->PlayerController);
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
+	APlayerControllerMagicTrigger** PlayerControllerLoc = &(PlayerController);
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -201,41 +201,41 @@ void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
 
 void USaveGameManager::SaveGameSettings(UGameSettingsSaveGameMT* InSavingGame)
 {
-	if (!this->PlayerController)
+	if (!PlayerController)
 	{
-		DEBUGMESSAGE("!this->PlayerController");
+		DEBUGMESSAGE("!PlayerController");
 		return;
 	}
 	if (!InSavingGame)
 	{
 		DEBUGMESSAGE("!InSavingGame");
 	}
-	InSavingGame->MouseSensitivity = this->PlayerController->MouseSensitivity;
+	InSavingGame->MouseSensitivity = PlayerController->MouseSensitivity;
 
 }
 
 void USaveGameManager::ResetGameSettings()
 {
-	if (!this->GameInstance)
+	if (!GameInstance)
 	{
-		DEBUGMESSAGE("!this->GameInstance");
+		DEBUGMESSAGE("!GameInstance");
 		return;
 	}
-	if (!this->GameInstance->GetWorld())
+	if (!GameInstance->GetWorld())
 	{
-		DEBUGMESSAGE("!this->GameInstance->GetWorld()");
+		DEBUGMESSAGE("!GameInstance->GetWorld()");
 		return;
 	}
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->LoadSettingsTimer);
-	APlayerControllerMagicTrigger** PlayerControllerLoc = &(this->PlayerController);
-	UGameInstanceMagicTrigger* GameInstanceLoc = this->GameInstance;
+	FTimerHandle* TmpTimer = &(LoadSettingsTimer);
+	APlayerControllerMagicTrigger** PlayerControllerLoc = &(PlayerController);
+	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -248,7 +248,7 @@ void USaveGameManager::ResetGameSettings()
 		}
 	}
 	);
-	this->GameInstance->GetWorld()->GetTimerManager().SetTimer(this->LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
+	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
 void USaveGameManager::SaveLevelName(USaveGameMT* InSavingGame)

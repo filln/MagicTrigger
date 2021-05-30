@@ -29,20 +29,20 @@ void USavedGameUserWidget::NativeOnInitialized()
 		DEBUGMESSAGE("!HUD");
 		return;
 	}
-	this->HUDMagicTrigger = Cast<AHUDMagicTrigger>(HUD);
-	if (!this->HUDMagicTrigger)
+	HUDMagicTrigger = Cast<AHUDMagicTrigger>(HUD);
+	if (!HUDMagicTrigger)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger");
+		DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
 }
 
 void USavedGameUserWidget::OnCheckStateChangedSavedGameCheckBox(bool bChecked)
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger");
+		DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	this->HUDMagicTrigger->SwitchSavedGames(bChecked, this);
+	HUDMagicTrigger->SwitchSavedGames(bChecked, this);
 }

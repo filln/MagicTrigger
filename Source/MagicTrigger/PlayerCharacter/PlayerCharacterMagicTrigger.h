@@ -32,6 +32,7 @@ class APlayerController;
 class AThrowableRock;
 class AHUD;
 class AGameModeBase;
+class AAbilitySystemManager;
 
 UCLASS()
 class MAGICTRIGGER_API APlayerCharacterMagicTrigger : public ACharacter,
@@ -59,125 +60,95 @@ protected:
 public:
 
 	/**
-	 *
-	 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
-		UMeleeAttackComponent* MeleeAttackComponent;
-
-	/**
 	* Для начальной точки трейса к точке установки поднимаемого актора.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointStartTraceToPutDownPoint;
-
 	/**
 	*
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UUpDownLiftingItemComponent* UpDownLiftingItemComponent;
-
 	/**
 	* Для трейса препятствия поставить поднимаемый актор.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* UpDownLiftingArrow;
-
 	/**
 	*
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UAnimationManagerComponent* AnimationManagerComponent;
-
 	/**
 	*
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UTargetSelectionComponent* TargetSelectionComponent;
-
-	/**
-	*
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
-		USevenfoldSphereComponent* SevenfoldSphereComponent;
-
 	/**
 	* Для генерации шума шагов.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
-
 	/**
 	* Для скриншота сохраненной игры.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneCaptureComponent2D* ScreenShotComponent;
-
 	/**
 	* Для трейса атаки.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* ArrowRightFoot;
-
 	/**
 	* Для трейса атаки.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UArrowComponent* ArrowLeftFoot;
-
 	/**
 	* Для точки аттача поднимаемого актора.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointCarryUp;
-
 	/**
 	* Для трейса точки опускания поднятого актора.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USceneComponent* PointPutDown;
-
 	/**
 	* Для разных взаимодействий с разными итемами, которые перед персом.
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UCapsuleComponent* InteractCollision;
-
 	/**
 	* Основная камера.
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		UCameraComponent* Camera;
-
 	/**
 	* Для камеры.
 	*/
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
 		USpringArmComponent* SpringArm;
-
 	/**
 	* Вращать ли перса в сторону цели.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		bool bRotatingToTarget;
-
 	/**
 	* Скорость зума камеры.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		float ZoomIntencity;
-
 	/**
 	* Максимальная длина штатива камеры, которая соответ. минимальному зуму.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		float SpringArmLengthMax;
-
 	/**
 	* Минимальная длина штатива камеры, которая соответ. максимальному зуму.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		float SpringArmLengthMin;
-
 	/**
 	 * Умножается на AxisValue из InputAxis для изменения скорости передвижения.
 	 */
@@ -213,33 +184,29 @@ public:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		float LifeSpan;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Settings")
+	TSubclassOf<AAbilitySystemManager> AbilitySystemManagerClass;
 	/**
 	 * Умножается на AxisValue из InputAxis для изменения скорости передвижения.
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
 		float AxisValueMovementCoeff;
-
 	/**
 	 * Режимы движения
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
 		EMovementStatus MovementStatus;
 
-	///**
-	// * включен ли автобег
-	// */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
-
+	APlayerController* PlayerController;
 
 private:
 	/**
 	 * Для автобега. Запускает метод AutoRunning().
 	 */
 	FTimerHandle AutoRunningTimer;
-	APlayerController* PlayerController;
 	AHUD* HUD;
 	AGameModeBase* GameMode;
+	AAbilitySystemManager* AbilitySystemManager;
 
 	/**
 	 * Methods
@@ -285,6 +252,10 @@ public:
 
 	void Interact_InAct();
 
+	void MeleeAbility_InAct();
+	void ThrowAbility_InAct();
+	void SFSphereAbility_InAct();
+
 	/**
 	 * Other
 	 */
@@ -297,6 +268,13 @@ public:
 	void InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void MeleeAttack();
+	FVector GetForwardVectorArrowLeftFoot();
+	FVector GetForwardVectorArrowRightFoot();
+	FVector GetArrowLeftFootSocketLocation();
+	FVector GetArrowRightFootSocketLocation();
+	void SpawnAbilitySystemManager();
 
 	/**
 	 * Изменяет значение AxisValue для AddMovementInput() при контроле игроком скорости передвижения.
@@ -322,15 +300,9 @@ public:
 
 	float GetDamage() const;
 	float GetMultiplierOfDamage() const;
+	float GetAllDamage() const;
 	float GetDefence();
 	float GetLife();
-
-	/**
-	 * Attack Tracing
-	 */
-
-	void TraceAttackRightFoot();
-	void TraceAttackLeftFoot();
 
 
 public:

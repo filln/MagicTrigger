@@ -6,9 +6,9 @@
 #include "MagicTrigger\Interfaces\GameInstanceInterface.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "MagicTrigger\UI\Settings\SettingsMenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGameMenuUserWidget.h"
-#include "MagicTrigger\UI\LoadGameMenuUserWidget.h"
-#include "MagicTrigger\UI\ListOfSavedGamesUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\SaveGameMenuUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\LoadGameMenuUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\ListOfSavedGamesUserWidget.h"
 
 #include "Kismet\KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,39 +19,6 @@
 void UMenuUserWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	//DEBUGMESSAGE("NativeOnInitialized");
-	//Проверить, есть ли сохраненные игры. Если нет, то скрыть кнопку загрузки игры.
-	//FTimerHandle* TmpTimer = &(this->CheckHUDTimer);
-	//FTimerDelegate TmpDelegate;
-	//AHUDMagicTrigger** HUD = &(this->HUDMagicTrigger);
-	//UButton* ButtonLoc = this->LoadGameMenuButton;
-	//USpacer* SpacerLoc = this->SpacerLoad;
-	//TmpDelegate.BindLambda
-	//(
-	//	[=]
-	//()
-	//{
-	//	if (*HUD)
-	//	{
-	//		if (IsInterfaceImplementedBy<IGameInstanceInterface>((*HUD)->GameInstance))
-	//		{
-				//bool bVisible = UGameplayStatics::DoesSaveGameExist(IGameInstanceInterface::Execute_GetGamesListName_IF((*HUD)->GameInstance), 0);
-				//if (bVisible)
-				//{
-				//	ButtonLoc->SetVisibility(ESlateVisibility::Visible);
-				//	SpacerLoc->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				//}
-				//else
-				//{
-				//	ButtonLoc->SetVisibility(ESlateVisibility::Collapsed);
-				//	SpacerLoc->SetVisibility(ESlateVisibility::Collapsed);
-				//}
-	//		}
-	//		GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
-	//	}
-	//}
-	//);
-	//GetWorld()->GetTimerManager().SetTimer(this->CheckHUDTimer, TmpDelegate, 0.05, true);
 }
 
 
@@ -59,20 +26,20 @@ void UMenuUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	//Проверить, есть ли сохраненные игры. Если нет, то скрыть кнопку загрузки игры.
-	if (this->HUDMagicTrigger)
+	if (HUDMagicTrigger)
 	{
-		if (IsInterfaceImplementedBy<IGameInstanceInterface>(this->HUDMagicTrigger->GameInstance))
+		if (IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
 		{
-			bool bVisible = UGameplayStatics::DoesSaveGameExist(IGameInstanceInterface::Execute_GetGamesListName_IF(this->HUDMagicTrigger->GameInstance), 0);
+			bool bVisible = UGameplayStatics::DoesSaveGameExist(IGameInstanceInterface::Execute_GetGamesListName_IF(HUDMagicTrigger->GameInstance), 0);
 			if (bVisible)
 			{
-				this->LoadGameMenuButton->SetVisibility(ESlateVisibility::Visible);
-				this->SpacerLoad->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				LoadGameMenuButton->SetVisibility(ESlateVisibility::Visible);
+				SpacerLoad->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
 			{
-				this->LoadGameMenuButton->SetVisibility(ESlateVisibility::Collapsed);
-				this->SpacerLoad->SetVisibility(ESlateVisibility::Collapsed);
+				LoadGameMenuButton->SetVisibility(ESlateVisibility::Collapsed);
+				SpacerLoad->SetVisibility(ESlateVisibility::Collapsed);
 			}
 		}
 	}
@@ -81,7 +48,7 @@ void UMenuUserWidget::NativeConstruct()
 
 void UMenuUserWidget::OnPressedResumeButton()
 {
-	this->HUDMagicTrigger->SetPauseGame(false, this);
+	HUDMagicTrigger->SetPauseGame(false, this);
 }
 
 void UMenuUserWidget::OnPressedExitButton()
@@ -91,34 +58,34 @@ void UMenuUserWidget::OnPressedExitButton()
 
 void UMenuUserWidget::OnPressedNewGameButton()
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(this->HUDMagicTrigger->GameInstance))
+	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy(this->HUDMagicTrigger->GameInstance)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy(HUDMagicTrigger->GameInstance)");
 		return;
 	}
 
-	IGameInstanceInterface::Execute_BeginNewGame_IF(this->HUDMagicTrigger->GameInstance);
+	IGameInstanceInterface::Execute_BeginNewGame_IF(HUDMagicTrigger->GameInstance);
 }
 
 void UMenuUserWidget::OnPressedSaveGameMenuButton()
 {
-	this->HUDMagicTrigger->SaveGameMenuUserWidget->Prepare();
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->SaveGameMenuUserWidget);
+	HUDMagicTrigger->SaveGameMenuUserWidget->Prepare();
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->SaveGameMenuUserWidget);
 }
 
 void UMenuUserWidget::OnPressedSettingsButton()
 {
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->SettingsMenuUserWidget);
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->SettingsMenuUserWidget);
 }
 
 void UMenuUserWidget::OnPressedLoadGameMenuButton()
 {
 
-	if (!this->HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget)
+	if (!HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget");
+		DEBUGMESSAGE("!HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget");
 		return;
 	}
-	this->HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget->Refresh();
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->LoadGameMenuUserWidget);
+	HUDMagicTrigger->LoadGameMenuUserWidget->ListOfSavedGamesUserWidget->Refresh();
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->LoadGameMenuUserWidget);
 }

@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MagicTrigger\Data\AttackAbilities\FireBallMoveToTargetInputsStruct.h"
+#include "MagicTrigger\Data\AbilitySystem\FireBallMoveToTargetInputsStruct.h"
 #include "FireBall.generated.h"
 
 class UMaterialInterface;

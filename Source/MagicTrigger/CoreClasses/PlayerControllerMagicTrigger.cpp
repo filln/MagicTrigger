@@ -48,10 +48,10 @@ void APlayerControllerMagicTrigger::BeginPlay()
 
 void APlayerControllerMagicTrigger::SetInputRotationScale(float InMouseSensitivity)
 {
-	this->MouseSensitivity = InMouseSensitivity;
-	this->InputPitchScale = this->InitialInputPitchScale * MouseSensitivity;
-	this->InputYawScale = this->InitialInputYawScale * MouseSensitivity;
-	this->InputRollScale = this->InitialInputRollScale * MouseSensitivity;
+	MouseSensitivity = InMouseSensitivity;
+	InputPitchScale = InitialInputPitchScale * MouseSensitivity;
+	InputYawScale = InitialInputYawScale * MouseSensitivity;
+	InputRollScale = InitialInputRollScale * MouseSensitivity;
 
 }
 
@@ -62,5 +62,5 @@ void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(floa
 
 float APlayerControllerMagicTrigger::GetMouseSensitivity_IF_Implementation()
 {
-	return this->MouseSensitivity;
+	return MouseSensitivity;
 }

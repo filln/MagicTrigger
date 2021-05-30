@@ -18,7 +18,7 @@ ABoxForPlatformParent::ABoxForPlatformParent()
 void ABoxForPlatformParent::BeginPlay()
 {
 	Super::BeginPlay();
-	this->InitialLocation = GetActorLocation();
+	InitialLocation = GetActorLocation();
 }
 
 void ABoxForPlatformParent::MoveToInitialLocation()
@@ -30,7 +30,7 @@ void ABoxForPlatformParent::MoveToInitialLocation()
 void ABoxForPlatformParent::MoveUp()
 {
 	FVector CurrentLocation = GetActorLocation();
-	FVector TargetRelativeLocation = FVector(CurrentLocation.X, CurrentLocation.Y, CurrentLocation.Z + this->MoveUpHigh);
+	FVector TargetRelativeLocation = FVector(CurrentLocation.X, CurrentLocation.Y, CurrentLocation.Z + MoveUpHigh);
 	FRotator TargetRelativeRotation = GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -42,19 +42,19 @@ void ABoxForPlatformParent::MoveUp()
 		TargetRelativeRotation,
 		false,
 		false,
-		this->MoveUpOverTime,
+		MoveUpOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABoxForPlatformParent::MoveHorizontal, this->MoveUpOverTime);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABoxForPlatformParent::MoveHorizontal, MoveUpOverTime);
 }
 
 void ABoxForPlatformParent::MoveHorizontal()
 {
-	FVector TargetRelativeLocation = FVector(this->InitialLocation.X, this->InitialLocation.Y, this->InitialLocation.Z + this->MoveUpHigh);
+	FVector TargetRelativeLocation = FVector(InitialLocation.X, InitialLocation.Y, InitialLocation.Z + MoveUpHigh);
 	FRotator TargetRelativeRotation = GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -66,19 +66,19 @@ void ABoxForPlatformParent::MoveHorizontal()
 		TargetRelativeRotation,
 		false,
 		false,
-		this->MoveHorizontalOverTime,
+		MoveHorizontalOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABoxForPlatformParent::MoveDown, this->MoveHorizontalOverTime);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABoxForPlatformParent::MoveDown, MoveHorizontalOverTime);
 }
 
 void ABoxForPlatformParent::MoveDown()
 {
-	FVector TargetRelativeLocation = this->InitialLocation;
+	FVector TargetRelativeLocation = InitialLocation;
 	FRotator TargetRelativeRotation = GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -90,7 +90,7 @@ void ABoxForPlatformParent::MoveDown()
 		TargetRelativeRotation,
 		false,
 		false,
-		this->MoveDownOverTime,
+		MoveDownOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
@@ -98,11 +98,11 @@ void ABoxForPlatformParent::MoveDown()
 
 	FTimerHandle TimerHandle;
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &ABoxForPlatformParent::SetEnableInteraction, true);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, this->MoveDownOverTime, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, MoveDownOverTime, false);
 }
 
 void ABoxForPlatformParent::SetEnableInteraction(bool bInEnable)
 {
 	SetActorEnableCollision(bInEnable);
-	this->StaticMesh->SetSimulatePhysics(bInEnable);
+	StaticMesh->SetSimulatePhysics(bInEnable);
 }

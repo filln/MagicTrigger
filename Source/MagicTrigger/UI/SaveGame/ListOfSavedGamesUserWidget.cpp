@@ -4,7 +4,7 @@
 #include "ListOfSavedGamesUserWidget.h"
 #include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
 #include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\UI\SavedGameUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\SavedGameUserWidget.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "Components\ScrollBox.h"
 #include "Components\Image.h"
@@ -34,35 +34,35 @@ void UListOfSavedGamesUserWidget::NativeOnInitialized()
 		DEBUGMESSAGE("!HUD");
 		return;
 	}
-	this->HUDMagicTrigger = Cast<AHUDMagicTrigger>(HUD);
-	if (!this->HUDMagicTrigger)
+	HUDMagicTrigger = Cast<AHUDMagicTrigger>(HUD);
+	if (!HUDMagicTrigger)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger");
+		DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
 }
 
 void UListOfSavedGamesUserWidget::Refresh()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		DEBUGMESSAGE("!HUDMagicTrigger");
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(this->HUDMagicTrigger->GameInstance))
+	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(this->HUDMagicTrigger->GameInstance)");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance)");
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 
 	TArray<FString> GamesList;
-	bool bLoaded = IGameInstanceInterface::Execute_LoadGamesList_IF(this->HUDMagicTrigger->GameInstance, GamesList);
+	bool bLoaded = IGameInstanceInterface::Execute_LoadGamesList_IF(HUDMagicTrigger->GameInstance, GamesList);
 	if (!bLoaded)
 	{
 		DEBUGMESSAGE("!bLoaded");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 
@@ -73,48 +73,48 @@ void UListOfSavedGamesUserWidget::Refresh()
 void UListOfSavedGamesUserWidget::RefreshWithoutLoadData(const TArray<FString>& InGamesList)
 {
 	//////////////////////////////////////////////////////////////////////////Check
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		DEBUGMESSAGE("!this->HUDMagicTrigger");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		DEBUGMESSAGE("!HUDMagicTrigger");
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	if (!this->ListOfSavedGamesScrollBox)
+	if (!ListOfSavedGamesScrollBox)
 	{
-		DEBUGMESSAGE("!this->ListOfSavedGamesScrollBox");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		DEBUGMESSAGE("!ListOfSavedGamesScrollBox");
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 	if (!InGamesList.Num())
 	{
 		DEBUGMESSAGE("!InGamesList.Num()");
-		this->SetVisibility(ESlateVisibility::Collapsed);
+		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	this->ListOfSavedGamesScrollBox->ClearChildren();
-	if (this->HUDMagicTrigger->LastSavedGame)
+	ListOfSavedGamesScrollBox->ClearChildren();
+	if (HUDMagicTrigger->LastSavedGame)
 	{
-		this->HUDMagicTrigger->LastSavedGame = nullptr;
+		HUDMagicTrigger->LastSavedGame = nullptr;
 	}
 
-	this->ScreenShotImage->SetVisibility(ESlateVisibility::Hidden);
+	ScreenShotImage->SetVisibility(ESlateVisibility::Hidden);
 
-	this->SetVisibility(ESlateVisibility::Visible);
+	SetVisibility(ESlateVisibility::Visible);
 
 	for (auto Index = InGamesList.Num() - 1; Index >= 0; Index--)
 	{
 		USavedGameUserWidget* CurrentSaveWidget = CreateWidget<USavedGameUserWidget>
 			(
-				this->HUDMagicTrigger->PlayerController,
-				this->HUDMagicTrigger->SavedGameUserWidgetClass,
+				HUDMagicTrigger->PlayerController,
+				HUDMagicTrigger->SavedGameUserWidgetClass,
 				FName(*(InGamesList[Index]))
 				);
 		FText NameText = FText::AsCultureInvariant(InGamesList[Index]);
 		//DEBUGSTRING(InGamesList[Index]);
 		CurrentSaveWidget->NameOfSavedGame->SetText(NameText);
-		this->ListOfSavedGamesScrollBox->AddChild(CurrentSaveWidget);
+		ListOfSavedGamesScrollBox->AddChild(CurrentSaveWidget);
 	}
 
 }

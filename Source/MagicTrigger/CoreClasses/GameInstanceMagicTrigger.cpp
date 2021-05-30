@@ -10,7 +10,7 @@
 #include "MagicTrigger\SaveGame\SaveGameMT.h"
 #include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
 #include "MagicTrigger\SaveGame\SaveGameManager.h"
-#include "MagicTrigger\UI\LoadingUserWidget.h"
+#include "MagicTrigger\UI\SaveGame\LoadingUserWidget.h"
 
 #include "GameFramework\PlayerController.h"
 #include "GameFramework\HUD.h"
@@ -30,7 +30,7 @@ void UGameInstanceMagicTrigger::Init()
 	Super::Init();
 	SaveGameManager = NewObject<USaveGameManager>(this, USaveGameManager::StaticClass(), FName(TEXT("SaveGameManager")));
 	SaveGameManager->GameInstance = this;
-	this->LoadingUserWidget = CreateWidget<ULoadingUserWidget>(this, LoadingUserWidgetClass, FName(TEXT("LoadingUserWidget")));
+	LoadingUserWidget = CreateWidget<ULoadingUserWidget>(this, LoadingUserWidgetClass, FName(TEXT("LoadingUserWidget")));
 	//DEBUGMESSAGE("Init()");
 }
 
@@ -55,7 +55,7 @@ bool UGameInstanceMagicTrigger::SaveCurrentGame(const FString& NameOfSaveGame)
 		DEBUGMESSAGE("!SaveGameTmp");
 		return false;
 	}
-	this->SaveGameManager->SaveAll(SaveGameTmp);
+	SaveGameManager->SaveAll(SaveGameTmp);
 
 	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, NameOfSaveGame, 0);
 
@@ -66,9 +66,9 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 {
 	//DEBUGSTRING(NameOfSaveGame);
 	bool bGameSaved;
-	if (UGameplayStatics::DoesSaveGameExist(this->GamesListName, 0))
+	if (UGameplayStatics::DoesSaveGameExist(GamesListName, 0))
 	{
-		USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GamesListName, 0);
+		USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(GamesListName, 0);
 		UListOfSavedGames* ListTmp = Cast<UListOfSavedGames>(SaveGameTmp);
 		if (!ListTmp)
 		{
@@ -76,7 +76,7 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 			return false;
 		}
 		ListTmp->ListOfSavedGames.Add(NameOfSaveGame);
-		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, GamesListName, 0);
 		if (bGameSaved)
 		{
 			InGamesList = ListTmp->ListOfSavedGames;
@@ -93,7 +93,7 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 		TArray<FString> NamesListTmp;
 		NamesListTmp.Add(NameOfSaveGame);
 		ListTmp->ListOfSavedGames = NamesListTmp;
-		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+		bGameSaved = UGameplayStatics::SaveGameToSlot(ListTmp, GamesListName, 0);
 		if (bGameSaved)
 		{
 			InGamesList = NamesListTmp;
@@ -106,13 +106,13 @@ bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGam
 
 bool UGameInstanceMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList)
 {
-	if (!UGameplayStatics::DoesSaveGameExist(this->GamesListName, 0))
+	if (!UGameplayStatics::DoesSaveGameExist(GamesListName, 0))
 	{
-		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(this->GamesListName, 0)");
+		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(GamesListName, 0)");
 		return false;
 	}
 
-	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GamesListName, 0);
+	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(GamesListName, 0);
 	UListOfSavedGames* ListTmp = Cast<UListOfSavedGames>(SaveGameTmp);
 	if (!ListTmp)
 	{
@@ -203,7 +203,7 @@ bool UGameInstanceMagicTrigger::DeleteSaveGame(const FString& NameOfDeleteGame)
 
 bool UGameInstanceMagicTrigger::DeleteNameFromGamesList(const FString& NameOfDeleteGame, TArray<FString>& InGamesList)
 {
-	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GamesListName, 0);
+	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(GamesListName, 0);
 	UListOfSavedGames* ListTmp = Cast<UListOfSavedGames>(SaveGameTmp);
 	if (!ListTmp)
 	{
@@ -217,7 +217,7 @@ bool UGameInstanceMagicTrigger::DeleteNameFromGamesList(const FString& NameOfDel
 		return false;
 	}
 
-	bool bSaved = UGameplayStatics::SaveGameToSlot(ListTmp, this->GamesListName, 0);
+	bool bSaved = UGameplayStatics::SaveGameToSlot(ListTmp, GamesListName, 0);
 	if (bSaved)
 	{
 		InGamesList = ListTmp->ListOfSavedGames;
@@ -266,7 +266,7 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 		return;
 	}
 	//////////////////////////////////////////////////////////////////////////
-	this->CurrentLoadingGame = LoadGamesData(NameOfLoadGame);
+	CurrentLoadingGame = LoadGamesData(NameOfLoadGame);
 	if (!CurrentLoadingGame)
 	{
 		DEBUGMESSAGE("!CurrentLoadingGame");
@@ -274,12 +274,12 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 	}
 
 	IHUDInterface::Execute_HideLoadGameMenuWidget_IF(HUD);
-	UGameplayStatics::OpenLevel(GetWorld(), this->CurrentLoadingGame->LevelName);
-	FTimerHandle* TmpTimer = &(this->LoadingGameTimer);
+	UGameplayStatics::OpenLevel(GetWorld(), CurrentLoadingGame->LevelName);
+	FTimerHandle* TmpTimer = &(LoadingGameTimer);
 	FTimerDelegate TmpDelegate;
-	USaveGameManager* SaveGameManagerLoc = this->SaveGameManager;
-	bool* bLevelLoadedRef = &(this->bLevelLoaded);
-	USaveGameMT* LoadingGameTmp = this->CurrentLoadingGame;
+	USaveGameManager* SaveGameManagerLoc = SaveGameManager;
+	bool* bLevelLoadedRef = &(bLevelLoaded);
+	USaveGameMT* LoadingGameTmp = CurrentLoadingGame;
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -293,7 +293,7 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 		}
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(this->LoadingGameTimer, TmpDelegate, 0.1, true, 3);
+	GetWorld()->GetTimerManager().SetTimer(LoadingGameTimer, TmpDelegate, 0.1, true, 3);
 }
 
 void UGameInstanceMagicTrigger::BeginNewGame()
@@ -323,10 +323,10 @@ void UGameInstanceMagicTrigger::BeginNewGame()
 	//FPlayerStateMagicTriggerStruct States = IPlayerStateInterface::Execute_GetBeginGameStates_IF(PlayerState);
 	//IPlayerStateInterface::Execute_SetStates_IF(PlayerState, States);
 
-	FTimerHandle* TmpTimer = &(this->BeginNewGameTimer);
-	ULoadingUserWidget* LoadingUserWidgetTmp = this->LoadingUserWidget;
+	FTimerHandle* TmpTimer = &(BeginNewGameTimer);
+	ULoadingUserWidget* LoadingUserWidgetTmp = LoadingUserWidget;
 	FTimerDelegate TmpDelegate;
-	bool* bLevelLoadedRef = &(this->bLevelLoaded);
+	bool* bLevelLoadedRef = &(bLevelLoaded);
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -379,7 +379,7 @@ void UGameInstanceMagicTrigger::BeginNewGame()
 	}
 	);
 
-	GetWorld()->GetTimerManager().SetTimer(this->BeginNewGameTimer, TmpDelegate, 0.1, true, 3);
+	GetWorld()->GetTimerManager().SetTimer(BeginNewGameTimer, TmpDelegate, 0.1, true, 3);
 }
 
 bool UGameInstanceMagicTrigger::MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList)
@@ -401,9 +401,9 @@ bool UGameInstanceMagicTrigger::MainDeleteGame(const FString& NameOfDeleteGame, 
 
 void UGameInstanceMagicTrigger::SaveGameSettings()
 {
-	if (UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0))
+	if (UGameplayStatics::DoesSaveGameExist(GameSettingsName, 0))
 	{
-		bool bDeleted = UGameplayStatics::DeleteGameInSlot(this->GameSettingsName, 0);
+		bool bDeleted = UGameplayStatics::DeleteGameInSlot(GameSettingsName, 0);
 		if (!bDeleted)
 		{
 			DEBUGMESSAGE("!bDeleted");
@@ -417,8 +417,8 @@ void UGameInstanceMagicTrigger::SaveGameSettings()
 		DEBUGMESSAGE("!SaveGameTmp");
 		return;
 	}
-	this->SaveGameManager->SaveGameSettings(SaveGameTmp);
-	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, this->GameSettingsName, 0);
+	SaveGameManager->SaveGameSettings(SaveGameTmp);
+	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, GameSettingsName, 0);
 
 	if (!bGameSaved)
 	{
@@ -429,31 +429,31 @@ void UGameInstanceMagicTrigger::SaveGameSettings()
 
 void UGameInstanceMagicTrigger::LoadGameSettings()
 {
-	if (!UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0))
+	if (!UGameplayStatics::DoesSaveGameExist(GameSettingsName, 0))
 	{
-		//DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(this->GameSettingsName, 0)");
+		//DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(GameSettingsName, 0)");
 		ResetGameSettings();
 		return;
 	}
-	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(this->GameSettingsName, 0);
+	USaveGame* SaveGameTmp = UGameplayStatics::LoadGameFromSlot(GameSettingsName, 0);
 	UGameSettingsSaveGameMT* SaveGameMTTmp = Cast<UGameSettingsSaveGameMT>(SaveGameTmp);
 	if (!SaveGameMTTmp)
 	{
 		DEBUGMESSAGE("!SaveGameMTTmp");
 		return;
 	}
-	if (!this->SaveGameManager)
+	if (!SaveGameManager)
 	{
-		DEBUGMESSAGE("!this->SaveGameManager");
+		DEBUGMESSAGE("!SaveGameManager");
 		return;
 	}
-	this->SaveGameManager->LoadGameSettings(SaveGameMTTmp);
+	SaveGameManager->LoadGameSettings(SaveGameMTTmp);
 
 }
 
 void UGameInstanceMagicTrigger::ResetGameSettings()
 {
-	this->SaveGameManager->ResetGameSettings();
+	SaveGameManager->ResetGameSettings();
 }
 
 USaveGameMT* UGameInstanceMagicTrigger::LoadGamesData_IF_Implementation(FString& NameOfLoadGame)
@@ -463,17 +463,17 @@ USaveGameMT* UGameInstanceMagicTrigger::LoadGamesData_IF_Implementation(FString&
 
 FGameSettingsStruct UGameInstanceMagicTrigger::GetGameSettingsStruct_IF_Implementation() const
 {
-	return this->GameSettingsStruct;
+	return GameSettingsStruct;
 }
 
 void UGameInstanceMagicTrigger::SetGameSettingsStruct_IF_Implementation(FGameSettingsStruct InGameSettingsStruct)
 {
-	this->GameSettingsStruct = InGameSettingsStruct;
+	GameSettingsStruct = InGameSettingsStruct;
 }
 
 void UGameInstanceMagicTrigger::SetMouseSensitivity_IF_Implementation(float MouseSensitivity)
 {
-	this->GameSettingsStruct.MouseSensitivity = MouseSensitivity;
+	GameSettingsStruct.MouseSensitivity = MouseSensitivity;
 }
 
 bool UGameInstanceMagicTrigger::LoadGamesList_IF_Implementation(TArray<FString>& InGamesList)
@@ -503,7 +503,7 @@ void UGameInstanceMagicTrigger::BeginNewGame_IF_Implementation()
 
 void UGameInstanceMagicTrigger::SetLevelLoadedTrue_IF_Implementation()
 {
-	this->bLevelLoaded = true;
+	bLevelLoaded = true;
 }
 
 void UGameInstanceMagicTrigger::SaveGameSettings_IF_Implementation()
@@ -525,7 +525,7 @@ void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
 	}
 
 	FTimerDelegate TmpDelegate;
-	FTimerHandle* TmpTimer = &(this->BeginNewGameTimer);
+	FTimerHandle* TmpTimer = &(BeginNewGameTimer);
 	TmpDelegate.BindLambda
 	(
 		[=]
@@ -546,22 +546,22 @@ void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
 		}
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(this->BeginNewGameTimer, TmpDelegate, 0.1, true);
+	GetWorld()->GetTimerManager().SetTimer(BeginNewGameTimer, TmpDelegate, 0.1, true);
 }
 
 FString UGameInstanceMagicTrigger::GetGamesListName_IF_Implementation()
 {
-	return this->GamesListName;
+	return GamesListName;
 }
 
 void UGameInstanceMagicTrigger::ShowLoadingUserWidget_IF_Implementation()
 {
-	if (this->LoadingUserWidget)
+	if (LoadingUserWidget)
 	{
-		this->LoadingUserWidget->AddToViewport(0);
+		LoadingUserWidget->AddToViewport(0);
 	}
 	else
 	{
-		DEBUGMESSAGE("!this->LoadingUserWidget");
+		DEBUGMESSAGE("!LoadingUserWidget");
 	}
 }

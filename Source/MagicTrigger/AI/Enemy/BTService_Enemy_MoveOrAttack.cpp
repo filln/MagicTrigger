@@ -64,7 +64,7 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 	{
 		//DEBUGMESSAGE("Move to player");
 		Enemy->StopAttack();
-		Blackboard->SetValueAsBool(this->BBKeys.bCanMoveToPlayer, true);
+		Blackboard->SetValueAsBool(BBKeys.bCanMoveToPlayer, true);
 	}
 	//Move and attack
 	else if (
@@ -73,7 +73,7 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 		)
 	{
 		//DEBUGMESSAGE("Move and attack");
-		Blackboard->SetValueAsBool(this->BBKeys.bCanMoveToPlayer, true);
+		Blackboard->SetValueAsBool(BBKeys.bCanMoveToPlayer, true);
 		Enemy->StartAttack();
 	} 
 	//Attack
@@ -84,7 +84,7 @@ void UBTService_Enemy_MoveOrAttack::TickNode(UBehaviorTreeComponent& OwnerComp, 
 	{
 		//DEBUGMESSAGE("Attack");
 		EnemyAIController->StopMovement();
-		Blackboard->ClearValue(this->BBKeys.bCanMoveToPlayer);
+		Blackboard->ClearValue(BBKeys.bCanMoveToPlayer);
 		Enemy->StartAttack();
 	}
 }

@@ -21,14 +21,14 @@ UObserveEnemyUserWidget::UObserveEnemyUserWidget()
 
 float UObserveEnemyUserWidget::GetLife()
 {
-	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy))
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy)");
 		return 0;
 	}
 
-	float Life = IEnemyCharacterInterface::Execute_GetLife_IF(this->HUDMagicTrigger->Enemy);
-	float MaxLife = IEnemyCharacterInterface::Execute_GetMaxLife_IF(this->HUDMagicTrigger->Enemy);
+	float Life = IEnemyCharacterInterface::Execute_GetLife_IF(HUDMagicTrigger->Enemy);
+	float MaxLife = IEnemyCharacterInterface::Execute_GetMaxLife_IF(HUDMagicTrigger->Enemy);
 	if (MaxLife <= 0 || Life <= 0)
 	{
 		return 0;
@@ -39,41 +39,41 @@ float UObserveEnemyUserWidget::GetLife()
 
 FText UObserveEnemyUserWidget::GetTextLife()
 {
-	//if (!this->HUDMagicTrigger->Enemy)
+	//if (!HUDMagicTrigger->Enemy)
 	//{
-	//	DEBUGMESSAGE("!this->HUDMagicTrigger->Enemy");
+	//	DEBUGMESSAGE("!HUDMagicTrigger->Enemy");
 	//}
-	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy))
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy)");
 		return FText();
 	}
 
-	float Life = IEnemyCharacterInterface::Execute_GetLife_IF(this->HUDMagicTrigger->Enemy);
+	float Life = IEnemyCharacterInterface::Execute_GetLife_IF(HUDMagicTrigger->Enemy);
 	return UKismetTextLibrary::Conv_FloatToText(Life, ERoundingMode::HalfToEven, false, false, 1, 324, 0, 0);
 }
 
 FSlateBrush UObserveEnemyUserWidget::GetIcon()
 {
-	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy))
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy)");
 		return FSlateBrush();
 	}
 
-	UTexture2D* IconImageTmp = IEnemyCharacterInterface::Execute_GetIcon_IF(this->HUDMagicTrigger->Enemy);
-	this->IconBrush.SetResourceObject(IconImageTmp);
-	return this->IconBrush;
+	UTexture2D* IconImageTmp = IEnemyCharacterInterface::Execute_GetIcon_IF(HUDMagicTrigger->Enemy);
+	IconBrush.SetResourceObject(IconImageTmp);
+	return IconBrush;
 
 }
 
 FText UObserveEnemyUserWidget::GetTextName()
 {
-	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy))
+	if (!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(this->HUDMagicTrigger->Enemy)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IEnemyCharacterInterface>(HUDMagicTrigger->Enemy)");
 		return FText();
 	}
 
-	return IEnemyCharacterInterface::Execute_GetName_IF(this->HUDMagicTrigger->Enemy);
+	return IEnemyCharacterInterface::Execute_GetName_IF(HUDMagicTrigger->Enemy);
 }

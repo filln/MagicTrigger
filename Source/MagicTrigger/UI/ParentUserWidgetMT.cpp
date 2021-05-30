@@ -32,3 +32,4 @@ AHUDMagicTrigger* UParentUserWidgetMT::GetHUDMagicTrigger()
 
 	return HUDMagicTriggerTmp;
 }
+

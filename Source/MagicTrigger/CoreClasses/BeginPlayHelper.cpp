@@ -30,14 +30,14 @@ void ABeginPlayHelper::StartBeginPlayTimer()
 		return;
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(this->BeginPlayTimer, this, &ABeginPlayHelper::BeforeBeginPlay, this->BeginPlayTimerTime, true);
+	GetWorld()->GetTimerManager().SetTimer(BeginPlayTimer, this, &ABeginPlayHelper::BeforeBeginPlay, BeginPlayTimerTime, true);
 }
 
 void ABeginPlayHelper::BeforeBeginPlay()
 {
 	if (CheckReferences())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(this->BeginPlayTimer);
+		GetWorld()->GetTimerManager().ClearTimer(BeginPlayTimer);
 		DoBeginPlay();
 	}
 }

@@ -47,36 +47,36 @@ void UAnimationManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (this->PlayerCharacter)
+	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (PlayerCharacter)
 	{
 		USkeletalMeshComponent* Mesh = PlayerCharacter->GetMesh();
-		this->AnimInstance = Mesh->GetAnimInstance();
+		AnimInstance = Mesh->GetAnimInstance();
 	}
 	else
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter")
+		DEBUGMESSAGE("!PlayerCharacter")
 	}
 
-	this->Owner = GetOwner();
-	if (!this->Owner)
+	Owner = GetOwner();
+	if (!Owner)
 	{
-		DEBUGMESSAGE("!this->Owner")
+		DEBUGMESSAGE("!Owner")
 	}
 
 }
 
 void UAnimationManagerComponent::StartJump()
 {
-	if (!this->bCanJump)
+	if (!bCanJump)
 	{
 		return;
 	}
 
-	if (this->PlayerCharacter)
+	if (PlayerCharacter)
 	{
 		SetPlayingAnimationJump(true);
-		this->PlayerCharacter->Jump();
+		PlayerCharacter->Jump();
 		GetWorld()->GetTimerManager().SetTimer(CheckStopJumpAnimationTimer, this, &UAnimationManagerComponent::CheckStopJumpAnimation, CheckStopJumpAnimationTimerRate);
 
 	}
@@ -86,7 +86,7 @@ void UAnimationManagerComponent::StartJump()
 
 void UAnimationManagerComponent::CheckStopJumpAnimation()
 {
-	if (this->bJumping)
+	if (bJumping)
 	{
 		SetPlayingAnimationJump(false);
 	}
@@ -94,7 +94,7 @@ void UAnimationManagerComponent::CheckStopJumpAnimation()
 
 void UAnimationManagerComponent::CheckStopAttackAnimation()
 {
-	if (this->bAttacking)
+	if (bAttacking)
 	{
 		SetPlayingAnimationAttack(false);
 	}
@@ -102,7 +102,7 @@ void UAnimationManagerComponent::CheckStopAttackAnimation()
 
 void UAnimationManagerComponent::CheckStopThrowAnimation()
 {
-	if (this->bThrowing)
+	if (bThrowing)
 	{
 		SetPlayingAnimationThrow(false);
 	}
@@ -110,16 +110,16 @@ void UAnimationManagerComponent::CheckStopThrowAnimation()
 
 void UAnimationManagerComponent::StopJump()
 {
-	if (this->PlayerCharacter)
+	if (PlayerCharacter)
 	{
-		this->PlayerCharacter->StopJumping();
+		PlayerCharacter->StopJumping();
 		SetPlayingAnimationJump(false);
 	}
 }
 
 void UAnimationManagerComponent::AttackAnimation()
 {
-	if (!this->bCanAttack)
+	if (!bCanAttack)
 	{
 		return;
 	}
@@ -131,7 +131,7 @@ void UAnimationManagerComponent::AttackAnimation()
 
 void UAnimationManagerComponent::ThrowAnimation()
 {
-	if (!this->bCanThrow)
+	if (!bCanThrow)
 	{
 		return;
 	}
@@ -145,19 +145,19 @@ void UAnimationManagerComponent::SetPlayingAnimationThrow(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
 
-		this->bThrowing = true;
+		bThrowing = true;
 	}
 	else
 	{
-		this->bCanThrow = true;
-		this->bCanAttack = true;
-		this->bCanInteract = true;
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
 
-		this->bThrowing = false;
+		bThrowing = false;
 	}
 }
 
@@ -165,23 +165,23 @@ void UAnimationManagerComponent::SetPlayingAnimationAttack(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
-		this->bCanRun = false;
-		this->bCanJump = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
 
-		this->bAttacking = true;
+		bAttacking = true;
 	}
 	else
 	{
-		this->bCanThrow = true;
-		this->bCanAttack = true;
-		this->bCanInteract = true;
-		this->bCanRun = true;
-		this->bCanJump = true;
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+		bCanRun = true;
+		bCanJump = true;
 
-		this->bAttacking = false;
+		bAttacking = false;
 	}
 }
 
@@ -189,15 +189,15 @@ void UAnimationManagerComponent::SetPlayingAnimationJump(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanInteract = false;
+		bCanInteract = false;
 
-		this->bJumping = true;
+		bJumping = true;
 	}
 	else
 	{
-		this->bCanInteract = true;
+		bCanInteract = true;
 
-		this->bJumping = false;
+		bJumping = false;
 	}
 }
 
@@ -205,24 +205,24 @@ void UAnimationManagerComponent::SetPlayingAnimationLiftUp1Hand(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
-		this->bCanRun = false;
-		this->bCanJump = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
 
-		this->bLiftingUp1Hand = true;
+		bLiftingUp1Hand = true;
 
 	}
 	else
 	{
-		this->bCanThrow = true;
-		this->bCanAttack = true;
-		this->bCanInteract = true;
-		this->bCanRun = true;
-		this->bCanJump = true;
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+		bCanRun = true;
+		bCanJump = true;
 
-		this->bLiftingUp1Hand = false;
+		bLiftingUp1Hand = false;
 	}
 }
 
@@ -230,19 +230,19 @@ void UAnimationManagerComponent::SetPlayingAnimationLiftUp2Hands(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
-		this->bCanRun = false;
-		this->bCanJump = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
 
-		this->bLiftingUp2Hands = true;
+		bLiftingUp2Hands = true;
 
 	}
 	else
 	{
-		this->bCanInteract = false;
-		this->bCanRun = true;
+		bCanInteract = false;
+		bCanRun = true;
 	}
 }
 
@@ -250,24 +250,24 @@ void UAnimationManagerComponent::SetPlayingAnimationPutDown1Hand(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
-		this->bCanRun = false;
-		this->bCanJump = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
 
-		this->bPutingDown1Hand = true;
+		bPutingDown1Hand = true;
 
 	}
 	else
 	{
-		this->bCanThrow = true;
-		this->bCanAttack = true;
-		this->bCanInteract = true;
-		this->bCanRun = true;
-		this->bCanJump = true;
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+		bCanRun = true;
+		bCanJump = true;
 
-		this->bPutingDown1Hand = false;
+		bPutingDown1Hand = false;
 	}
 }
 
@@ -275,30 +275,30 @@ void UAnimationManagerComponent::SetPlayingAnimationPutDown2Hands(bool bPlaying)
 {
 	if (bPlaying)
 	{
-		this->bCanThrow = false;
-		this->bCanAttack = false;
-		this->bCanInteract = false;
-		this->bCanRun = false;
-		this->bCanJump = false;
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
 
-		this->bLiftingUp2Hands = false;
+		bLiftingUp2Hands = false;
 
 	}
 	else
 	{
-		this->bCanThrow = true;
-		this->bCanAttack = true;
-		this->bCanInteract = true;
-		this->bCanRun = true;
-		this->bCanJump = true;
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+		bCanRun = true;
+		bCanJump = true;
 	}
 }
 
 void UAnimationManagerComponent::StopAnimations()
 {
-	if (this->AnimInstance->Montage_IsPlaying(FightIdleMontage))
+	if (AnimInstance->Montage_IsPlaying(FightIdleMontage))
 	{
-		this->AnimInstance->Montage_Stop(0, FightIdleMontage);
+		AnimInstance->Montage_Stop(0, FightIdleMontage);
 	}
 }
 
@@ -346,17 +346,17 @@ void UAnimationManagerComponent::SetPlayingAnimationPutDown2Hand_IF_Implementati
 
 void UAnimationManagerComponent::SetGettingDamage_IF_Implementation(bool bInGettingDamage)
 {
-	this->bGettingDamage = bInGettingDamage;
+	bGettingDamage = bInGettingDamage;
 }
 
 void UAnimationManagerComponent::SetCarrying_IF_Implementation(bool bInCarrying)
 {
-	this->bCarrying = bInCarrying;
+	bCarrying = bInCarrying;
 }
 
 void UAnimationManagerComponent::SetCanInteract_IF_Implementation(bool bInCanInteract)
 {
-	this->bCanInteract = bInCanInteract;
+	bCanInteract = bInCanInteract;
 }
 
 /**
@@ -368,52 +368,52 @@ void UAnimationManagerComponent::SetCanInteract_IF_Implementation(bool bInCanInt
 
 bool UAnimationManagerComponent::GetAttacking_IF_Implementation() const
 {
-	return this->bAttacking;
+	return bAttacking;
 }
 
 bool UAnimationManagerComponent::GetWatchingNow_IF_Implementation() const
 {
-	return this->bWatchingNow;
+	return bWatchingNow;
 }
 
 bool UAnimationManagerComponent::GetLiftingUp2Hands_IF_Implementation() const
 {
-	return this->bLiftingUp2Hands;
+	return bLiftingUp2Hands;
 }
 
 bool UAnimationManagerComponent::GetLiftingUp1Hand_IF_Implementation() const
 {
-	return this->bLiftingUp1Hand;
+	return bLiftingUp1Hand;
 }
 
 bool UAnimationManagerComponent::GetPutingDown1Hand_IF_Implementation() const
 {
-	return this->bPutingDown1Hand;
+	return bPutingDown1Hand;
 }
 
 bool UAnimationManagerComponent::GetThrowing_IF_Implementation() const
 {
-	return this->bThrowing;
+	return bThrowing;
 }
 
 bool UAnimationManagerComponent::GetGettingDamage_IF_Implementation() const
 {
-	return this->bGettingDamage;
+	return bGettingDamage;
 }
 
 bool UAnimationManagerComponent::GetDying_IF_Implementation() const
 {
-	return this->bDying;
+	return bDying;
 }
 
 bool UAnimationManagerComponent::GetCarrying_IF_Implementation() const
 {
-	return this->bCarrying;
+	return bCarrying;
 }
 
 bool UAnimationManagerComponent::GetShortWalk_IF_Implementation() const
 {
-	return this->bShortWalk;
+	return bShortWalk;
 }
 
 /**

@@ -4,7 +4,7 @@
  */
 
 #include "DemonCharacter.h"
-#include "MagicTrigger\AttackAbilities\FireBallComponent.h"
+#include "MagicTrigger\AbilitySystem\FireBall\FireBallComponent.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "Components/CapsuleComponent.h"
 #include "Components\SphereComponent.h"
@@ -92,26 +92,26 @@ void ADemonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Demon");
-	if (this->Name.IsEmpty())
+	Name = FText::FromStringTable("/Game/MagicTrigger/Data/ST_EnemyName.ST_EnemyName", "Demon");
+	if (Name.IsEmpty())
 	{
-		DEBUGMESSAGE("this->Name.IsEmpty()");
+		DEBUGMESSAGE("Name.IsEmpty()");
 
 	}
 }
 
 float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
-	if (this->Defence > 1)
+	if (Defence > 1)
 	{
-		this->Life = this->Life - (DamageAmount / this->Defence);
+		Life = Life - (DamageAmount / Defence);
 	}
 	else
 	{
-		this->Life = this->Life - DamageAmount;
+		Life = Life - DamageAmount;
 	}
 
-	if (this->Life <= 0)
+	if (Life <= 0)
 	{
 		Die();
 	}
@@ -121,7 +121,7 @@ float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const&
 
 void ADemonCharacter::CreateFireBall()
 {
-	this->FireBallComponent->CreateFireBall(GetMesh());
+	FireBallComponent->CreateFireBall(GetMesh());
 }
 
 void ADemonCharacter::MoveFireBallToTarget()
@@ -137,10 +137,10 @@ void ADemonCharacter::MoveFireBallToTarget()
 		DEBUGMESSAGE("!GetController()");
 		return;
 	}
-	//if (!this->FireBallComponent)
+	//if (!FireBallComponent)
 	//{
-	//	DEBUGMESSAGE("!this->FireBallComponent");
+	//	DEBUGMESSAGE("!FireBallComponent");
 	//	return;
 	//}
-	this->FireBallComponent->MoveFireBallToTarget(GetController(), PlayerCharacter);
+	FireBallComponent->MoveFireBallToTarget(GetController(), PlayerCharacter);
 }

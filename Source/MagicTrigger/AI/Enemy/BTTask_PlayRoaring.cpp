@@ -44,13 +44,13 @@ EBTNodeResult::Type UBTTask_PlayRoaring::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Failed;
 	}
 
-	this->MyOwnerComp = &OwnerComp;
-	this->AnimationToPlay = Enemy->EnemyToBehaviorTreeStruct.AnimationRoaring;
-	this->TimerHandle.Invalidate();
+	MyOwnerComp = &OwnerComp;
+	AnimationToPlay = Enemy->EnemyToBehaviorTreeStruct.AnimationRoaring;
+	TimerHandle.Invalidate();
 
-	if (!this->AnimationToPlay)
+	if (!AnimationToPlay)
 	{
-		DEBUGMESSAGE("!this->AnimationToPlay");
+		DEBUGMESSAGE("!AnimationToPlay");
 		return EBTNodeResult::Failed;
 	}
 	if (!MyController->GetPawn())
@@ -81,10 +81,10 @@ EBTNodeResult::Type UBTTask_PlayRoaring::ExecuteTask(UBehaviorTreeComponent& Own
 		return EBTNodeResult::Succeeded;
 	}
 
-	this->PreviousAnimationMode = SkelMesh->GetAnimationMode();
-	this->CachedSkelMesh = SkelMesh;
-	SkelMesh->PlayAnimation(this->AnimationToPlay, false);
-	MyController->GetWorld()->GetTimerManager().SetTimer(this->TimerHandle, this->TimerDelegate, FinishDelay, /*bLoop=*/false);
+	PreviousAnimationMode = SkelMesh->GetAnimationMode();
+	CachedSkelMesh = SkelMesh;
+	SkelMesh->PlayAnimation(AnimationToPlay, false);
+	MyController->GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, FinishDelay, /*bLoop=*/false);
 	return EBTNodeResult::InProgress;
 
 }
@@ -93,9 +93,9 @@ EBTNodeResult::Type UBTTask_PlayRoaring::AbortTask(UBehaviorTreeComponent& Owner
 {
 	AAIController* const MyController = OwnerComp.GetAIOwner();
 
-	if (!this->AnimationToPlay)
+	if (!AnimationToPlay)
 	{
-		DEBUGMESSAGE("!this->AnimationToPlay");
+		DEBUGMESSAGE("!AnimationToPlay");
 		return EBTNodeResult::Failed;
 	}
 	if (!MyController)
@@ -103,14 +103,14 @@ EBTNodeResult::Type UBTTask_PlayRoaring::AbortTask(UBehaviorTreeComponent& Owner
 		DEBUGMESSAGE("!MyController");
 		return EBTNodeResult::Failed;
 	}
-	if (!this->TimerHandle.IsValid())
+	if (!TimerHandle.IsValid())
 	{
-		DEBUGMESSAGE("!this->TimerHandle.IsValid()");
+		DEBUGMESSAGE("!TimerHandle.IsValid()");
 		return EBTNodeResult::Failed;
 	}
 
-	MyController->GetWorld()->GetTimerManager().ClearTimer(this->TimerHandle);
-	this->TimerHandle.Invalidate();
+	MyController->GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	TimerHandle.Invalidate();
 
 	CleanUp(OwnerComp);
 
@@ -119,15 +119,15 @@ EBTNodeResult::Type UBTTask_PlayRoaring::AbortTask(UBehaviorTreeComponent& Owner
 
 FString UBTTask_PlayRoaring::GetStaticDescription() const
 {
-	return FString::Printf(TEXT("%s: '%s'"), *Super::GetStaticDescription(), *GetNameSafe(this->AnimationToPlay));
+	return FString::Printf(TEXT("%s: '%s'"), *Super::GetStaticDescription(), *GetNameSafe(AnimationToPlay));
 }
 
 void UBTTask_PlayRoaring::OnAnimationTimerDone()
 {
-	if (this->MyOwnerComp)
+	if (MyOwnerComp)
 	{
 
-		AAIController* const MyController = this->MyOwnerComp->GetAIOwner();
+		AAIController* const MyController = MyOwnerComp->GetAIOwner();
 		if (!MyController)
 		{
 			DEBUGMESSAGE("!MyController");
@@ -146,27 +146,27 @@ void UBTTask_PlayRoaring::OnAnimationTimerDone()
 			DEBUGMESSAGE("!Blackboard");
 			return;
 		}
-		CleanUp(*this->MyOwnerComp);
-		FinishLatentTask(*this->MyOwnerComp, EBTNodeResult::Succeeded);
-		Blackboard->SetValueAsBool(this->BBKeys.bRoaring, false);
+		CleanUp(*MyOwnerComp);
+		FinishLatentTask(*MyOwnerComp, EBTNodeResult::Succeeded);
+		Blackboard->SetValueAsBool(BBKeys.bRoaring, false);
 
 	}
 	else
 	{
-		DEBUGMESSAGE("!this->MyOwnerComp");
+		DEBUGMESSAGE("!MyOwnerComp");
 	}
 }
 
 void UBTTask_PlayRoaring::CleanUp(UBehaviorTreeComponent& OwnerComp)
 {
-	if (!this->CachedSkelMesh)
+	if (!CachedSkelMesh)
 	{
-		DEBUGMESSAGE("!this->CachedSkelMesh");
+		DEBUGMESSAGE("!CachedSkelMesh");
 		return;
 	}
-	if (this->PreviousAnimationMode == EAnimationMode::AnimationBlueprint)
+	if (PreviousAnimationMode == EAnimationMode::AnimationBlueprint)
 	{
-		this->CachedSkelMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+		CachedSkelMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	}
 }
 

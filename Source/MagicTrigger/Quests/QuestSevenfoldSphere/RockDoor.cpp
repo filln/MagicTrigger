@@ -37,7 +37,7 @@ ARockDoor::ARockDoor()
 void ARockDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	this->DoorInitialLocation = this->DoorCollision->GetRelativeLocation();
+	DoorInitialLocation = DoorCollision->GetRelativeLocation();
 }
 
 

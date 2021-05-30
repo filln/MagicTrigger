@@ -45,24 +45,24 @@ void UQuestSevenfoldSphereComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (this->PlatformForBox4 && this->PlatformForBox5)
+	if (PlatformForBox4 && PlatformForBox5)
 	{
-		this->PlatformForBox4->Platform4OverlapBoxDelegate.BindUObject(this, &UQuestSevenfoldSphereComponent::Platform4Or5BeginOverlapBox);
-		this->PlatformForBox5->Platform5OverlapBoxDelegate.BindUObject(this, &UQuestSevenfoldSphereComponent::Platform4Or5BeginOverlapBox);
+		PlatformForBox4->Platform4OverlapBoxDelegate.BindUObject(this, &UQuestSevenfoldSphereComponent::Platform4Or5BeginOverlapBox);
+		PlatformForBox5->Platform5OverlapBoxDelegate.BindUObject(this, &UQuestSevenfoldSphereComponent::Platform4Or5BeginOverlapBox);
 	}
 	else
 	{
-		DEBUGMESSAGE("!this->PlatformForBox4 || !this->PlatformForBox5");
+		DEBUGMESSAGE("!PlatformForBox4 || !PlatformForBox5");
 	}
 
 }
 
 void UQuestSevenfoldSphereComponent::LiftBeginOverlapCharacter(UPrimitiveComponent* InCharacterCollision)
 {
-	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!this->PlayerCharacter)
+	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
 	UCapsuleComponent* InCapsuleComponent = Cast<UCapsuleComponent>(InCharacterCollision);
@@ -70,7 +70,7 @@ void UQuestSevenfoldSphereComponent::LiftBeginOverlapCharacter(UPrimitiveCompone
 	{
 		return;
 	}
-	if (this->PlayerCharacter->GetCapsuleComponent() != InCapsuleComponent || this->bDisableOverlapCharacter)
+	if (PlayerCharacter->GetCapsuleComponent() != InCapsuleComponent || bDisableOverlapCharacter)
 	{
 		return;
 	}
@@ -80,10 +80,10 @@ void UQuestSevenfoldSphereComponent::LiftBeginOverlapCharacter(UPrimitiveCompone
 
 void UQuestSevenfoldSphereComponent::LiftEndOverlapCharacter(UPrimitiveComponent* InCharacterCollision)
 {
-	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!this->PlayerCharacter)
+	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
 	UCapsuleComponent* InCapsuleComponent = Cast<UCapsuleComponent>(InCharacterCollision);
@@ -91,7 +91,7 @@ void UQuestSevenfoldSphereComponent::LiftEndOverlapCharacter(UPrimitiveComponent
 	{
 		return;
 	}
-	if (this->PlayerCharacter->GetCapsuleComponent() != InCapsuleComponent || this->bDisableOverlapCharacter)
+	if (PlayerCharacter->GetCapsuleComponent() != InCapsuleComponent || bDisableOverlapCharacter)
 	{
 		return;
 	}
@@ -104,18 +104,18 @@ void UQuestSevenfoldSphereComponent::BeginOverlapMoveDown()
 
 	if (bLiftDown)
 	{
-		this->CurrentLocation = this->InitialLocation;
+		CurrentLocation = InitialLocation;
 	}
 	else
 	{
-		this->CurrentLocation = this->UpLocation;
+		CurrentLocation = UpLocation;
 	}
 
 	//Лифт опускается на расстояние своей высоты ExtentZ.
-	float ExtentZ = 2 * this->Mesh->Bounds.BoxExtent.Z;
-	float TargetLocationZ = this->CurrentLocation.Z - ExtentZ;
+	float ExtentZ = 2 * Mesh->Bounds.BoxExtent.Z;
+	float TargetLocationZ = CurrentLocation.Z - ExtentZ;
 
-	FVector TargetRelativeLocation = FVector(this->CurrentLocation.X, this->CurrentLocation.Y, TargetLocationZ);
+	FVector TargetRelativeLocation = FVector(CurrentLocation.X, CurrentLocation.Y, TargetLocationZ);
 	FRotator TargetRelativeRotation = GetOwner()->GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -127,28 +127,28 @@ void UQuestSevenfoldSphereComponent::BeginOverlapMoveDown()
 		TargetRelativeRotation,
 		false,
 		false,
-		this->BeginOverlapMoveDownOverTime,
+		BeginOverlapMoveDownOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UQuestSevenfoldSphereComponent::CheckKey, this->PauseBeforeCheckKey);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UQuestSevenfoldSphereComponent::CheckKey, PauseBeforeCheckKey);
 }
 
 void UQuestSevenfoldSphereComponent::EndOverlapMoveUp()
 {
 	if (bLiftDown)
 	{
-		this->CurrentLocation = this->InitialLocation;
+		CurrentLocation = InitialLocation;
 	}
 	else
 	{
-		this->CurrentLocation = this->UpLocation;
+		CurrentLocation = UpLocation;
 	}
 
-	FVector TargetRelativeLocation = this->CurrentLocation;
+	FVector TargetRelativeLocation = CurrentLocation;
 	FRotator TargetRelativeRotation = GetOwner()->GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -160,7 +160,7 @@ void UQuestSevenfoldSphereComponent::EndOverlapMoveUp()
 		TargetRelativeRotation,
 		false,
 		false,
-		this->EndOverlapMoveUpOverTime,
+		EndOverlapMoveUpOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
@@ -169,13 +169,13 @@ void UQuestSevenfoldSphereComponent::EndOverlapMoveUp()
 
 void UQuestSevenfoldSphereComponent::CheckKey()
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
 	//Не проверять и не двигать лифт, если перса нет на лифте.
-	bool bOverlappingPlayerCharacter = OverlapCollision->IsOverlappingComponent(this->PlayerCharacter->GetCapsuleComponent());
+	bool bOverlappingPlayerCharacter = OverlapCollision->IsOverlappingComponent(PlayerCharacter->GetCapsuleComponent());
 	if (!bOverlappingPlayerCharacter)
 	{
 		return;
@@ -208,7 +208,7 @@ void UQuestSevenfoldSphereComponent::CheckKey()
 bool UQuestSevenfoldSphereComponent::IsRightPlacingsDown()
 {
 	//Все нижние платформы должны иметь правильные боксы.
-	for (auto CurrentPlatform : this->PlatformsForBoxDown)
+	for (auto CurrentPlatform : PlatformsForBoxDown)
 	{
 		if (!CurrentPlatform->CurrentBox)
 		{
@@ -229,7 +229,7 @@ bool UQuestSevenfoldSphereComponent::IsRightPlacingsDown()
 bool UQuestSevenfoldSphereComponent::IsRightPlacingsUp()
 {
 	//Любая одна из верхних платформ должна иметь правильный бокс.
-	for (auto CurrentPlatform : this->PlatformsForBoxUp)
+	for (auto CurrentPlatform : PlatformsForBoxUp)
 	{
 		if (!CurrentPlatform->CurrentBox)
 		{
@@ -249,17 +249,17 @@ bool UQuestSevenfoldSphereComponent::IsRightPlacingsUp()
 
 void UQuestSevenfoldSphereComponent::LiftIsOpen()
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	//Двигать лифт вверх или вниз в зависимости от this->bLiftDown.
+	//Двигать лифт вверх или вниз в зависимости от bLiftDown.
 	SetCharacterParameters(true);
 	MoveCharacterToCenterLift();
 	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UQuestSevenfoldSphereComponent::MoveLift, this->bLiftDown);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, this->MoveCharacterToCenterLiftOverTime, false);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UQuestSevenfoldSphereComponent::MoveLift, bLiftDown);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, MoveCharacterToCenterLiftOverTime, false);
 }
 
 void UQuestSevenfoldSphereComponent::LiftIsClosed()
@@ -267,9 +267,9 @@ void UQuestSevenfoldSphereComponent::LiftIsClosed()
 	/**
 	 * Переместить боксы к начальному положению.
 	 */
-	if (this->bLiftDown)
+	if (bLiftDown)
 	{
-		for (auto CurrentPlatform : this->PlatformsForBoxDown)
+		for (auto CurrentPlatform : PlatformsForBoxDown)
 		{
 			if (CurrentPlatform->CurrentBox)
 			{
@@ -279,7 +279,7 @@ void UQuestSevenfoldSphereComponent::LiftIsClosed()
 	}
 	else
 	{
-		for (auto CurrentPlatform : this->PlatformsForBoxUp)
+		for (auto CurrentPlatform : PlatformsForBoxUp)
 		{
 			if (CurrentPlatform->CurrentBox)
 			{
@@ -291,19 +291,19 @@ void UQuestSevenfoldSphereComponent::LiftIsClosed()
 
 void UQuestSevenfoldSphereComponent::MoveCharacterToCenterLift()
 {
-	FVector TargetRelativeLocation = this->AttachCharacterPoint->GetComponentLocation();
-	FRotator TargetRelativeRotation = this->PlayerCharacter->GetActorRotation();
+	FVector TargetRelativeLocation = AttachCharacterPoint->GetComponentLocation();
+	FRotator TargetRelativeRotation = PlayerCharacter->GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
 
 	UKismetSystemLibrary::MoveComponentTo
 	(
-		this->PlayerCharacter->GetRootComponent(),
+		PlayerCharacter->GetRootComponent(),
 		TargetRelativeLocation,
 		TargetRelativeRotation,
 		false,
 		false,
-		this->MoveCharacterToCenterLiftOverTime,
+		MoveCharacterToCenterLiftOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
@@ -313,21 +313,19 @@ void UQuestSevenfoldSphereComponent::MoveCharacterToCenterLift()
 void UQuestSevenfoldSphereComponent::MoveLift(bool bMoveUp)
 {
 	FAttachmentTransformRules TransformRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
-	this->PlayerCharacter->AttachToComponent(AttachCharacterPoint, TransformRules);
-
+	PlayerCharacter->AttachToComponent(AttachCharacterPoint, TransformRules);
 	FVector TargetRelativeLocation;
 	if (bMoveUp)
 	{
-		TargetRelativeLocation = this->UpLocation;
+		TargetRelativeLocation = UpLocation;
 	} 
 	else
 	{
-		TargetRelativeLocation = this->InitialLocation;
+		TargetRelativeLocation = InitialLocation;
 	}
 	FRotator TargetRelativeRotation = FRotator(GetOwner()->GetActorRotation().Pitch, GetOwner()->GetActorRotation().Yaw + 180, GetOwner()->GetActorRotation().Roll);
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
-
 	UKismetSystemLibrary::MoveComponentTo
 	(
 		GetOwner()->GetRootComponent(),
@@ -335,25 +333,24 @@ void UQuestSevenfoldSphereComponent::MoveLift(bool bMoveUp)
 		TargetRelativeRotation,
 		false,
 		false,
-		this->MoveLiftOverTime,
+		MoveLiftOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
-
 	FTimerHandle TmpTimer;
 	FTimerDelegate TmpDelegate;
 	TmpDelegate.BindLambda
 	(
 		[=]()
 	{
-		GetWorld()->GetTimerManager().ClearTimer(this->MoveCameraTimer);
-		this->bLiftDown = !bMoveUp;
+		GetWorld()->GetTimerManager().ClearTimer(MoveCameraTimer);
+		bLiftDown = !bMoveUp;
 		SetCharacterParameters(false);
 		BeginOverlapMoveDown();
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, this->MoveLiftOverTime, false);
+	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, MoveLiftOverTime, false);
 
 	//Вращать камеру, пока двигается лифт.
 	FTimerDelegate MoveCameraTmpDelegate;
@@ -361,11 +358,10 @@ void UQuestSevenfoldSphereComponent::MoveLift(bool bMoveUp)
 	(
 		[=]()
 	{
-		this->PlayerCharacter->AddControllerYawInput(this->MoveCameraSpeed);
+		PlayerCharacter->AddControllerYawInput(MoveCameraSpeed);
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(this->MoveCameraTimer, MoveCameraTmpDelegate, 0.017, true);
-
+	GetWorld()->GetTimerManager().SetTimer(MoveCameraTimer, MoveCameraTmpDelegate, 0.017, true);
 }
 
 void UQuestSevenfoldSphereComponent::SetCharacterParameters(bool bCharacterInLift)
@@ -380,23 +376,23 @@ void UQuestSevenfoldSphereComponent::SetCharacterParameters(bool bCharacterInLif
 	bDisableOverlapCharacter = bCharacterInLift;
 	if (bCharacterInLift)
 	{
-		this->PlayerCharacter->DisableInput(PlayerController);
-		if (!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->PlayerCharacter))
+		PlayerCharacter->DisableInput(PlayerController);
+		if (!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(PlayerCharacter))
 		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->PlayerCharacter)");
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(PlayerCharacter)");
 			return;
 		}
-		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(this->PlayerCharacter);
-		this->PlayerCharacter->GetCharacterMovement()->DisableMovement();
-		this->PlayerCharacter->SetActorEnableCollision(false);
+		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(PlayerCharacter);
+		PlayerCharacter->GetCharacterMovement()->DisableMovement();
+		PlayerCharacter->SetActorEnableCollision(false);
 	} 
 	else
 	{
-		this->PlayerCharacter->EnableInput(PlayerController);
-		this->PlayerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+		PlayerCharacter->EnableInput(PlayerController);
+		PlayerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		FDetachmentTransformRules DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, true);
-		this->PlayerCharacter->DetachFromActor(DetachmentRules);
-		this->PlayerCharacter->SetActorEnableCollision(true);
+		PlayerCharacter->DetachFromActor(DetachmentRules);
+		PlayerCharacter->SetActorEnableCollision(true);
 	}
 
 
@@ -412,25 +408,25 @@ void UQuestSevenfoldSphereComponent::Platform4Or5BeginOverlapBox()
 
 bool UQuestSevenfoldSphereComponent::IsRightPlacingsForRockDoor()
 {
-	if (!this->PlatformForBox4)
+	if (!PlatformForBox4)
 	{
-		DEBUGMESSAGE("!this->PlatformForBox4");
+		DEBUGMESSAGE("!PlatformForBox4");
 		return false;
 	}
-	if (!this->PlatformForBox5)
+	if (!PlatformForBox5)
 	{
-		DEBUGMESSAGE("!this->PlatformForBox5");
+		DEBUGMESSAGE("!PlatformForBox5");
 		return false;
 	}
-	if (!this->PlatformForBox4->CurrentBox || !this->PlatformForBox5->CurrentBox)
+	if (!PlatformForBox4->CurrentBox || !PlatformForBox5->CurrentBox)
 	{
 		return false;
 	}
 
 	if 
 		(
-			this->PlatformForBox4->CurrentBox->ActorHasTag(this->OpenBigWallTag) 
-			&& this->PlatformForBox5->CurrentBox->ActorHasTag(this->OpenBigWallTag)
+			PlatformForBox4->CurrentBox->ActorHasTag(OpenBigWallTag) 
+			&& PlatformForBox5->CurrentBox->ActorHasTag(OpenBigWallTag)
 			)
 	{
 		return true;
@@ -441,24 +437,24 @@ bool UQuestSevenfoldSphereComponent::IsRightPlacingsForRockDoor()
 
 void UQuestSevenfoldSphereComponent::OpenRockDoor()
 {
-	if (!this->RockDoor)
+	if (!RockDoor)
 	{
-		DEBUGMESSAGE("!this->RockDoor");
+		DEBUGMESSAGE("!RockDoor");
 		return;
 	}
-	FVector TargetRelativeLocation = FVector(this->RockDoor->DoorInitialLocation.X, this->RockDoor->DoorInitialLocation.Y + this->OpenRockDoorOffset, this->RockDoor->DoorInitialLocation.Z);
-	FRotator TargetRelativeRotation = this->RockDoor->DoorCollision->GetComponentRotation();
+	FVector TargetRelativeLocation = FVector(RockDoor->DoorInitialLocation.X, RockDoor->DoorInitialLocation.Y + OpenRockDoorOffset, RockDoor->DoorInitialLocation.Z);
+	FRotator TargetRelativeRotation = RockDoor->DoorCollision->GetComponentRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
 
 	UKismetSystemLibrary::MoveComponentTo
 	(
-		this->RockDoor->DoorCollision,
+		RockDoor->DoorCollision,
 		TargetRelativeLocation,
 		TargetRelativeRotation,
 		false,
 		false,
-		this->OpenRockDoorOverTime,
+		OpenRockDoorOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo

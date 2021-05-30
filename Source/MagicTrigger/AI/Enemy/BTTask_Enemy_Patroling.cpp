@@ -63,7 +63,7 @@ EBTNodeResult::Type UBTTask_Enemy_Patroling::ExecuteTask(UBehaviorTreeComponent&
 	}
 
 	FVector Destination = ResultLocation.Location;
-	EPathFollowingRequestResult::Type Result = EnemyAIController->MoveToLocation(Destination, this->AcceptanceRadius, false, true, true, true, nullptr, true);
+	EPathFollowingRequestResult::Type Result = EnemyAIController->MoveToLocation(Destination, AcceptanceRadius, false, true, true, true, nullptr, true);
 
 	switch (Result)
 	{

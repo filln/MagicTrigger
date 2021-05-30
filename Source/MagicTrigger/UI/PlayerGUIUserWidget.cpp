@@ -11,24 +11,24 @@
 
 float UPlayerGUIUserWidget::GetLife()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return 0;
 	}
-	if (!this->HUDMagicTrigger->PlayerCharacter)
+	if (!HUDMagicTrigger->PlayerCharacter)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerCharacter");
+		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerCharacter");
 		return 0;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
+	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState())");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy(HUDMagicTrigger->PlayerCharacter->GetPlayerState())");
 		return 0;
 	}
 
-	float Life = IPlayerStateInterface::Execute_GetLife_IF(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState());
-	float MaxLife = IPlayerStateInterface::Execute_GetMaxLife_IF(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState());
+	float Life = IPlayerStateInterface::Execute_GetLife_IF(HUDMagicTrigger->PlayerCharacter->GetPlayerState());
+	float MaxLife = IPlayerStateInterface::Execute_GetMaxLife_IF(HUDMagicTrigger->PlayerCharacter->GetPlayerState());
 
 	if (MaxLife <= 0 || Life <= 0)
 	{
@@ -40,22 +40,22 @@ float UPlayerGUIUserWidget::GetLife()
 
 FText UPlayerGUIUserWidget::GetTextLife()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return FText();
 	}
-	if (!this->HUDMagicTrigger->PlayerCharacter)
+	if (!HUDMagicTrigger->PlayerCharacter)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerCharacter");
+		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerCharacter");
 		return FText();
 	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
+	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(HUDMagicTrigger->PlayerCharacter->GetPlayerState()))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState())");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy(HUDMagicTrigger->PlayerCharacter->GetPlayerState())");
 		return FText();
 	}
 
-	float Life = IPlayerStateInterface::Execute_GetLife_IF(this->HUDMagicTrigger->PlayerCharacter->GetPlayerState());
+	float Life = IPlayerStateInterface::Execute_GetLife_IF(HUDMagicTrigger->PlayerCharacter->GetPlayerState());
 	return UKismetTextLibrary::Conv_FloatToText(Life, ERoundingMode::HalfToEven, false, false, 1, 324, 0, 0);
 }

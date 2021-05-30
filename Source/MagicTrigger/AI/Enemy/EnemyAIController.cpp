@@ -82,7 +82,7 @@ void AEnemyAIController::OnRunAI()
 
 	//DEBUGMESSAGE("OnRunAI");
 	GetPerceptionComponent()->Activate();
-	this->BehaviorTreeComponent->StartLogic();
+	BehaviorTreeComponent->StartLogic();
 }
 
 void AEnemyAIController::OnStopAI()
@@ -90,27 +90,27 @@ void AEnemyAIController::OnStopAI()
 	//DEBUGMESSAGE("OnStopAI");
 	GetPerceptionComponent()->Deactivate();
 	FString Reason;
-	this->BehaviorTreeComponent->StopLogic(Reason);
+	BehaviorTreeComponent->StopLogic(Reason);
 }
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	this->Enemy = GetPawn<AEnemyCharacterMagicTrigger>();
+	Enemy = GetPawn<AEnemyCharacterMagicTrigger>();
 
-	this->AISightConfig->SightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.SightRadius;
-	this->AISightConfig->LoseSightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.LoseSightRadius;
-	this->AIHearingConfig->HearingRange = GetEnemy()->EnemyToBehaviorTreeStruct.HearingRange;
+	AISightConfig->SightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.SightRadius;
+	AISightConfig->LoseSightRadius = GetEnemy()->EnemyToBehaviorTreeStruct.LoseSightRadius;
+	AIHearingConfig->HearingRange = GetEnemy()->EnemyToBehaviorTreeStruct.HearingRange;
 
-	bool bInitializeBB = this->BlackboardComponent->InitializeBlackboard(*this->BlackboardAsset);
+	bool bInitializeBB = BlackboardComponent->InitializeBlackboard(*BlackboardAsset);
 	if (!bInitializeBB)
 	{
 		DEBUGMESSAGE("!bInitializeBB");
 		return;
 	}
 
-	this->BehaviorTreeComponent->StartTree(*this->BehaviorTreeAsset);
+	BehaviorTreeComponent->StartTree(*BehaviorTreeAsset);
 
 
 	/////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	bool bPlayerCharacterFound = false;
 
 
-	this->Enemy->RunAISphere->GetOverlappingActors(OverlappingActors, ClassFilter);
+	Enemy->RunAISphere->GetOverlappingActors(OverlappingActors, ClassFilter);
 	if (!OverlappingActors.Num())
 	{
 		//DEBUGMESSAGE("!OverlappingActors.Num()")
@@ -156,42 +156,42 @@ void AEnemyAIController::FindPlayer(AActor* PlayerActor)
 		DEBUGMESSAGE("!GetEnemy()");
 		return;
 	}
-	if (!this->BlackboardComponent)
+	if (!BlackboardComponent)
 	{
-		DEBUGMESSAGE("!this->BlackboardComponent");
+		DEBUGMESSAGE("!BlackboardComponent");
 		return;
 	}
 
 	//DEBUGMESSAGE("FindPlayer");
-	this->BlackboardComponent->SetValueAsObject(this->BBKeys.TargetPlayer, PlayerActor);
+	BlackboardComponent->SetValueAsObject(BBKeys.TargetPlayer, PlayerActor);
 	StopMovement();
-	this->BlackboardComponent->SetValueAsBool(this->BBKeys.bRoaring, true);
+	BlackboardComponent->SetValueAsBool(BBKeys.bRoaring, true);
 
 }
 
 void AEnemyAIController::LosePlayer()
 {
-	if (!this->Enemy)
+	if (!Enemy)
 	{
-		DEBUGMESSAGE("!this->Enemy");
+		DEBUGMESSAGE("!Enemy");
 		return;
 	}
-	if (!this->BlackboardComponent)
+	if (!BlackboardComponent)
 	{
-		DEBUGMESSAGE("!this->BlackboardComponent");
+		DEBUGMESSAGE("!BlackboardComponent");
 		return;
 	}
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
 	//DEBUGMESSAGE("LosePlayer");
-	this->Enemy->StopAttack();
+	Enemy->StopAttack();
 	StopMovement();
-	this->BlackboardComponent->ClearValue(this->BBKeys.bCanMoveToPlayer);
-	this->BlackboardComponent->ClearValue(this->BBKeys.TargetPlayer);
-	this->BlackboardComponent->ClearValue(this->BBKeys.bRoaring);
+	BlackboardComponent->ClearValue(BBKeys.bCanMoveToPlayer);
+	BlackboardComponent->ClearValue(BBKeys.TargetPlayer);
+	BlackboardComponent->ClearValue(BBKeys.bRoaring);
 
 }
 
@@ -209,7 +209,7 @@ void AEnemyAIController::TargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimu
 		return;
 	}
 
-	UObject* TargetPlayer = this->BlackboardComponent->GetValueAsObject(this->BBKeys.TargetPlayer);
+	UObject* TargetPlayer = BlackboardComponent->GetValueAsObject(BBKeys.TargetPlayer);
 
 	if (TargetPlayer)
 	{
@@ -230,37 +230,37 @@ void AEnemyAIController::TargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimu
 
 void AEnemyAIController::ConfigureAIPerception()
 {
-	this->AISightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	this->AISightConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	this->AISightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	this->AIHearingConfig->DetectionByAffiliation.bDetectEnemies = true;
-	this->AIHearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	this->AIHearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	AISightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	AISightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	AISightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	AIHearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+	AIHearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	AIHearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
-	GetPerceptionComponent()->ConfigureSense(*this->AISightConfig);
-	GetPerceptionComponent()->ConfigureSense(*this->AIHearingConfig);
+	GetPerceptionComponent()->ConfigureSense(*AISightConfig);
+	GetPerceptionComponent()->ConfigureSense(*AIHearingConfig);
 
-	GetPerceptionComponent()->SetDominantSense(this->AISightConfig->GetSenseImplementation());
+	GetPerceptionComponent()->SetDominantSense(AISightConfig->GetSenseImplementation());
 }
 
 
 ACharacter* AEnemyAIController::GetPlayerCharacter() const
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 	}
-	return this->PlayerCharacter;
+	return PlayerCharacter;
 }
 
 AEnemyCharacterMagicTrigger* AEnemyAIController::GetEnemy() const
 {
-	if (!this->Enemy)
+	if (!Enemy)
 	{
-		DEBUGMESSAGE("!this->Enemy");
+		DEBUGMESSAGE("!Enemy");
 	}
 
-	return this->Enemy;
+	return Enemy;
 }
 
 void AEnemyAIController::LosePlayer_IF_Implementation()
@@ -275,11 +275,11 @@ void AEnemyAIController::LosePlayer_IF_Implementation()
 bool AEnemyAIController::CheckReferences_IF_Implementation()
 {
 	ACharacter* PlayerCharacterTmp = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARecastNavMesh::StaticClass(), this->NavMeshArray);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARecastNavMesh::StaticClass(), NavMeshArray);
 	if (
-		!this->NavMeshArray.Num()
-		|| !this->NavMeshArray[0]
-		|| !Cast<ARecastNavMesh>(this->NavMeshArray[0])
+		!NavMeshArray.Num()
+		|| !NavMeshArray[0]
+		|| !Cast<ARecastNavMesh>(NavMeshArray[0])
 		|| !PlayerCharacterTmp
 		)
 	{
@@ -291,8 +291,8 @@ bool AEnemyAIController::CheckReferences_IF_Implementation()
 
 void AEnemyAIController::DoBeginPlay_IF_Implementation()
 {
-	this->NavMesh = Cast<ARecastNavMesh>(this->NavMeshArray[0]);
-	this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	NavMesh = Cast<ARecastNavMesh>(NavMeshArray[0]);
+	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 }
 
 void AEnemyAIController::StartBeginPlayTimer_IF_Implementation()
@@ -303,14 +303,14 @@ void AEnemyAIController::StartBeginPlayTimer_IF_Implementation()
 		return;
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(this->BeginPlayTimer, this, &AEnemyAIController::BeforeBeginPlay_IF_Implementation, this->BeginPlayTimerTime, true);
+	GetWorld()->GetTimerManager().SetTimer(BeginPlayTimer, this, &AEnemyAIController::BeforeBeginPlay_IF_Implementation, BeginPlayTimerTime, true);
 }
 
 void AEnemyAIController::BeforeBeginPlay_IF_Implementation()
 {
 	if (CheckReferences_IF_Implementation())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(this->BeginPlayTimer);
+		GetWorld()->GetTimerManager().ClearTimer(BeginPlayTimer);
 		DoBeginPlay_IF_Implementation();
 	}
 }

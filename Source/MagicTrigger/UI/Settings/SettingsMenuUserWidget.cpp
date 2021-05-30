@@ -8,16 +8,16 @@
 
 void USettingsMenuUserWidget::OnPressedBackMenuButton()
 {
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->MenuUserWidget);
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->MenuUserWidget);
 }
 
 void USettingsMenuUserWidget::OnPressedResumeButton()
 {
-	this->HUDMagicTrigger->SetPauseGame(false, this);
+	HUDMagicTrigger->SetPauseGame(false, this);
 }
 
 void USettingsMenuUserWidget::OnPressedControlButton()
 {
-	this->HUDMagicTrigger->ControlUserWidget->SetSliderValue();
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->ControlUserWidget);
+	HUDMagicTrigger->ControlUserWidget->SetSliderValue();
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->ControlUserWidget);
 }

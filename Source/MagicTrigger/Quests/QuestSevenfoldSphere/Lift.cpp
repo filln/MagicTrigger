@@ -85,10 +85,10 @@ void ALift::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->QuestSevenfoldSphereComponent->InitialLocation = GetActorLocation();
-	this->QuestSevenfoldSphereComponent->AttachCharacterPoint = this->AttachCharacterPoint;
-	this->QuestSevenfoldSphereComponent->Mesh = this->Mesh;
-	this->QuestSevenfoldSphereComponent->OverlapCollision = this->OverlapCollision;
+	QuestSevenfoldSphereComponent->InitialLocation = GetActorLocation();
+	QuestSevenfoldSphereComponent->AttachCharacterPoint = AttachCharacterPoint;
+	QuestSevenfoldSphereComponent->Mesh = Mesh;
+	QuestSevenfoldSphereComponent->OverlapCollision = OverlapCollision;
 
 }
 
@@ -105,7 +105,7 @@ void ALift::LiftBeginOverlapCharacter(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 
-	this->QuestSevenfoldSphereComponent->LiftBeginOverlapCharacter(OtherComp);
+	QuestSevenfoldSphereComponent->LiftBeginOverlapCharacter(OtherComp);
 }
 
 void ALift::LiftEndOverlapCharacter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -121,17 +121,17 @@ void ALift::LiftEndOverlapCharacter(UPrimitiveComponent* OverlappedComponent, AA
 		return;
 	}
 
-	this->QuestSevenfoldSphereComponent->LiftEndOverlapCharacter(OtherComp);
+	QuestSevenfoldSphereComponent->LiftEndOverlapCharacter(OtherComp);
 }
 
 void ALift::IsObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(true);
+	Mesh->SetRenderCustomDepth(true);
 }
 
 void ALift::IsNotObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(false);
+	Mesh->SetRenderCustomDepth(false);
 }
 
 

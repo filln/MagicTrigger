@@ -71,7 +71,7 @@ void APlatformForBoxParent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->InitialLocation = GetActorLocation();
+	InitialLocation = GetActorLocation();
 
 }
 
@@ -86,11 +86,11 @@ void APlatformForBoxParent::MoveUp(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		return;
 	}
-	if (this->CurrentBox != CurrentPlacingBox)
+	if (CurrentBox != CurrentPlacingBox)
 	{
 		return;
 	}
-	this->CurrentBox = nullptr;
+	CurrentBox = nullptr;
 
 	//Delay 1 sec. т.к. когда бокс начинает подниматься, уже происходит енд оверлап, а анимация еще не подняла бокс.
 	FTimerHandle TmpTimer;
@@ -99,7 +99,7 @@ void APlatformForBoxParent::MoveUp(UPrimitiveComponent* OverlappedComponent, AAc
 	(
 		[=]()
 	{
-		Move(this->InitialLocation.Z);
+		Move(InitialLocation.Z);
 	}
 	);
 	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, 1, false);
@@ -108,7 +108,7 @@ void APlatformForBoxParent::MoveUp(UPrimitiveComponent* OverlappedComponent, AAc
 
 void APlatformForBoxParent::MoveDown(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (this->CurrentBox)
+	if (CurrentBox)
 	{
 		return;
 	}
@@ -122,17 +122,17 @@ void APlatformForBoxParent::MoveDown(UPrimitiveComponent* OverlappedComponent, A
 		return;
 	}
 
-	this->CurrentBox = CurrentPlacingBox;
+	CurrentBox = CurrentPlacingBox;
 
-	float ExtentZ = 2 * this->Mesh->Bounds.BoxExtent.Z;
-	float TargetLocationZ = this->InitialLocation.Z - ExtentZ;
+	float ExtentZ = 2 * Mesh->Bounds.BoxExtent.Z;
+	float TargetLocationZ = InitialLocation.Z - ExtentZ;
 	Move(TargetLocationZ);
 
 }
 
 void APlatformForBoxParent::Move(float InTargetRelativeLocationZ)
 {
-	FVector TargetRelativeLocation = FVector(this->InitialLocation.X, this->InitialLocation.Y, InTargetRelativeLocationZ);
+	FVector TargetRelativeLocation = FVector(InitialLocation.X, InitialLocation.Y, InTargetRelativeLocationZ);
 	FRotator TargetRelativeRotation = GetActorRotation();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
@@ -153,10 +153,10 @@ void APlatformForBoxParent::Move(float InTargetRelativeLocationZ)
 
 void APlatformForBoxParent::IsObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(true);
+	Mesh->SetRenderCustomDepth(true);
 }
 
 void APlatformForBoxParent::IsNotObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(false);
+	Mesh->SetRenderCustomDepth(false);
 }

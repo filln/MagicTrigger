@@ -84,7 +84,7 @@ AFireBall::AFireBall()
 
 void AFireBall::SaveInitialScale()
 {
-	this->InitialScale = GetActorScale3D();
+	InitialScale = GetActorScale3D();
 }
 
 void AFireBall::MoveToTarget(FFireBallMoveToTargetInputsStruct FireBallMoveToTargetInputsStruct)
@@ -120,7 +120,7 @@ void AFireBall::MoveToTarget(FFireBallMoveToTargetInputsStruct FireBallMoveToTar
 
 void AFireBall::DoAfterMoveToTarget(FFireBallMoveToTargetInputsStruct FireBallMoveToTargetInputsStruct)
 {
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), this->EmitterTemplate, GetActorLocation(), FRotator(0), FVector(1), true, EPSCPoolMethod::None, true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EmitterTemplate, GetActorLocation(), FRotator(0), FVector(1), true, EPSCPoolMethod::None, true);
 	DoDamage(FireBallMoveToTargetInputsStruct);
 	Destroy();
 }

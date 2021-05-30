@@ -46,67 +46,67 @@ FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates() const
 {
 	return FPlayerStateMagicTriggerStruct
 	(
-		this->Life,
-		this->Defence,
-		this->Damage,
-		this->MaxLife,
-		this->MaxDefence,
-		this->MaxDamage,
-		this->MultiplierOfDamage
+		Life,
+		Defence,
+		Damage,
+		MaxLife,
+		MaxDefence,
+		MaxDamage,
+		MultiplierOfDamage
 	);
 
 }
 
 void APlayerStateMagicTrigger::SetStates(FPlayerStateMagicTriggerStruct InStates)
 {
-	this->Life = InStates.Life;
-	this->Defence = InStates.Defence;
-	this->Damage = InStates.Damage;
-	this->MaxLife = InStates.MaxLife;
-	this->MaxDefence = InStates.MaxDefence;
-	this->MaxDamage = InStates.MaxDamage;
-	this->MultiplierOfDamage = InStates.MultiplierOfDamage;
+	Life = InStates.Life;
+	Defence = InStates.Defence;
+	Damage = InStates.Damage;
+	MaxLife = InStates.MaxLife;
+	MaxDefence = InStates.MaxDefence;
+	MaxDamage = InStates.MaxDamage;
+	MultiplierOfDamage = InStates.MultiplierOfDamage;
 
 }
 
 float APlayerStateMagicTrigger::GetLife_IF_Implementation() const
 {
-	return this->Life;
+	return Life;
 }
 
 float APlayerStateMagicTrigger::GetMaxLife_IF_Implementation() const
 {
-	return this->MaxLife;
+	return MaxLife;
 }
 
 float APlayerStateMagicTrigger::GetDefence_IF_Implementation() const
 {
-	return this->Defence;
+	return Defence;
 }
 
 float APlayerStateMagicTrigger::GetDamage_IF_Implementation() const
 {
-	return this->Damage;
+	return Damage;
 }
 
 float APlayerStateMagicTrigger::GetMaxDefence_IF_Implementation() const
 {
-	return this->MaxDefence;
+	return MaxDefence;
 }
 
 float APlayerStateMagicTrigger::GetMaxDamage_IF_Implementation() const
 {
-	return this->MaxDamage;
+	return MaxDamage;
 }
 
 float APlayerStateMagicTrigger::GetMultiplierOfDamage_IF_Implementation() const
 {
-	return this->MultiplierOfDamage;
+	return MultiplierOfDamage;
 }
 
 FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetBeginGameStates_IF_Implementation() const
 {
-	return this->BeginGameStates;
+	return BeginGameStates;
 }
 
 FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates_IF_Implementation() const
@@ -116,42 +116,42 @@ FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates_IF_Implementa
 
 void APlayerStateMagicTrigger::SetLife_IF_Implementation(float InLife)
 {
-	this->Life = InLife;
+	Life = InLife;
 }
 
 void APlayerStateMagicTrigger::SetMaxLife_IF_Implementation(float InMaxLife)
 {
-	this->MaxLife = InMaxLife;
+	MaxLife = InMaxLife;
 }
 
 void APlayerStateMagicTrigger::SetDefence_IF_Implementation(float InDefence)
 {
-	this->Defence = InDefence;
+	Defence = InDefence;
 }
 
 void APlayerStateMagicTrigger::SetDamage_IF_Implementation(float InDamage)
 {
-	this->Damage = InDamage;
+	Damage = InDamage;
 }
 
 void APlayerStateMagicTrigger::SetMaxDefence_IF_Implementation(float InMaxDefence)
 {
-	this->MaxDefence = InMaxDefence;
+	MaxDefence = InMaxDefence;
 }
 
 void APlayerStateMagicTrigger::SetMaxDamage_IF_Implementation(float InMaxDamage)
 {
-	this->MaxDamage = InMaxDamage;
+	MaxDamage = InMaxDamage;
 }
 
 void APlayerStateMagicTrigger::SetMultiplierOfDamage_IF_Implementation(float InMultiplierOfDamage)
 {
-	this->MultiplierOfDamage = InMultiplierOfDamage;
+	MultiplierOfDamage = InMultiplierOfDamage;
 }
 
 void APlayerStateMagicTrigger::SetBeginGameStates_IF_Implementation(FPlayerStateMagicTriggerStruct InBeginGameStates)
 {
-	this->BeginGameStates = InBeginGameStates;
+	BeginGameStates = InBeginGameStates;
 }
 
 void APlayerStateMagicTrigger::SetStates_IF_Implementation(FPlayerStateMagicTriggerStruct InStates)

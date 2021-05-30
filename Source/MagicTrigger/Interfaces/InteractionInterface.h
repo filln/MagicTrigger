@@ -9,6 +9,8 @@
 #include "MagicTrigger/Interfaces/InterfaceCheck.h"
 #include "InteractionInterface.generated.h"
 
+class APlayerCharacterMagicTrigger;
+
 // This class does not need to be modified.
 UINTERFACE(Blueprintable, Category = "InteractionInterface")
 class UInteractionInterface : public UInterface
@@ -29,6 +31,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "InteractionInterface")
 		FText GetInteractionText_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "InteractionInterface")
-		void Interact_IF();
+		void Interact_IF(APlayerCharacterMagicTrigger* InPlayerCharacter);
 
 };

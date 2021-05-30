@@ -30,19 +30,19 @@ void UMutantAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
-	//if (!this->Mutant)
+	//if (!Mutant)
 	//{
-	//	DEBUGMESSAGE("!this->Mutant");
+	//	DEBUGMESSAGE("!Mutant");
 	//	return;
 	//}
 
-	FVector Velocity = this->Mutant->GetVelocity();
-	this->Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
+	FVector Velocity = Mutant->GetVelocity();
+	Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
 
-	this->bAttacking = this->Mutant->bAttacking;
-	this->bGettingDamage = this->Mutant->bGettingDamage;
-	this->bDying = this->Mutant->bDying;
-	this->bStunning = this->Mutant->bStunning;
+	bAttacking = Mutant->bAttacking;
+	bGettingDamage = Mutant->bGettingDamage;
+	bDying = Mutant->bDying;
+	bStunning = Mutant->bStunning;
 }
 
 bool UMutantAnimInstance::GetAndCheckReferences()
@@ -53,10 +53,10 @@ bool UMutantAnimInstance::GetAndCheckReferences()
 		//DEBUGMESSAGE("!PawnOwner");
 		return false;
 	}
-	this->Mutant = Cast<AMutantCharacter>(PawnOwner);
-	if (!this->Mutant)
+	Mutant = Cast<AMutantCharacter>(PawnOwner);
+	if (!Mutant)
 	{
-		//DEBUGMESSAGE("!this->Mutant");
+		//DEBUGMESSAGE("!Mutant");
 		return false;
 	}
 
@@ -65,36 +65,36 @@ bool UMutantAnimInstance::GetAndCheckReferences()
 
 void UMutantAnimInstance::StopTraceAttackRightHand()
 {
-	this->Mutant->StopTraceAttack();
+	Mutant->StopTraceAttack();
 }
 
 void UMutantAnimInstance::StopTraceAttackLeftHand()
 {
-	this->Mutant->StopTraceAttack();
+	Mutant->StopTraceAttack();
 }
 
 void UMutantAnimInstance::StartTraceAttackRightHand()
 {
-	this->Mutant->StartTraceAttack(true);
+	Mutant->StartTraceAttack(true);
 }
 
 void UMutantAnimInstance::StartTraceAttackLeftHand()
 {
-	this->Mutant->StartTraceAttack(false);
+	Mutant->StartTraceAttack(false);
 }
 
 void UMutantAnimInstance::EndAnimationHitReaction()
 {
-	this->Mutant->DoAfterEndAnimationTakeDamage();
+	Mutant->DoAfterEndAnimationTakeDamage();
 }
 
 void UMutantAnimInstance::EndAnimationStunning()
 {
 	FTimerHandle StunningTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(StunningTimerHandle, this, &UMutantAnimInstance::DoAfterEndAnimationStunning, this->DurationAnimationStunning);
+	GetWorld()->GetTimerManager().SetTimer(StunningTimerHandle, this, &UMutantAnimInstance::DoAfterEndAnimationStunning, DurationAnimationStunning);
 }
 
 void UMutantAnimInstance::DoAfterEndAnimationStunning()
 {
-	this->Mutant->Stunning(false);
+	Mutant->Stunning(false);
 }

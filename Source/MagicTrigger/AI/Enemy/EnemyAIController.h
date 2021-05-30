@@ -70,9 +70,9 @@ public:
 		float DeltaAttackRadius;
 
 	/**
-	 * this->AISightConfig->SightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.SightRadius;
-	 * this->AISightConfig->LoseSightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.LoseSightRadius;
-	 * this->AIHearingConfig->HearingRange = ControlledEnemy->EnemyToBehaviorTreeStruct.HearingRange;
+	 * AISightConfig->SightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.SightRadius;
+	 * AISightConfig->LoseSightRadius = ControlledEnemy->EnemyToBehaviorTreeStruct.LoseSightRadius;
+	 * AIHearingConfig->HearingRange = ControlledEnemy->EnemyToBehaviorTreeStruct.HearingRange;
 	 */
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyAIController|Components")
 		UAIPerceptionComponent* AIPerceptionComponent;

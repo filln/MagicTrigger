@@ -70,7 +70,7 @@ void ALiftingItem::BeginPlay()
 
 FName ALiftingItem::GetAttachSocket_IF_Implementation() const
 {
-	return this->AttachSocket;
+	return AttachSocket;
 }
 
 void ALiftingItem::SetPlayingAnimationLiftUp_IF_Implementation(bool bPlaying)
@@ -87,7 +87,7 @@ void ALiftingItem::SetSimulatePhysics_IF_Implementation(bool bSimulate)
 
 FText ALiftingItem::GetInteractionText_IF_Implementation() const
 {
-	return this->InteractionText;
+	return InteractionText;
 }
 
 void ALiftingItem::Interact_IF_Implementation()
@@ -96,12 +96,12 @@ void ALiftingItem::Interact_IF_Implementation()
 
 void ALiftingItem::IsObserved_Implementation()
 {
-	this->StaticMesh->SetRenderCustomDepth(true);
+	StaticMesh->SetRenderCustomDepth(true);
 }
 
 void ALiftingItem::IsNotObserved_Implementation()
 {
-	this->StaticMesh->SetRenderCustomDepth(false);
+	StaticMesh->SetRenderCustomDepth(false);
 }
 
 void ALiftingItem::StartBeginPlayTimer_IF_Implementation()
@@ -119,8 +119,8 @@ void ALiftingItem::StartBeginPlayTimer_IF_Implementation()
 	{
 		if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 		{
-			GetWorld()->GetTimerManager().ClearTimer(this->BeginPlayTimer);
-			this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+			GetWorld()->GetTimerManager().ClearTimer(BeginPlayTimer);
+			PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		}
 		else
 		{
@@ -128,6 +128,6 @@ void ALiftingItem::StartBeginPlayTimer_IF_Implementation()
 		}
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(this->BeginPlayTimer, BeginPlayDelegate, 0.2, true);
+	GetWorld()->GetTimerManager().SetTimer(BeginPlayTimer, BeginPlayDelegate, 0.2, true);
 }
 

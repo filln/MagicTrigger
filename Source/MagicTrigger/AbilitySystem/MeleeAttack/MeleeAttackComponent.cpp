@@ -17,7 +17,7 @@ UMeleeAttackComponent::UMeleeAttackComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	AttackLengthTrace = 100;
-	TraceSphereRadius = 50;
+	TraceSphereRadius = 100;
 	TraceCollisionChannel = ECollisionChannel::ECC_Attack;
 	bDrawDebugTrace = false;
 	AttackTimerDeltaTime = 0.017;
@@ -34,18 +34,18 @@ void UMeleeAttackComponent::DoAttack(const FVector& StartTrace, const FVector& E
 	{
 		StopAttackTimer();
 
-		UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), BaseDamage, EventInstigator, DamageCauser, this->DamageTypeClass);
+		UGameplayStatics::ApplyDamage(TraceAttackHitResult.GetActor(), BaseDamage, EventInstigator, DamageCauser, DamageTypeClass);
 	}
 }
 
 void UMeleeAttackComponent::StopAttackTimer()
 {
-	GetWorld()->GetTimerManager().ClearTimer(this->AttackTimer);
+	GetWorld()->GetTimerManager().ClearTimer(AttackTimer);
 }
 
 bool UMeleeAttackComponent::TraceAttack(FHitResult& OutHit, const FVector& StartTrace, const FVector& EndTraceUnit, const TArray<AActor*>& IgnoredActors)
 {
-	FVector EndTrace = StartTrace + EndTraceUnit * this->AttackLengthTrace;
+	FVector EndTrace = StartTrace + EndTraceUnit * AttackLengthTrace;
 
 
 	FName TraceTag = FName(TEXT("TraceAttack"));
@@ -56,7 +56,7 @@ bool UMeleeAttackComponent::TraceAttack(FHitResult& OutHit, const FVector& Start
 	FCollisionResponseParams CollisionResponseParams;
 
 
-	if (this->bDrawDebugTrace)
+	if (bDrawDebugTrace)
 	{
 		GetWorld()->DebugDrawTraceTag = TraceTag;
 	}
@@ -66,8 +66,8 @@ bool UMeleeAttackComponent::TraceAttack(FHitResult& OutHit, const FVector& Start
 	}
 
 	FQuat QuatTmp = FQuat();
-	FCollisionShape CollisionShape = FCollisionShape::MakeSphere(this->TraceSphereRadius);
-	bool bTraceResult = GetWorld()->SweepSingleByChannel(OutHit, StartTrace, EndTrace, QuatTmp, this->TraceCollisionChannel, CollisionShape, CollisionQueryParams, CollisionResponseParams);
+	FCollisionShape CollisionShape = FCollisionShape::MakeSphere(TraceSphereRadius);
+	bool bTraceResult = GetWorld()->SweepSingleByChannel(OutHit, StartTrace, EndTrace, QuatTmp, TraceCollisionChannel, CollisionShape, CollisionQueryParams, CollisionResponseParams);
 
 	return bTraceResult;
 }

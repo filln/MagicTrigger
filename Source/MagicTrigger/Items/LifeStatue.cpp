@@ -171,10 +171,10 @@ void ALifeStatue::BeginPlay()
 	ReverseIntensityLightTimeline->SetTimelineFinishedFunc(ReverseIntensityLightFinishedDelegate);
 	ReverseIntensityLightTimeline->SetTimelineLength(5);
 
-	this->InteractionText = FText::FromStringTable("/Game/MagicTrigger/Data/ST_Interaction.ST_Interaction", "HealingTip");
-	if (this->InteractionText.IsEmpty())
+	InteractionText = FText::FromStringTable("/Game/MagicTrigger/Data/ST_Interaction.ST_Interaction", "HealingTip");
+	if (InteractionText.IsEmpty())
 	{
-		DEBUGMESSAGE("this->InteractionText.IsEmpty()");
+		DEBUGMESSAGE("InteractionText.IsEmpty()");
 
 	}
 	StartBeginPlayTimer_IF_Implementation();
@@ -182,26 +182,26 @@ void ALifeStatue::BeginPlay()
 
 void ALifeStatue::BeginInteractTimelineFunction(float InAlphaIntensity)
 {	
-	float NewIntensity = FMath::Lerp(0.f, this->MaxIntensitySpotLight, InAlphaIntensity);
-	this->SpotLight->SetIntensity(NewIntensity);
+	float NewIntensity = FMath::Lerp(0.f, MaxIntensitySpotLight, InAlphaIntensity);
+	SpotLight->SetIntensity(NewIntensity);
 }
 
 void ALifeStatue::AddLifeTimelineFunction(float InAlphaLife)
 {
-	bool bPlayerNearStatue = UKismetMathLibrary::EqualEqual_VectorVector(this->PlayerCharacter->GetActorLocation(), this->InitialLocationCharacter, 0.1);
+	bool bPlayerNearStatue = UKismetMathLibrary::EqualEqual_VectorVector(PlayerCharacter->GetActorLocation(), InitialLocationCharacter, 0.1);
 	if (bPlayerNearStatue)
 	{
-		float Life = FMath::Lerp(this->CurrentLife, this->MaxLife, InAlphaLife);
-		IPlayerStateInterface::Execute_SetLife_IF(this->PlayerCharacter->GetPlayerState(), Life);
+		float Life = FMath::Lerp(CurrentLife, MaxLife, InAlphaLife);
+		IPlayerStateInterface::Execute_SetLife_IF(PlayerCharacter->GetPlayerState(), Life);
 
-		float AlphaIntensity = this->AddLifePointLightCurve->GetFloatValue(this->AddLifeTimeline->GetPlaybackPosition());
-		float Prc = this->CurrentLife / this->MaxLife;
-		float MinIntensityPointLight = this->MaxIntensityPointLight * Prc;
-		float NewIntensity = FMath::Lerp(this->MaxIntensityPointLight, MinIntensityPointLight, AlphaIntensity);
-		this->PointLight->SetIntensity(NewIntensity);
-		float MinAttenuationRadiusPointLight = this->MaxAttenuationRadiusPointLight * Prc;
-		float NewAttenuationRadius = FMath::Lerp(this->MaxAttenuationRadiusPointLight, MinAttenuationRadiusPointLight, AlphaIntensity);
-		this->PointLight->AttenuationRadius = NewAttenuationRadius;
+		float AlphaIntensity = AddLifePointLightCurve->GetFloatValue(AddLifeTimeline->GetPlaybackPosition());
+		float Prc = CurrentLife / MaxLife;
+		float MinIntensityPointLight = MaxIntensityPointLight * Prc;
+		float NewIntensity = FMath::Lerp(MaxIntensityPointLight, MinIntensityPointLight, AlphaIntensity);
+		PointLight->SetIntensity(NewIntensity);
+		float MinAttenuationRadiusPointLight = MaxAttenuationRadiusPointLight * Prc;
+		float NewAttenuationRadius = FMath::Lerp(MaxAttenuationRadiusPointLight, MinAttenuationRadiusPointLight, AlphaIntensity);
+		PointLight->AttenuationRadius = NewAttenuationRadius;
 
 	}
 	else
@@ -215,51 +215,51 @@ void ALifeStatue::ReverseIntensityLightTimelineFunction(float InAlphaIntensity)
 {
 	//Reverse with ReverseFromEnd() from B to A.
 
-	float NewIntensitySpotLight = FMath::Lerp(0.f, this->MaxIntensitySpotLight, InAlphaIntensity);
-	this->SpotLight->SetIntensity(NewIntensitySpotLight);
+	float NewIntensitySpotLight = FMath::Lerp(0.f, MaxIntensitySpotLight, InAlphaIntensity);
+	SpotLight->SetIntensity(NewIntensitySpotLight);
 
-	float NewIntensityPointLight = FMath::Lerp(this->MaxIntensityPointLight, this->CurrentIntensityPointLight, InAlphaIntensity);
-	this->PointLight->SetIntensity(NewIntensityPointLight);
+	float NewIntensityPointLight = FMath::Lerp(MaxIntensityPointLight, CurrentIntensityPointLight, InAlphaIntensity);
+	PointLight->SetIntensity(NewIntensityPointLight);
 }
 
 void ALifeStatue::SetCanInteractTrue()
 {
-	IAnimationManagerInterface::Execute_SetCanInteract_IF(this->AnimationManager, true);
+	IAnimationManagerInterface::Execute_SetCanInteract_IF(AnimationManager, true);
 }
 
 float ALifeStatue::GetLife() const
 {
-	return IPlayerStateInterface::Execute_GetLife_IF(this->PlayerCharacter->GetPlayerState());
+	return IPlayerStateInterface::Execute_GetLife_IF(PlayerCharacter->GetPlayerState());
 }
 
 float ALifeStatue::GetMaxLife() const
 {
-	return IPlayerStateInterface::Execute_GetMaxLife_IF(this->PlayerCharacter->GetPlayerState());
+	return IPlayerStateInterface::Execute_GetMaxLife_IF(PlayerCharacter->GetPlayerState());
 }
 
 void ALifeStatue::AddLife()
 {
-	this->CurrentLife = GetLife();
-	if (this->CurrentLife >= this->MaxLife)
+	CurrentLife = GetLife();
+	if (CurrentLife >= MaxLife)
 	{
 		ReverseIntensityLight();
 		return;
 	}
 
-	float NewRate = 1 / ((this->MaxLife - this->CurrentLife) / this->SpeedHealing);
-	this->AddLifeTimeline->SetPlayRate(NewRate);
-	this->AddLifeTimeline->PlayFromStart();
+	float NewRate = 1 / ((MaxLife - CurrentLife) / SpeedHealing);
+	AddLifeTimeline->SetPlayRate(NewRate);
+	AddLifeTimeline->PlayFromStart();
 }
 
 void ALifeStatue::ReverseIntensityLight()
 {
-	this->CurrentIntensityPointLight = this->PointLight->Intensity;
-	this->ReverseIntensityLightTimeline->ReverseFromEnd();
+	CurrentIntensityPointLight = PointLight->Intensity;
+	ReverseIntensityLightTimeline->ReverseFromEnd();
 }
 
 void ALifeStatue::StopAddingLife()
 {
-	this->AddLifeTimeline->Stop();
+	AddLifeTimeline->Stop();
 }
 
 void ALifeStatue::StartBeginPlayTimer_IF_Implementation()
@@ -277,8 +277,8 @@ void ALifeStatue::StartBeginPlayTimer_IF_Implementation()
 	{
 		if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 		{
-			this->PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-			GetWorld()->GetTimerManager().ClearTimer(this->BeginPlayTimer);
+			PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+			GetWorld()->GetTimerManager().ClearTimer(BeginPlayTimer);
 		}
 		else
 		{
@@ -286,12 +286,12 @@ void ALifeStatue::StartBeginPlayTimer_IF_Implementation()
 		}
 	}
 	);
-	GetWorld()->GetTimerManager().SetTimer(this->BeginPlayTimer, BeginPlayDelegate, 0.2, true);
+	GetWorld()->GetTimerManager().SetTimer(BeginPlayTimer, BeginPlayDelegate, 0.2, true);
 }
 
 FText ALifeStatue::GetInteractionText_IF_Implementation() const
 {
-	return this->InteractionText;
+	return InteractionText;
 }
 
 void ALifeStatue::Interact_IF_Implementation()
@@ -300,52 +300,52 @@ void ALifeStatue::Interact_IF_Implementation()
 	 * Check all variables.
 	 */
 	//////////////////////////////////////////////////////////////////////////
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PlayerCharacter))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(!this->PlayerCharacter)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(!PlayerCharacter)");
 		return;
 	}
-	this->AnimationManager = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(this->PlayerCharacter);
-	if (!this->AnimationManager)
+	AnimationManager = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(PlayerCharacter);
+	if (!AnimationManager)
 	{
-		DEBUGMESSAGE("!this->AnimationManager");
+		DEBUGMESSAGE("!AnimationManager");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManager))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManager))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManager)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManager)");
 		return;
 	}
-	if (!this->PlayerCharacter->GetPlayerState())
+	if (!PlayerCharacter->GetPlayerState())
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter->GetPlayerState()");
+		DEBUGMESSAGE("!PlayerCharacter->GetPlayerState()");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(this->PlayerCharacter->GetPlayerState()))
+	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerCharacter->GetPlayerState()))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(this->PlayerCharacter->GetPlayerState())");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(PlayerCharacter->GetPlayerState())");
 		return;
 	}
 	//////////////////////////////////////////////////////////////////////////
 
 	//Begin Interact.
-	this->MaxLife = GetMaxLife();
-	this->InitialLocationCharacter = this->PlayerCharacter->GetActorLocation();
-	IAnimationManagerInterface::Execute_SetCanInteract_IF(this->AnimationManager, false);
-	this->BeginInteractTimeline->PlayFromStart();	
+	MaxLife = GetMaxLife();
+	InitialLocationCharacter = PlayerCharacter->GetActorLocation();
+	IAnimationManagerInterface::Execute_SetCanInteract_IF(AnimationManager, false);
+	BeginInteractTimeline->PlayFromStart();	
 }
 
 void ALifeStatue::IsObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(true);
+	Mesh->SetRenderCustomDepth(true);
 }
 
 void ALifeStatue::IsNotObserved_Implementation()
 {
-	this->Mesh->SetRenderCustomDepth(false);
+	Mesh->SetRenderCustomDepth(false);
 }

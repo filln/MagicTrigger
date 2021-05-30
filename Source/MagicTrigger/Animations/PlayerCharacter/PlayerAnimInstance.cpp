@@ -51,72 +51,72 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
-	if (!this->PawnOwner)
+	if (!PawnOwner)
 	{
-		DEBUGMESSAGE("!this->PawnOwner");
+		DEBUGMESSAGE("!PawnOwner");
 		return;
 	}
-	if (!this->AnimationManagerComponent)
+	if (!AnimationManagerComponent)
 	{
-		DEBUGMESSAGE("!this->AnimationManagerComponent");
-		return;
-	}
-
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent)");
+		DEBUGMESSAGE("!AnimationManagerComponent");
 		return;
 	}
 
-	FVector Velocity = this->PawnOwner->GetVelocity();
-	this->Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
-	if (this->Speed > 0)
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManagerComponent))
 	{
-		this->bMoving = true;
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManagerComponent)");
+		return;
+	}
+
+	FVector Velocity = PawnOwner->GetVelocity();
+	Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
+	if (Speed > 0)
+	{
+		bMoving = true;
 	}
 	else
 	{
-		this->bMoving = false;
+		bMoving = false;
 	}
-	this->bInAir = PawnOwner->GetMovementComponent()->IsFalling();
+	bInAir = PawnOwner->GetMovementComponent()->IsFalling();
 
-	this->bAttacking = IAnimationManagerInterface::Execute_GetAttacking_IF(this->AnimationManagerComponent);
-	this->bWatchingNow = IAnimationManagerInterface::Execute_GetWatchingNow_IF(this->AnimationManagerComponent);
-	this->bShortWalk = IAnimationManagerInterface::Execute_GetShortWalk_IF(this->AnimationManagerComponent);
-	this->bLiftingUp2Hands = IAnimationManagerInterface::Execute_GetLiftingUp2Hands_IF(this->AnimationManagerComponent);
-	this->bLiftingUp1Hand = IAnimationManagerInterface::Execute_GetLiftingUp1Hand_IF(this->AnimationManagerComponent);
-	this->bPutingDown1Hand = IAnimationManagerInterface::Execute_GetPutingDown1Hand_IF(this->AnimationManagerComponent);
-	this->bThrowing = IAnimationManagerInterface::Execute_GetThrowing_IF(this->AnimationManagerComponent);
-	this->bCarrying = IAnimationManagerInterface::Execute_GetCarrying_IF(this->AnimationManagerComponent);
-	this->bGettingDamage = IAnimationManagerInterface::Execute_GetGettingDamage_IF(this->AnimationManagerComponent);
-	this->bDying = IAnimationManagerInterface::Execute_GetDying_IF(this->AnimationManagerComponent);
+	bAttacking = IAnimationManagerInterface::Execute_GetAttacking_IF(AnimationManagerComponent);
+	bWatchingNow = IAnimationManagerInterface::Execute_GetWatchingNow_IF(AnimationManagerComponent);
+	bShortWalk = IAnimationManagerInterface::Execute_GetShortWalk_IF(AnimationManagerComponent);
+	bLiftingUp2Hands = IAnimationManagerInterface::Execute_GetLiftingUp2Hands_IF(AnimationManagerComponent);
+	bLiftingUp1Hand = IAnimationManagerInterface::Execute_GetLiftingUp1Hand_IF(AnimationManagerComponent);
+	bPutingDown1Hand = IAnimationManagerInterface::Execute_GetPutingDown1Hand_IF(AnimationManagerComponent);
+	bThrowing = IAnimationManagerInterface::Execute_GetThrowing_IF(AnimationManagerComponent);
+	bCarrying = IAnimationManagerInterface::Execute_GetCarrying_IF(AnimationManagerComponent);
+	bGettingDamage = IAnimationManagerInterface::Execute_GetGettingDamage_IF(AnimationManagerComponent);
+	bDying = IAnimationManagerInterface::Execute_GetDying_IF(AnimationManagerComponent);
 }
 
 
 bool UPlayerAnimInstance::GetAndCheckReferences()
 {
-	this->PawnOwner = TryGetPawnOwner();
-	if (!this->PawnOwner)
+	PawnOwner = TryGetPawnOwner();
+	if (!PawnOwner)
 	{
-		DEBUGMESSAGE("!this->PawnOwner");
+		DEBUGMESSAGE("!PawnOwner");
 		return false;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(PawnOwner))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PawnOwner)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(PawnOwner)");
 		return false;
 	}
 
-	this->AnimationManagerComponent = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(this->PawnOwner);
+	AnimationManagerComponent = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(PawnOwner);
 
-	if (!this->AnimationManagerComponent)
+	if (!AnimationManagerComponent)
 	{
-		DEBUGMESSAGE("!this->AnimationManagerComponent");
+		DEBUGMESSAGE("!AnimationManagerComponent");
 		return false;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManagerComponent))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->AnimationManagerComponent)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManagerComponent)");
 		return false;
 	}
 
@@ -125,118 +125,118 @@ bool UPlayerAnimInstance::GetAndCheckReferences()
 
 void UPlayerAnimInstance::PutDownThrowingObject()
 {
-	if (this->bPutingDown1Hand)
+	if (bPutingDown1Hand)
 	{
-		IAnimationManagerInterface::Execute_DetachLiftingActor_IF(this->AnimationManagerComponent);
+		IAnimationManagerInterface::Execute_DetachLiftingActor_IF(AnimationManagerComponent);
 	}
 }
 
 void UPlayerAnimInstance::LiftUpThrowingObject()
 {
-	if (this->bLiftingUp1Hand)
+	if (bLiftingUp1Hand)
 	{
-		IAnimationManagerInterface::Execute_AttachThrowableActor_IF(this->AnimationManagerComponent);
+		IAnimationManagerInterface::Execute_AttachThrowableActor_IF(AnimationManagerComponent);
 	}
 }
 
 void UPlayerAnimInstance::EndAnimationLiftingCarriedObject()
 {
-	if (this->bLiftingUp2Hands)
+	if (bLiftingUp2Hands)
 	{
-		IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp2Hand_IF(this->AnimationManagerComponent, false);
+		IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp2Hand_IF(AnimationManagerComponent, false);
 	}
 }
 
 void UPlayerAnimInstance::EndAnimationLiftingThrowingObject()
 {
-	if (this->bLiftingUp1Hand)
+	if (bLiftingUp1Hand)
 	{
-		IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp1Hand_IF(this->AnimationManagerComponent, false);
+		IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp1Hand_IF(AnimationManagerComponent, false);
 	}
 }
 
 void UPlayerAnimInstance::StartAnimationLiftingCarriedObject()
 {
-	if (this->bLiftingUp2Hands)
+	if (bLiftingUp2Hands)
 	{
-		IAnimationManagerInterface::Execute_SetCarrying_IF(this->AnimationManagerComponent, true);
+		IAnimationManagerInterface::Execute_SetCarrying_IF(AnimationManagerComponent, true);
 	}
 }
 
 void UPlayerAnimInstance::EndAnimationPutDownCarriedObject()
 {
-	if (!this->bLiftingUp2Hands)
+	if (!bLiftingUp2Hands)
 	{
-		IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown2Hand_IF(this->AnimationManagerComponent, false);
-		IAnimationManagerInterface::Execute_SetCarrying_IF(this->AnimationManagerComponent, false);
+		IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown2Hand_IF(AnimationManagerComponent, false);
+		IAnimationManagerInterface::Execute_SetCarrying_IF(AnimationManagerComponent, false);
 	}
 }
 
 void UPlayerAnimInstance::EndAnimationPutDownThrowingObject()
 {
-	if (this->bPutingDown1Hand)
+	if (bPutingDown1Hand)
 	{
-		IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown1Hand_IF(this->AnimationManagerComponent, false);
+		IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown1Hand_IF(AnimationManagerComponent, false);
 	}
 }
 
 void UPlayerAnimInstance::LiftUpCarriedObject()
 {
-	IAnimationManagerInterface::Execute_AttachLiftingActor_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_AttachLiftingActor_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::PutDownCarriedObject()
 {
-	IAnimationManagerInterface::Execute_DetachLiftingActor_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_DetachLiftingActor_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::StartTraceAttackLeftFoot()
 {
-	IAnimationManagerInterface::Execute_StartTraceAttackLeftFoot_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_StartTraceAttackLeftFoot_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::StartTraceAttackRightFoot()
 {
-	IAnimationManagerInterface::Execute_StartTraceAttackRightFoot_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_StartTraceAttackRightFoot_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::StopTraceAttackLeftFoot()
 {
-	IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::StopTraceAttackRightFoot()
 {
-	IAnimationManagerInterface::Execute_StopTraceAttackRightFoot_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_StopTraceAttackRightFoot_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::EndAttack()
 {
-	IAnimationManagerInterface::Execute_SetPlayingAnimationAttack_IF(this->AnimationManagerComponent, false);
+	IAnimationManagerInterface::Execute_SetPlayingAnimationAttack_IF(AnimationManagerComponent, false);
 	Montage_Play(PlayerFightIdle);	
 }
 
 void UPlayerAnimInstance::EndAnimationThrow()
 {
-	IAnimationManagerInterface::Execute_SetPlayingAnimationThrow_IF(this->AnimationManagerComponent, false);
+	IAnimationManagerInterface::Execute_SetPlayingAnimationThrow_IF(AnimationManagerComponent, false);
 }
 
 void UPlayerAnimInstance::ThrowObject()
 {
-	IAnimationManagerInterface::Execute_SpawnThrowableActor_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_SpawnThrowableActor_IF(AnimationManagerComponent);
 }
 
 void UPlayerAnimInstance::EndAnimationHitReaction()
 {
-	IAnimationManagerInterface::Execute_SetGettingDamage_IF(this->AnimationManagerComponent, false);
+	IAnimationManagerInterface::Execute_SetGettingDamage_IF(AnimationManagerComponent, false);
 }
 
 void UPlayerAnimInstance::EndAnimationJump()
 {
-	IAnimationManagerInterface::Execute_SetPlayingAnimationJump_IF(this->AnimationManagerComponent, false);
+	IAnimationManagerInterface::Execute_SetPlayingAnimationJump_IF(AnimationManagerComponent, false);
 }
 
 void UPlayerAnimInstance::ReportNoise()
 {
-	IAnimationManagerInterface::Execute_ReportNoise_IF(this->AnimationManagerComponent);
+	IAnimationManagerInterface::Execute_ReportNoise_IF(AnimationManagerComponent);
 }

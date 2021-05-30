@@ -95,23 +95,23 @@ void AEnemyCharacterMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnRunAI);
-	this->RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnStopAI);
+	RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnRunAI);
+	RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnStopAI);
 }
 
 void AEnemyCharacterMagicTrigger::StartAttack()
 {
-	if (!this->bAttacking)
+	if (!bAttacking)
 	{
-		this->bAttacking = true;
+		bAttacking = true;
 	}
 }
 
 void AEnemyCharacterMagicTrigger::StopAttack()
 {
-	if (this->bAttacking)
+	if (bAttacking)
 	{
-		this->bAttacking = false;
+		bAttacking = false;
 	}
 }
 
@@ -189,20 +189,20 @@ void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedCompon
 float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
 
-	if (this->Defence > 1)
+	if (Defence > 1)
 	{
-		this->Life = this->Life - (DamageAmount / this->Defence);
+		Life = Life - (DamageAmount / Defence);
 	}
 	else
 	{
-		this->Life = this->Life - DamageAmount;
+		Life = Life - DamageAmount;
 	}
 
 
-	if (this->Life > 0)
+	if (Life > 0)
 	{
-		//this->InitialMovementMode = EMovementMode::MOVE_Walking;
-		this->bGettingDamage = true;
+		//InitialMovementMode = EMovementMode::MOVE_Walking;
+		bGettingDamage = true;
 		GetCharacterMovement()->DisableMovement();
 	}
 	else
@@ -214,10 +214,10 @@ float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamage
 
 void AEnemyCharacterMagicTrigger::DoAfterEndAnimationTakeDamage()
 {
-	//GetCharacterMovement()->SetGroundMovementMode(this->InitialMovementMode);
+	//GetCharacterMovement()->SetGroundMovementMode(InitialMovementMode);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	//DEBUGMESSAGE("DoAfterEndAnimationTakeDamage");
-	this->bGettingDamage = false;
+	bGettingDamage = false;
 
 	if (bStunningAfterGetDamage)
 	{
@@ -230,16 +230,16 @@ void AEnemyCharacterMagicTrigger::Stunning(bool bInStunning)
 {
 	if (bInStunning)
 	{
-		//this->InitialMovementMode = EMovementMode::MOVE_Walking;
+		//InitialMovementMode = EMovementMode::MOVE_Walking;
 		GetCharacterMovement()->DisableMovement();
 	}
 	else
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-		this->bStunningAfterGetDamage = false;
+		bStunningAfterGetDamage = false;
 	}
 
-	this->bStunning = bInStunning;
+	bStunning = bInStunning;
 }
 
 void AEnemyCharacterMagicTrigger::Die()
@@ -271,15 +271,15 @@ void AEnemyCharacterMagicTrigger::Die()
 
 	IOwnerTargetSelectionInterface::Execute_RemoveAndSwitchActors_IF(PlayerCharacter, this);
 	EnemyController->OnStopAI();
-	this->Life = 0;
+	Life = 0;
 	bDying = true;
 	GetCharacterMovement()->DisableMovement();
-	SetLifeSpan(this->LifeSpan);
+	SetLifeSpan(LifeSpan);
 }
 
 void AEnemyCharacterMagicTrigger::IsObserved_Implementation()
 {
-	if (this->bDying)
+	if (bDying)
 	{
 		ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		if (!PlayerCharacter)
@@ -316,8 +316,8 @@ void AEnemyCharacterMagicTrigger::IsObserved_Implementation()
 		}
 		IHUDInterface::Execute_SetEnemy_IF(HUD, this);
 		IHUDInterface::Execute_ShowObserveEnemyWidget_IF(HUD);
-		this->bObserved = true;
-		GetMesh()->SetRenderCustomDepth(this->bObserved);
+		bObserved = true;
+		GetMesh()->SetRenderCustomDepth(bObserved);
 	}
 }
 
@@ -341,8 +341,8 @@ void AEnemyCharacterMagicTrigger::IsNotObserved_Implementation()
 		return;
 	}
 	IHUDInterface::Execute_HideObserveEnemyWidget_IF(HUD);
-	this->bObserved = false;
-	GetMesh()->SetRenderCustomDepth(this->bObserved);
+	bObserved = false;
+	GetMesh()->SetRenderCustomDepth(bObserved);
 }
 
 AActor* AEnemyCharacterMagicTrigger::GetEnemy_IF_Implementation()
@@ -352,26 +352,26 @@ AActor* AEnemyCharacterMagicTrigger::GetEnemy_IF_Implementation()
 
 float AEnemyCharacterMagicTrigger::GetLife_IF_Implementation() const
 {
-	return this->Life;
+	return Life;
 }
 
 float AEnemyCharacterMagicTrigger::GetMaxLife_IF_Implementation() const
 {
-	return this->MaxLife;
+	return MaxLife;
 }
 
 UTexture2D* AEnemyCharacterMagicTrigger::GetIcon_IF_Implementation() const
 {
-	return this->Icon;
+	return Icon;
 }
 
 FText AEnemyCharacterMagicTrigger::GetName_IF_Implementation() const
 {
-	return this->Name;
+	return Name;
 }
 
 bool AEnemyCharacterMagicTrigger::GetDying_IF_Implementation() const
 {
-	return this->bDying;
+	return bDying;
 }
 

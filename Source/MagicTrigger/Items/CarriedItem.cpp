@@ -39,38 +39,38 @@ ACarriedItem::ACarriedItem()
 
 void ACarriedItem::SetPlayingAnimationLiftUp_IF_Implementation(bool bPlaying)
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PlayerCharacter))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PlayerCharacter)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter)");
 		return;
 	}
-	IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp2Hand_IF(this->PlayerCharacter, bPlaying);
+	IAnimationManagerInterface::Execute_SetPlayingAnimationLiftUp2Hand_IF(PlayerCharacter, bPlaying);
 }
 
 void ACarriedItem::SetPlayingAnimationPutDown_IF_Implementation(bool bPlaying)
 {
-	if (!this->PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		DEBUGMESSAGE("!this->PlayerCharacter");
+		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PlayerCharacter))
+	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(this->PlayerCharacter)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter)");
 		return;
 	}
-	IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown2Hand_IF(this->PlayerCharacter, bPlaying);
+	IAnimationManagerInterface::Execute_SetPlayingAnimationPutDown2Hand_IF(PlayerCharacter, bPlaying);
 }
 
 void ACarriedItem::SetSimulatePhysics_IF_Implementation(bool bSimulate)
 {
-	this->StaticMesh->SetSimulatePhysics(bSimulate);
+	StaticMesh->SetSimulatePhysics(bSimulate);
 	FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
-	this->Box->AttachToComponent(GetRootComponent(), AttachmentRules, NAME_None);
-	this->InteractCollision->AttachToComponent(GetRootComponent(), AttachmentRules, NAME_None);
+	Box->AttachToComponent(GetRootComponent(), AttachmentRules, NAME_None);
+	InteractCollision->AttachToComponent(GetRootComponent(), AttachmentRules, NAME_None);
 }

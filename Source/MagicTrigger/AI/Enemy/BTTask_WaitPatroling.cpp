@@ -33,11 +33,11 @@ EBTNodeResult::Type UBTTask_WaitPatroling::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	//this->WaitTime = RandRange(0, Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime);
+	//WaitTime = RandRange(0, Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime);
 	//InMin + (InMax - InMin) * FRand();
 	//Rand() / (float)RAND_MAX
 
-	this->WaitTime = Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime * rand() / (float)RAND_MAX;
+	WaitTime = Enemy->EnemyToBehaviorTreeStruct.PatrolingWaitMaxTime * rand() / (float)RAND_MAX;
 
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }

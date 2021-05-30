@@ -30,11 +30,11 @@ void UDemonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
-	FVector Velocity = this->Demon->GetVelocity();
-	this->Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
+	FVector Velocity = Demon->GetVelocity();
+	Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y + Velocity.Z * Velocity.Z);
 
-	this->bAttacking = this->Demon->bAttacking;
-	this->bDying = this->Demon->bDying;
+	bAttacking = Demon->bAttacking;
+	bDying = Demon->bDying;
 
 }
 
@@ -46,10 +46,10 @@ bool UDemonAnimInstance::GetAndCheckReferences()
 		//DEBUGMESSAGE("!PawnOwner");
 		return false;
 	}
-	this->Demon = Cast<ADemonCharacter>(PawnOwner);
-	if (!this->Demon)
+	Demon = Cast<ADemonCharacter>(PawnOwner);
+	if (!Demon)
 	{
-		//DEBUGMESSAGE("!this->Demon");
+		//DEBUGMESSAGE("!Demon");
 		return false;
 	}
 
@@ -58,10 +58,10 @@ bool UDemonAnimInstance::GetAndCheckReferences()
 
 void UDemonAnimInstance::CreateFireBall()
 {
-	this->Demon->CreateFireBall();
+	Demon->CreateFireBall();
 }
 
 void UDemonAnimInstance::MoveFireBallToTarget()
 {
-	this->Demon->MoveFireBallToTarget();
+	Demon->MoveFireBallToTarget();
 }

@@ -29,4 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ParentUserWidgetMT")
 		AHUDMagicTrigger* GetHUDMagicTrigger();
+
+
 };

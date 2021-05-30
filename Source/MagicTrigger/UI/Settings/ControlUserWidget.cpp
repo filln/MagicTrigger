@@ -22,83 +22,83 @@ UControlUserWidget::UControlUserWidget()
 
 FText UControlUserWidget::ConvertMouseSensToText()
 {
-	return UKismetTextLibrary::Conv_FloatToText(this->MouseSensitivity, ERoundingMode::HalfToEven, false, false, 1, 324, 0, 2);
+	return UKismetTextLibrary::Conv_FloatToText(MouseSensitivity, ERoundingMode::HalfToEven, false, false, 1, 324, 0, 2);
 }
 
 void UControlUserWidget::SetSliderValue()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	if (!this->HUDMagicTrigger->PlayerController)
+	if (!HUDMagicTrigger->PlayerController)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerController");
+		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerController");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(this->HUDMagicTrigger->PlayerController))
+	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController))
 	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(this->HUDMagicTrigger->PlayerController)");
+		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController)");
 		return;
 	}
 
-	this->MouseSensitivity = IPlayerControllerInterface::Execute_GetMouseSensitivity_IF(this->HUDMagicTrigger->PlayerController);
+	MouseSensitivity = IPlayerControllerInterface::Execute_GetMouseSensitivity_IF(HUDMagicTrigger->PlayerController);
 
-	if (this->MouseSensSliderMultiplier <= 0)
+	if (MouseSensSliderMultiplier <= 0)
 	{
-		DEBUGMESSAGE("this->MouseSensSliderMultiplier <= 0");
-		this->MouseSensSlider->SetValue(0);
+		DEBUGMESSAGE("MouseSensSliderMultiplier <= 0");
+		MouseSensSlider->SetValue(0);
 	}
 
-	float SliderValue =(this->MouseSensitivity - this->MouseSensSliderAddend) / this->MouseSensSliderMultiplier;
-	this->MouseSensSlider->SetValue(SliderValue);
+	float SliderValue =(MouseSensitivity - MouseSensSliderAddend) / MouseSensSliderMultiplier;
+	MouseSensSlider->SetValue(SliderValue);
 	MouseSensTextBlock2->SetText(ConvertMouseSensToText());
 }
 void UControlUserWidget::OnValueChangedMouseSensSlider(float Value)
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	if (!this->HUDMagicTrigger->PlayerController)
+	if (!HUDMagicTrigger->PlayerController)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger->PlayerController");
+		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerController");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(this->HUDMagicTrigger->PlayerController))
+	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(this->HUDMagicTrigger->PlayerController)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController)");
 		return;
 	}
-	this->MouseSensitivity = Value * this->MouseSensSliderMultiplier + this->MouseSensSliderAddend;
-	IPlayerControllerInterface::Execute_SetInputRotationScale_IF(this->HUDMagicTrigger->PlayerController, this->MouseSensitivity);
+	MouseSensitivity = Value * MouseSensSliderMultiplier + MouseSensSliderAddend;
+	IPlayerControllerInterface::Execute_SetInputRotationScale_IF(HUDMagicTrigger->PlayerController, MouseSensitivity);
 	MouseSensTextBlock2->SetText(ConvertMouseSensToText());
 }
 
 void UControlUserWidget::OnPressedResumeButton()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	this->HUDMagicTrigger->SetPauseGame(false, this);
+	HUDMagicTrigger->SetPauseGame(false, this);
 }
 
 void UControlUserWidget::OnPressedBackMenuButton()
 {
-	if (!this->HUDMagicTrigger)
+	if (!HUDMagicTrigger)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger");
+		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	if (!this->HUDMagicTrigger->SettingsMenuUserWidget)
+	if (!HUDMagicTrigger->SettingsMenuUserWidget)
 	{
-		//DEBUGMESSAGE("!this->HUDMagicTrigger->SettingsMenuUserWidget");
+		//DEBUGMESSAGE("!HUDMagicTrigger->SettingsMenuUserWidget");
 		return;
 	}
-	this->HUDMagicTrigger->SwitchWidgets(this, this->HUDMagicTrigger->SettingsMenuUserWidget);
+	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->SettingsMenuUserWidget);
 }
 

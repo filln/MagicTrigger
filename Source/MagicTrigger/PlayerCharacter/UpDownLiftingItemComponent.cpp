@@ -40,179 +40,179 @@ void UUpDownLiftingItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->Owner = GetOwner();
+	Owner = GetOwner();
 
-	if (this->Owner)
+	if (Owner)
 	{
-		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner))
 		{
-			this->OwnersMesh = IPlayerCharacterInterface::Execute_GetMesh_IF(this->Owner);
+			OwnersMesh = IPlayerCharacterInterface::Execute_GetMesh_IF(Owner);
 		}
 		else
 		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)")
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner)")
 		}
 
-		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+		if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner))
 		{
-			this->InterractCollision = IPlayerCharacterInterface::Execute_GetInteractCollision_IF(this->Owner);
+			InterractCollision = IPlayerCharacterInterface::Execute_GetInteractCollision_IF(Owner);
 		}
 		else
 		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)")
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner)")
 		}
 
 	}
 	else
 	{
-		DEBUGMESSAGE("!this->Owner")
+		DEBUGMESSAGE("!Owner")
 	}
 }
 
 void UUpDownLiftingItemComponent::DetachLiftingActor()
 {
 
-	if (!this->LiftUpObject)
+	if (!LiftUpObject)
 	{
-		DEBUGMESSAGE("!this->LiftUpObject");
+		DEBUGMESSAGE("!LiftUpObject");
 		return;
 	}
 
-	this->LiftUpObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, false));
+	LiftUpObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, false));
 
 	FTransform PointPutDownTransform;
-	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner))
 	{
-		PointPutDownTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
+		PointPutDownTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(Owner);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner)");
 		return;
 	}
 
-	FVector TargetRelativeLocation = this->DetachLiftingActorTraceOut.Location;
+	FVector TargetRelativeLocation = DetachLiftingActorTraceOut.Location;
 	FRotator TargetRelativeRotation = PointPutDownTransform.Rotator();
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
 
 	UKismetSystemLibrary::MoveComponentTo
 	(
-		this->LiftUpObject->GetRootComponent(),
+		LiftUpObject->GetRootComponent(),
 		TargetRelativeLocation,
 		TargetRelativeRotation,
 		false,
 		false,
-		this->DetachOverTime,
+		DetachOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor, this->DetachOverTime);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor, DetachOverTime);
 }
 void UUpDownLiftingItemComponent::DoAfterMoveComponentInDetachLiftingActor()
 {
-	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	if (IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject))
 	{
-		ILiftingItemInterface::Execute_SetSimulatePhysics_IF(this->LiftUpObject, true);
+		ILiftingItemInterface::Execute_SetSimulatePhysics_IF(LiftUpObject, true);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject)");
 		return;
 	}
 
-	this->LiftUpObject->SetActorEnableCollision(true);
-	this->LiftUpObject = nullptr;
+	LiftUpObject->SetActorEnableCollision(true);
+	LiftUpObject = nullptr;
 }
 
 void UUpDownLiftingItemComponent::AttachLiftingActor()
 {
-	if (!this->LiftUpObject)
+	if (!LiftUpObject)
 	{
-		DEBUGMESSAGE("!this->LiftUpObject");
+		DEBUGMESSAGE("!LiftUpObject");
 		return;
 	}
-	if (!this->OwnersMesh)
+	if (!OwnersMesh)
 	{
-		DEBUGMESSAGE("!this->OwnersMesh");
+		DEBUGMESSAGE("!OwnersMesh");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	if (!IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject))
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject)");
 		return;
 	}
 
-	this->AttachSocket = ILiftingItemInterface::Execute_GetAttachSocket_IF(this->LiftUpObject);
-	ILiftingItemInterface::Execute_SetSimulatePhysics_IF(this->LiftUpObject, false);
+	AttachSocket = ILiftingItemInterface::Execute_GetAttachSocket_IF(LiftUpObject);
+	ILiftingItemInterface::Execute_SetSimulatePhysics_IF(LiftUpObject, false);
 
 
-	this->LiftUpObject->SetActorEnableCollision(false);
+	LiftUpObject->SetActorEnableCollision(false);
 
-	FVector TargetRelativeLocation = this->OwnersMesh->GetSocketLocation(this->AttachSocket);
-	FRotator TargetRelativeRotation = this->LiftUpObject->GetRootComponent()->GetSocketRotation(this->AttachSocket);
+	FVector TargetRelativeLocation = OwnersMesh->GetSocketLocation(AttachSocket);
+	FRotator TargetRelativeRotation = LiftUpObject->GetRootComponent()->GetSocketRotation(AttachSocket);
 	FLatentActionInfo LatentInfo = FLatentActionInfo();
 	LatentInfo.CallbackTarget = this;
 	UKismetSystemLibrary::MoveComponentTo
 	(
-		this->LiftUpObject->GetRootComponent(),
+		LiftUpObject->GetRootComponent(),
 		TargetRelativeLocation,
 		TargetRelativeRotation,
 		false,
 		false,
-		this->AttachOverTime,
+		AttachOverTime,
 		false,
 		EMoveComponentAction::Move,
 		LatentInfo
 	);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor, this->AttachOverTime);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor, AttachOverTime);
 
 }
 
 void UUpDownLiftingItemComponent::DoAfterMoveComponentInAttachLiftingActor()
 {
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
-	this->LiftUpObject->AttachToComponent(this->OwnersMesh, AttachmentTransformRules, this->AttachSocket);
+	LiftUpObject->AttachToComponent(OwnersMesh, AttachmentTransformRules, AttachSocket);
 
 }
 
 
 void UUpDownLiftingItemComponent::LiftUp()
 {
-	if (this->LiftUpObject)
+	if (LiftUpObject)
 	{
 		return;
 	}
 
-	this->LiftUpObject = FindLifUpObject();
+	LiftUpObject = FindLifUpObject();
 
-	if (!this->LiftUpObject)
+	if (!LiftUpObject)
 	{
 		return;
 	}
 
-	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner))
+	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(Owner))
 	{
-		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(this->Owner);
+		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(Owner);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(Owner)");
 		return;
 	}
 
-	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	if (IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject))
 	{
-		ILiftingItemInterface::Execute_SetPlayingAnimationLiftUp_IF(this->LiftUpObject, true);
+		ILiftingItemInterface::Execute_SetPlayingAnimationLiftUp_IF(LiftUpObject, true);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject)");
 		return;
 	}
 
@@ -220,9 +220,9 @@ void UUpDownLiftingItemComponent::LiftUp()
 
 void UUpDownLiftingItemComponent::PutDown()
 {
-	if (!this->LiftUpObject)
+	if (!LiftUpObject)
 	{
-		//DEBUGMESSAGE("!this->LiftUpObject");
+		//DEBUGMESSAGE("!LiftUpObject");
 		return;
 	}
 
@@ -236,28 +236,28 @@ void UUpDownLiftingItemComponent::PutDown()
 		return;
 	}
 
-	if (IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject))
+	if (IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject))
 	{
-		ILiftingItemInterface::Execute_SetPlayingAnimationPutDown_IF(this->LiftUpObject, true);
+		ILiftingItemInterface::Execute_SetPlayingAnimationPutDown_IF(LiftUpObject, true);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(this->LiftUpObject)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<ILiftingItemInterface>(LiftUpObject)");
 	}
 }
 
 void UUpDownLiftingItemComponent::DestroyLiftingActor()
 {
-	if (!this->LiftUpObject)
+	if (!LiftUpObject)
 	{
-		DEBUGMESSAGE("!this->LiftUpObject");
+		DEBUGMESSAGE("!LiftUpObject");
 		return;
 	}
 
-	bool bDestroyed = this->LiftUpObject->Destroy();
+	bool bDestroyed = LiftUpObject->Destroy();
 	if (bDestroyed)
 	{
-		this->LiftUpObject = nullptr;
+		LiftUpObject = nullptr;
 	}
 	else
 	{
@@ -270,19 +270,19 @@ AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 	AActor* LiftUpObjectTmp = nullptr;
 
 
-	if (!this->InterractCollision)
+	if (!InterractCollision)
 	{
-		DEBUGMESSAGE("!this->InterractCollision");
+		DEBUGMESSAGE("!InterractCollision");
 		return LiftUpObjectTmp;
 	}
-	if (!this->LiftUpClass)
+	if (!LiftUpClass)
 	{
-		DEBUGMESSAGE("!this->LiftUpClass");
+		DEBUGMESSAGE("!LiftUpClass");
 		return LiftUpObjectTmp;
 	}
 
 	TArray<AActor*> OverlappingActorsArr;
-	this->InterractCollision->GetOverlappingActors(OverlappingActorsArr, this->LiftUpClass);
+	InterractCollision->GetOverlappingActors(OverlappingActorsArr, LiftUpClass);
 
 	if (!OverlappingActorsArr.Num())
 	{
@@ -290,9 +290,9 @@ AActor* UUpDownLiftingItemComponent::FindLifUpObject()
 	}
 
 	AActor* ObservedActor = nullptr;
-	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(this->Owner))
+	if (IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(Owner))
 	{
-		ObservedActor = IOwnerTargetSelectionInterface::Execute_GetObservedActor_IF(this->Owner);
+		ObservedActor = IOwnerTargetSelectionInterface::Execute_GetObservedActor_IF(Owner);
 	}
 
 	if (ObservedActor)
@@ -338,32 +338,32 @@ bool UUpDownLiftingItemComponent::TracePutDownPoint()
 
 	FTransform StartTraceTransform;
 	FTransform EndTraceTransform;
-	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner))
 	{
-		StartTraceTransform = IPlayerCharacterInterface::Execute_GetPointStartTraceToPutDownPointTransform_IF(this->Owner);
-		EndTraceTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(this->Owner);
+		StartTraceTransform = IPlayerCharacterInterface::Execute_GetPointStartTraceToPutDownPointTransform_IF(Owner);
+		EndTraceTransform = IPlayerCharacterInterface::Execute_GetPointPutDownTransform_IF(Owner);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner)");
 		return false;
 	}
 
 	FVector StartTrace = StartTraceTransform.GetLocation();
 	FVector EndTrace = EndTraceTransform.GetLocation();
-	EndTrace.Z = EndTrace.Z - this->DeltaVerticalTraceZ;
+	EndTrace.Z = EndTrace.Z - DeltaVerticalTraceZ;
 
 	FName TraceTag = FName(TEXT("TracePutDownPoint"));
 	FCollisionQueryParams CollisionQueryParams = FCollisionQueryParams(TraceTag, FCollisionQueryParams::GetUnknownStatId());
 	TArray<AActor*> IgnoredActors;
-	IgnoredActors.Add(this->Owner);
-	IgnoredActors.Add(this->LiftUpObject);
+	IgnoredActors.Add(Owner);
+	IgnoredActors.Add(LiftUpObject);
 	CollisionQueryParams.AddIgnoredActors(IgnoredActors);
 
 	FCollisionResponseParams CollisionResponseParams;
 
 
-	if (this->bDrawDebugTrace)
+	if (bDrawDebugTrace)
 	{
 		GetWorld()->DebugDrawTraceTag = TraceTag;
 	}
@@ -372,46 +372,46 @@ bool UUpDownLiftingItemComponent::TracePutDownPoint()
 		GetWorld()->DebugDrawTraceTag = FName();
 	}
 
-	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(this->DetachLiftingActorTraceOut, StartTrace, EndTrace, this->TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
+	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(DetachLiftingActorTraceOut, StartTrace, EndTrace, TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
 
 	return bTraceResult;
 }
 
 bool UUpDownLiftingItemComponent::TraceObstacle()
 {
-	if (!this->Owner)
+	if (!Owner)
 	{
-		DEBUGMESSAGE("!this->Owner");
+		DEBUGMESSAGE("!Owner");
 		return true;
 	}
 
 	FTransform StartTraceObstacleSocketNameTransform;
 	FVector UpDownLiftingArrowForwardVector;
-	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner))
+	if (IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner))
 	{
-		StartTraceObstacleSocketNameTransform = IPlayerCharacterInterface::Execute_GetSocketTransform_IF(this->Owner, this->StartTraceObstacleSocketName);
-		UpDownLiftingArrowForwardVector = IPlayerCharacterInterface::Execute_GetUpDownLiftingArrowForwardVector_IF(this->Owner);
+		StartTraceObstacleSocketNameTransform = IPlayerCharacterInterface::Execute_GetSocketTransform_IF(Owner, StartTraceObstacleSocketName);
+		UpDownLiftingArrowForwardVector = IPlayerCharacterInterface::Execute_GetUpDownLiftingArrowForwardVector_IF(Owner);
 	}
 	else
 	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(this->Owner)");
+		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(Owner)");
 		return true;
 	}
 
 	FVector StartTrace = StartTraceObstacleSocketNameTransform.GetLocation();
-	FVector EndTrace = StartTrace + UpDownLiftingArrowForwardVector * this->DistanceOfTraceObstacle;
+	FVector EndTrace = StartTrace + UpDownLiftingArrowForwardVector * DistanceOfTraceObstacle;
 
 	FName TraceTag = FName(TEXT("TraceObstacle"));
 	FCollisionQueryParams CollisionQueryParams = FCollisionQueryParams(TraceTag, FCollisionQueryParams::GetUnknownStatId());
 	TArray<AActor*> IgnoredActors;
-	IgnoredActors.Add(this->Owner);
-	IgnoredActors.Add(this->LiftUpObject);
+	IgnoredActors.Add(Owner);
+	IgnoredActors.Add(LiftUpObject);
 	CollisionQueryParams.AddIgnoredActors(IgnoredActors);
 
 	FCollisionResponseParams CollisionResponseParams;
 
 
-	if (this->bDrawDebugTrace)
+	if (bDrawDebugTrace)
 	{
 		GetWorld()->DebugDrawTraceTag = TraceTag;
 	}
@@ -421,7 +421,7 @@ bool UUpDownLiftingItemComponent::TraceObstacle()
 	}
 
 	FHitResult HitResultTmp;
-	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(HitResultTmp, StartTrace, EndTrace, this->TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
+	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(HitResultTmp, StartTrace, EndTrace, TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
 
 	return bTraceResult;
 
