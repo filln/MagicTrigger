@@ -6,7 +6,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Items\CarriedItem.h"
+#include "MagicTrigger\Items\LiftUp\CarryItem.h"
 #include "BoxForPlatformParent.generated.h"
 
 
@@ -14,7 +14,7 @@
   *
   */
 UCLASS()
-class MAGICTRIGGER_API ABoxForPlatformParent : public ACarriedItem
+class MAGICTRIGGER_API ABoxForPlatformParent : public ACarryItem
 {
 	GENERATED_BODY()
 

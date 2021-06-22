@@ -8,7 +8,7 @@
 #include "Kismet\GameplayStatics.h"
 #include "Kismet\KismetMathLibrary.h"
 #include "GameFramework\PlayerState.h"
-#include "GameFramework\Character.h"
+#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
 #include "Components\StaticMeshComponent.h"
 #include "Components\PointLightComponent.h"
 #include "Components\SpotLightComponent.h"
@@ -177,7 +177,6 @@ void ALifeStatue::BeginPlay()
 		DEBUGMESSAGE("InteractionText.IsEmpty()");
 
 	}
-	StartBeginPlayTimer_IF_Implementation();
 }
 
 void ALifeStatue::BeginInteractTimelineFunction(float InAlphaIntensity)
@@ -224,7 +223,11 @@ void ALifeStatue::ReverseIntensityLightTimelineFunction(float InAlphaIntensity)
 
 void ALifeStatue::SetCanInteractTrue()
 {
-	IAnimationManagerInterface::Execute_SetCanInteract_IF(AnimationManager, true);
+	PlayerCharacter->SetCanInteract(true);
+}
+void ALifeStatue::SetCanInteractFalse()
+{
+	PlayerCharacter->SetCanInteract(false);
 }
 
 float ALifeStatue::GetLife() const
@@ -260,33 +263,7 @@ void ALifeStatue::ReverseIntensityLight()
 void ALifeStatue::StopAddingLife()
 {
 	AddLifeTimeline->Stop();
-}
-
-void ALifeStatue::StartBeginPlayTimer_IF_Implementation()
-{
-	if (!GetWorld())
-	{
-		DEBUGMESSAGE("!GetWorld()");
-		return;
-	}
-	FTimerDelegate BeginPlayDelegate;
-	BeginPlayDelegate.BindLambda
-	(
-		[=]
-	()
-	{
-		if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
-		{
-			PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-			GetWorld()->GetTimerManager().ClearTimer(BeginPlayTimer);
-		}
-		else
-		{
-			DEBUGMESSAGE("!UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)");
-		}
-	}
-	);
-	GetWorld()->GetTimerManager().SetTimer(BeginPlayTimer, BeginPlayDelegate, 0.2, true);
+	SetCanInteractTrue();
 }
 
 FText ALifeStatue::GetInteractionText_IF_Implementation() const
@@ -294,33 +271,18 @@ FText ALifeStatue::GetInteractionText_IF_Implementation() const
 	return InteractionText;
 }
 
-void ALifeStatue::Interact_IF_Implementation()
+void ALifeStatue::Interact_IF_Implementation(APlayerCharacterMagicTrigger* InPlayerCharacter)
 {
 	/**
 	 * Check all variables.
 	 */
 	//////////////////////////////////////////////////////////////////////////
-	if (!PlayerCharacter)
+	if (!InPlayerCharacter)
 	{
 		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(PlayerCharacter))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(!PlayerCharacter)");
-		return;
-	}
-	AnimationManager = IAnimationManagerInterface::Execute_GetAnimationManagerComponent_IF(PlayerCharacter);
-	if (!AnimationManager)
-	{
-		DEBUGMESSAGE("!AnimationManager");
-		return;
-	}
-	if (!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManager))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(AnimationManager)");
-		return;
-	}
+	PlayerCharacter = InPlayerCharacter;
 	if (!PlayerCharacter->GetPlayerState())
 	{
 		DEBUGMESSAGE("!PlayerCharacter->GetPlayerState()");
@@ -336,7 +298,7 @@ void ALifeStatue::Interact_IF_Implementation()
 	//Begin Interact.
 	MaxLife = GetMaxLife();
 	InitialLocationCharacter = PlayerCharacter->GetActorLocation();
-	IAnimationManagerInterface::Execute_SetCanInteract_IF(AnimationManager, false);
+	SetCanInteractFalse();
 	BeginInteractTimeline->PlayFromStart();	
 }
 

@@ -5,15 +5,14 @@
 #include "MagicTrigger\Data\DebugMessage.h"
 #include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBox4.h"
 #include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBox5.h"
-#include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
 #include "MagicTrigger\Quests\QuestSevenfoldSphere\RockDoor.h"
 #include "MagicTrigger\Quests\QuestSevenfoldSphere\BoxForPlatformParent.h"
+#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
 #include "Components\BoxComponent.h"
 #include "Components\SphereComponent.h"
 #include "Components\StaticMeshComponent.h"
 #include "Components\CapsuleComponent.h"
 #include "GameFramework\CharacterMovementComponent.h"
-#include "GameFramework\Character.h"
 #include "Kismet\GameplayStatics.h"
 #include "Kismet\KismetSystemLibrary.h"
 
@@ -59,7 +58,8 @@ void UQuestSevenfoldSphereComponent::BeginPlay()
 
 void UQuestSevenfoldSphereComponent::LiftBeginOverlapCharacter(UPrimitiveComponent* InCharacterCollision)
 {
-	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	ACharacter* PlayerCharacterTmp = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	PlayerCharacter = Cast<APlayerCharacterMagicTrigger>(PlayerCharacterTmp);
 	if (!PlayerCharacter)
 	{
 		DEBUGMESSAGE("!PlayerCharacter");
@@ -80,7 +80,8 @@ void UQuestSevenfoldSphereComponent::LiftBeginOverlapCharacter(UPrimitiveCompone
 
 void UQuestSevenfoldSphereComponent::LiftEndOverlapCharacter(UPrimitiveComponent* InCharacterCollision)
 {
-	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	ACharacter* PlayerCharacterTmp = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	PlayerCharacter = Cast<APlayerCharacterMagicTrigger>(PlayerCharacterTmp);
 	if (!PlayerCharacter)
 	{
 		DEBUGMESSAGE("!PlayerCharacter");
@@ -366,35 +367,21 @@ void UQuestSevenfoldSphereComponent::MoveLift(bool bMoveUp)
 
 void UQuestSevenfoldSphereComponent::SetCharacterParameters(bool bCharacterInLift)
 {
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!PlayerController)
-	{
-		DEBUGMESSAGE("!PlayerController");
-		return;
-	}
-
 	bDisableOverlapCharacter = bCharacterInLift;
+	PlayerCharacter->SetEnableMovement(!bCharacterInLift);
 	if (bCharacterInLift)
 	{
-		PlayerCharacter->DisableInput(PlayerController);
-		if (!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(PlayerCharacter))
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IOwnerTargetSelectionInterface>(PlayerCharacter)");
-			return;
-		}
-		IOwnerTargetSelectionInterface::Execute_OffWatchingActors_IF(PlayerCharacter);
+		PlayerCharacter->OffWatchingActors();
 		PlayerCharacter->GetCharacterMovement()->DisableMovement();
 		PlayerCharacter->SetActorEnableCollision(false);
 	} 
 	else
 	{
-		PlayerCharacter->EnableInput(PlayerController);
 		PlayerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		FDetachmentTransformRules DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, true);
 		PlayerCharacter->DetachFromActor(DetachmentRules);
 		PlayerCharacter->SetActorEnableCollision(true);
 	}
-
 
 }
 

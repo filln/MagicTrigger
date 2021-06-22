@@ -4,15 +4,19 @@
 #include "AbilitySystemManager.h"
 #include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
 #include "MagicTrigger\AbilitySystem\SevenfoldShere\SevenfoldSphereComponent.h"
-#include "MagicTrigger\AbilitySystem\ThrowableRock\ThrowComponent.h"
+#include "MagicTrigger\AbilitySystem\Throw\ThrowComponent.h"
 #include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
 #include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
 #include "MagicTrigger\UI\PlayerGUIUserWidget.h"
 #include "MagicTrigger\UI\AbilitySystem\PanelAbilityUserWidget.h"
 #include "MagicTrigger\UI\AbilitySystem\MeleeAbilityUserWidget.h"
 #include "MagicTrigger\UI\AbilitySystem\ThrowAbilityUserWidget.h"
 #include "MagicTrigger\UI\AbilitySystem\SFSphereAbilityUserWidget.h"
+#include "MagicTrigger\Data\DebugMessage.h"
 #include "Components\Border.h"
+#include "Components\TextBlock.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AAbilitySystemManager::AAbilitySystemManager()
@@ -43,13 +47,17 @@ void AAbilitySystemManager::Attack()
 	switch (CurrentAbility)
 	{
 	case ECurrentAbility::ECA_Melee:
-		PlayerCharacter->MeleeAttack();
+		PlayerCharacter->AnimationManagerComponent->MeleeAttackAnimation();
 		break;
 	case ECurrentAbility::ECA_Throw:
-
+		if (ThrowComponent->GetCountOfThrowableItem() < 1)
+		{
+			break;
+		}
+		PlayerCharacter->AnimationManagerComponent->ThrowAnimation();
 		break;
-	case ECurrentAbility::ECA_SFSphere:
-
+	case ECurrentAbility::ECA_SSphere:
+		DEBUGMESSAGE("Attack SSphere ");
 		break;
 	}
 }
@@ -79,7 +87,7 @@ void AAbilitySystemManager::SetCurrentAbility(ECurrentAbility InCurrentAbility)
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ThrowBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveBorderColor);
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ThrowAbilityUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveAbilityWidgetColorAndOpacity);
 		break;
-	case ECurrentAbility::ECA_SFSphere:
+	case ECurrentAbility::ECA_SSphere:
 		if (!AvaliabilityAbilities.bSFSphere)
 		{
 			return;
@@ -100,7 +108,7 @@ void AAbilitySystemManager::SetCurrentAbility(ECurrentAbility InCurrentAbility)
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ThrowBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveBorderColor);
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ThrowAbilityUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveAbilityWidgetColorAndOpacity);
 		break;
-	case ECurrentAbility::ECA_SFSphere:
+	case ECurrentAbility::ECA_SSphere:
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveBorderColor);
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereAbilityUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveAbilityWidgetColorAndOpacity);
 		break;
@@ -161,4 +169,64 @@ void AAbilitySystemManager::StopTraceAttackRightFoot()
 	MeleeAttackComponent->StopAttackTimer();
 }
 
+void AAbilitySystemManager::IncreaseCountOfThrowableItem()
+{
+	ThrowComponent->IncreaseCountOfThrowableItem();
+}
+
+void AAbilitySystemManager::SetCountOfThrowableItemText()
+{
+	FString CountString = FString::FromInt(ThrowComponent->GetCountOfThrowableItem());
+	HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ThrowAbilityUserWidget->CountText->SetText(FText::FromString(CountString));
+}
+
+void AAbilitySystemManager::SpawnThrowableItem()
+{
+	ThrowComponent->SpawnThrowableItem();
+}
+
+void AAbilitySystemManager::ThrowThrowableItem()
+{
+	ThrowComponent->Throw();
+}
+
+FTransform AAbilitySystemManager::GetSocketTransform(FName& SocketName) const
+{
+	return PlayerCharacter->GetSocketTransform(SocketName);
+}
+
+USkeletalMeshComponent* AAbilitySystemManager::GetPlayerCharacterMesh() const
+{
+	if (!PlayerCharacter)
+	{
+		return nullptr;
+	}
+	return PlayerCharacter->GetMesh();
+}
+
+AActor* AAbilitySystemManager::GetObservedActor() const
+{
+	return PlayerCharacter->GetObservedActor();
+}
+
+FVector AAbilitySystemManager::GetPlayerCharacterForwardVector() const
+{
+	return PlayerCharacter->GetActorForwardVector();
+}
+
+FVector AAbilitySystemManager::GetPlayerCharacterUpVector() const
+{
+	return PlayerCharacter->GetActorUpVector();
+}
+
+FVector AAbilitySystemManager::GetPlayerCharacterVelocity() const
+{
+	return PlayerCharacter->GetVelocity();
+}
+
+void AAbilitySystemManager::SwitchOnSSphereAbility()
+{
+	SevenfoldSphereComponent->Activate();
+	AvaliabilityAbilities.bSFSphere = true;
+}
 

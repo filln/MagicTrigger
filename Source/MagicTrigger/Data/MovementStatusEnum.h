@@ -1,6 +1,6 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
-* Режим движения перса.
+* Режим движения перса. Служит только для отражения текущего режима движения или готовности к нему, а не для изменения.
  */
 
 #pragma once

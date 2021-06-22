@@ -7,13 +7,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MagicTrigger\Interfaces\BeginPlayInterface.h"
 #include "MagicTrigger\Interfaces\InteractionInterface.h"
 #include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
 #include "Components\TimelineComponent.h"
 #include "LifeStatue.generated.h"
 
-class ACharacter;
+class APlayerCharacterMagicTrigger;
 class UStaticMeshComponent;
 class UPointLightComponent;
 class USpotLightComponent;
@@ -23,7 +22,6 @@ class UCurveFloat;
 
 UCLASS()
 class MAGICTRIGGER_API ALifeStatue : public AActor,
-	public IBeginPlayInterface,
 	public IInteractionInterface,
 	public ITargetSelectionInterface
 {
@@ -74,6 +72,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LifeStatue|Settings")
 		FText InteractionText;
 
+	//Timeline
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LifeStatue|Settings")
 		UCurveFloat* BeginInteractCurve;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LifeStatue|Settings")
@@ -86,7 +85,7 @@ public:
 
 private:
 	FTimerHandle BeginPlayTimer;
-	ACharacter* PlayerCharacter;
+	APlayerCharacterMagicTrigger* PlayerCharacter;
 	UActorComponent* AnimationManager;
 
 	UTimelineComponent* BeginInteractTimeline;
@@ -115,7 +114,7 @@ public:
 		void ReverseIntensityLightTimelineFunction(float InAlphaIntensity);
 	UFUNCTION()
 		void SetCanInteractTrue();
-
+	void SetCanInteractFalse();
 
 private:
 	float GetLife() const;
@@ -130,16 +129,12 @@ public:
 	/**
 	 * Interfaces methods
 	 */
-	 /**
-	  * BeginPlayInterface
-	  */
-	virtual void StartBeginPlayTimer_IF_Implementation() override;
 
 	/**
 	 * InteractionInterface
 	 */
 	virtual FText GetInteractionText_IF_Implementation() const override;
-	virtual void Interact_IF_Implementation() override;
+	virtual void Interact_IF_Implementation(APlayerCharacterMagicTrigger* InPlayerCharacter) override;
 
 	/**
 	 * TargetSelectionInterface

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\AbilitySystem\ThrowableRock\ThrowableItem.h"
+#include "GameFramework/Actor.h"
 #include "SevenfoldShere.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MAGICTRIGGER_API ASevenfoldShere : public AThrowableItem
+class MAGICTRIGGER_API ASevenfoldShere : public AActor
 {
 	GENERATED_BODY()
 	

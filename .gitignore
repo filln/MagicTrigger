@@ -78,3 +78,5 @@ DerivedDataCache/*
 Content/Developers/*
 Content/StarterContent/*
 Content/MagicTrigger/Textures/*
+Content/FirstPerson/*
+Content/FirstPersonBP/*

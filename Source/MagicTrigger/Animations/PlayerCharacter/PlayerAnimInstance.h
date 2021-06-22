@@ -10,8 +10,9 @@
 #include "Animation/AnimInstance.h"
 #include "PlayerAnimInstance.generated.h"
 
-class UActorComponent;
-
+class UAnimationManagerComponent;
+class APlayerCharacterMagicTrigger;
+class APawn;
 /**
  * 
  */
@@ -28,11 +29,11 @@ public:
 	 */
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerAnimInstance|Components")
-		UActorComponent* AnimationManagerComponent;
+		UAnimationManagerComponent* AnimationManagerComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PlayerAnimInstance|Animations")
 		UAnimMontage* PlayerFightIdle;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "PlayerAnimInstance")
-		APawn* PawnOwner;
+		APlayerCharacterMagicTrigger* PlayerCharacter;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		float Speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
@@ -82,23 +83,23 @@ public:
 	 * Methods for AnimNotifies.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void PutDownThrowingObject();
+		void PutDownPickUpItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void LiftUpThrowingObject();
+		void LiftUpPickUpItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void EndAnimationLiftingCarriedObject();
+		void EndAnimationLiftingCarryItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void EndAnimationLiftingThrowingObject();
+		void EndAnimationLiftingPickUpItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void StartAnimationLiftingCarriedObject();
+		void StartAnimationLiftingCarryItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void EndAnimationPutDownCarriedObject();
+		void EndAnimationPutDownCarryItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void EndAnimationPutDownThrowingObject();
+		void EndAnimationPutDownPickUpItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void LiftUpCarriedObject();
+		void LiftUpCarryItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|LiftUpPutDown")
-		void PutDownCarriedObject();
+		void PutDownCarryItem();
 
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies|TraceAttack")
 		void StartTraceAttackLeftFoot();
@@ -112,9 +113,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAttack();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
+		void StartAnimationThrow();
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAnimationThrow();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
-		void ThrowObject();
+		void ThrowThrowableItem();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAnimationHitReaction();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")

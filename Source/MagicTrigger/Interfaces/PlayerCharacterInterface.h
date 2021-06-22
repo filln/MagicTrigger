@@ -32,24 +32,24 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface")
 		UTextureRenderTarget2D* CreateScreenShot_IF();
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface")
-		void DestroyLiftUpObject_IF();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface")
+	//	void DestroyLiftUpObject_IF();
 
 	/**
 	 * Getters
 	 */
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetSocketTransform_IF(FName& SocketName) const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		UCapsuleComponent* GetInteractCollision_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FVector GetUpDownLiftingArrowForwardVector_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetPointPutDownTransform_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetPointStartTraceToPutDownPointTransform_IF() const;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		USkeletalMeshComponent* GetMesh_IF() const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	FTransform GetSocketTransform_IF(FName& SocketName) const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	UCapsuleComponent* GetInteractCollision_IF() const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	FVector GetUpDownLiftingArrowForwardVector_IF() const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	FTransform GetPointPutDownTransform_IF() const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	FTransform GetPointStartTraceToPutDownPointTransform_IF() const;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
+	//	USkeletalMeshComponent* GetMesh_IF() const;
 
 };

@@ -6,7 +6,7 @@
 
 UThrowAbilityUserWidget::UThrowAbilityUserWidget()
 {
-	Count = 0;
+
 }
 
 void UThrowAbilityUserWidget::NativeConstruct()

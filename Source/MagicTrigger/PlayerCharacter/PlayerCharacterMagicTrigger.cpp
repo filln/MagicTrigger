@@ -8,9 +8,7 @@
 #include "PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger\AbilitySystem\AbilitySystemManager.h"
 #include "MagicTrigger\AbilitySystem\SevenfoldShere\SevenfoldShere.h"
-#include "MagicTrigger\AbilitySystem\ThrowableRock\ThrowableRock.h"
-#include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
-#include "MagicTrigger\PlayerCharacter\UpDownLiftingItemComponent.h"
+#include "MagicTrigger\PlayerCharacter\UpDownLiftUpItemComponent.h"
 #include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
@@ -135,7 +133,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 		DEBUGMESSAGE("!AnimationClass.Succeeded()")
 	}
 
-	UpDownLiftingItemComponent = CreateDefaultSubobject<UUpDownLiftingItemComponent>(TEXT("UpDownLiftingItemComponent"));
+	UpDownLiftUpItemComponent = CreateDefaultSubobject<UUpDownLiftUpItemComponent>(TEXT("UpDownLiftUpItemComponent"));
 	AnimationManagerComponent = CreateDefaultSubobject<UAnimationManagerComponent>(TEXT("AnimationManagerComponent"));
 	TargetSelectionComponent = CreateDefaultSubobject<UTargetSelectionComponent>(TEXT("TargetSelectionComponent"));
 
@@ -168,6 +166,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	ArrowRightFootSocketName = FName(TEXT("RightFoot"));
 	MovementStatus = EMovementStatus::EMM_Stop;
 	LifeSpan = 5;
+	bMoveEnable = true;
 
 	TargetSelectionComponent->GetTargetSelectionCollision()->SetCollisionObjectType(ECC_Observe);
 	TargetSelectionComponent->GetTargetSelectionCollision()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -306,13 +305,8 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 	PlayerInputComponent->BindAction("ZoomDown", IE_Pressed, this, &APlayerCharacterMagicTrigger::ZoomDown_InAct);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APlayerCharacterMagicTrigger::Attack_InAct);
-	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &APlayerCharacterMagicTrigger::Throw_InAct);
 	PlayerInputComponent->BindAction("ShowGameMenu", IE_Pressed, this, &APlayerCharacterMagicTrigger::ShowGameMenu_InAct);
-	PlayerInputComponent->BindAction("CastArtefactAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::UseSevenfoldSphereAbility_InAct);
 	PlayerInputComponent->BindAction("AutoRun", IE_Pressed, this, &APlayerCharacterMagicTrigger::AutoRunning_InAct);
-
-	PlayerInputComponent->BindAction("LiftUp/PutDown", IE_Pressed, this, &APlayerCharacterMagicTrigger::LiftUpLiftingItem_InAct);
-	PlayerInputComponent->BindAction("LiftUp/PutDown", IE_Released, this, &APlayerCharacterMagicTrigger::PutDownLiftingItem_InAct);
 
 	PlayerInputComponent->BindAction("WatchEnemies_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::WatchEnemies_InAct);
 	PlayerInputComponent->BindAction("OffWatchingActors_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::OffWatchingActors_InAct);
@@ -322,12 +316,16 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 
 	PlayerInputComponent->BindAction("MeleeAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::MeleeAbility_InAct);
 	PlayerInputComponent->BindAction("ThrowAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::ThrowAbility_InAct);
-	PlayerInputComponent->BindAction("SFSphereAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::SFSphereAbility_InAct);
+	PlayerInputComponent->BindAction("SSphereAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::SSphereAbility_InAct);
 
 }
 
 void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (!PlayerController)
 	{
 		DEBUGMESSAGE("!PlayerController")
@@ -344,20 +342,15 @@ void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
 
 	/*Move to Direction in X axe.*/
 	AddMovementInput(Direction, ScaleAxisValue);
-
-	//if (
-	//	MovementStatus != EMovementStatus::EMM_ShortWalking
-	//	&& MovementStatus != EMovementStatus::EMM_Stop
-	//	)
-	//{
-	//	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), 1, this);
-	//}
-
 	RotateToTarget();
 }
 
 void APlayerCharacterMagicTrigger::MoveRight_InAx(float AxisValue)
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (!PlayerController)
 	{
 		DEBUGMESSAGE("!PlayerController")
@@ -373,15 +366,6 @@ void APlayerCharacterMagicTrigger::MoveRight_InAx(float AxisValue)
 
 	/*Move to Direction in Y axe.*/
 	AddMovementInput(Direction, ScaleAxisValue);
-
-	//if (
-	//	MovementStatus != EMovementStatus::EMM_ShortWalking
-	//	&& MovementStatus != EMovementStatus::EMM_Stop
-	//	)
-	//{
-	//	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), 1, this);
-	//}
-
 	RotateToTarget();
 }
 
@@ -397,6 +381,10 @@ void APlayerCharacterMagicTrigger::LookUp_InAx(float AxisValue)
 
 void APlayerCharacterMagicTrigger::StartMove_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (!AnimationManagerComponent->bCanRun)
 	{
 		return;
@@ -407,6 +395,10 @@ void APlayerCharacterMagicTrigger::StartMove_InAct()
 
 void APlayerCharacterMagicTrigger::StopMove_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (!AnimationManagerComponent->bCanRun)
 	{
 		return;
@@ -417,6 +409,10 @@ void APlayerCharacterMagicTrigger::StopMove_InAct()
 
 void APlayerCharacterMagicTrigger::StartRunning_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (
 		MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
@@ -433,6 +429,10 @@ void APlayerCharacterMagicTrigger::StartRunning_InAct()
 
 void APlayerCharacterMagicTrigger::StopRunning_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (
 		MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| MovementStatus != EMovementStatus::EMM_Running
@@ -449,6 +449,10 @@ void APlayerCharacterMagicTrigger::StopRunning_InAct()
 
 void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (
 		MovementStatus == EMovementStatus::EMM_Running
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
@@ -466,6 +470,10 @@ void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
 
 void APlayerCharacterMagicTrigger::StopShortWalking_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (
 		MovementStatus == EMovementStatus::EMM_Running
 		|| MovementStatus != EMovementStatus::EMM_ShortWalking
@@ -482,11 +490,19 @@ void APlayerCharacterMagicTrigger::StopShortWalking_InAct()
 
 void APlayerCharacterMagicTrigger::StartJump_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	AnimationManagerComponent->StartJump();
 }
 
 void APlayerCharacterMagicTrigger::StopJump_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	AnimationManagerComponent->StopJump();
 }
 
@@ -522,25 +538,11 @@ void APlayerCharacterMagicTrigger::ZoomDown_InAct()
 
 void APlayerCharacterMagicTrigger::Attack_InAct()
 {
-	AbilitySystemManager->Attack();
-
-}
-
-void APlayerCharacterMagicTrigger::Throw_InAct()
-{
-	if (!UpDownLiftingItemComponent->LiftUpObject)
+	if (!bMoveEnable)
 	{
 		return;
 	}
-
-	if (Cast<AThrowableItem>(UpDownLiftingItemComponent->LiftUpObject))
-	{
-		AnimationManagerComponent->ThrowAnimation();
-	}
-	else
-	{
-		DEBUGMESSAGE("!Cast<AThrowableItem>(UpDownLiftingItemComponent->LiftUpObject)")
-	}
+	AbilitySystemManager->Attack();
 }
 
 void APlayerCharacterMagicTrigger::ShowGameMenu_InAct()
@@ -555,13 +557,12 @@ void APlayerCharacterMagicTrigger::ShowGameMenu_InAct()
 	}
 }
 
-void APlayerCharacterMagicTrigger::UseSevenfoldSphereAbility_InAct()
-{
-	//SevenfoldSphereComponent->UseSevenfoldSphereAbility();
-}
-
 void APlayerCharacterMagicTrigger::AutoRunning_InAct()
 {
+	if (!bMoveEnable)
+	{
+		return;
+	}
 	if (!GetWorld())
 	{
 		DEBUGMESSAGE("!GetWorld()");
@@ -592,25 +593,14 @@ void APlayerCharacterMagicTrigger::AutoRunning_InAct()
 	}
 }
 
-void APlayerCharacterMagicTrigger::LiftUpLiftingItem_InAct()
+void APlayerCharacterMagicTrigger::LiftUpLiftUpItem()
 {
-	if (!AnimationManagerComponent->bCanInteract)
-	{
-		return;
-	}
-	AnimationManagerComponent->StopAnimations();
-	UpDownLiftingItemComponent->LiftUp();
+	UpDownLiftUpItemComponent->LiftUp();
 }
 
-void APlayerCharacterMagicTrigger::PutDownLiftingItem_InAct()
+void APlayerCharacterMagicTrigger::DetachLiftUpItem()
 {
-	if (!AnimationManagerComponent->bCanInteract && !AnimationManagerComponent->bCarrying)
-	{
-		return;
-	}
-	AnimationManagerComponent->StopAnimations();
-	UpDownLiftingItemComponent->PutDown();
-
+	UpDownLiftUpItemComponent->DetachLiftUpItem();
 }
 
 void APlayerCharacterMagicTrigger::WatchEnemies_InAct(FKey InputKey)
@@ -666,12 +656,18 @@ void APlayerCharacterMagicTrigger::OffWatchingActors_InAct()
 
 void APlayerCharacterMagicTrigger::Interact_InAct()
 {
-	if (!AnimationManagerComponent->bCanInteract)
+	if (!AnimationManagerComponent->bCanInteract && !AnimationManagerComponent->bCarrying)
 	{
 		return;
 	}
-
 	AnimationManagerComponent->StopAnimations();
+
+	if (AnimationManagerComponent->bCarrying)
+	{
+		UpDownLiftUpItemComponent->PutDown();
+		return;
+	}
+
 	TSubclassOf<AActor> ClassFilter;
 	TArray<AActor*> OverlappingActors;
 	InteractCollision->GetOverlappingActors(OverlappingActors, ClassFilter);
@@ -704,9 +700,9 @@ void APlayerCharacterMagicTrigger::ThrowAbility_InAct()
 	AbilitySystemManager->SetCurrentAbility(ECurrentAbility::ECA_Throw);
 }
 
-void APlayerCharacterMagicTrigger::SFSphereAbility_InAct()
+void APlayerCharacterMagicTrigger::SSphereAbility_InAct()
 {
-	AbilitySystemManager->SetCurrentAbility(ECurrentAbility::ECA_SFSphere);
+	AbilitySystemManager->SetCurrentAbility(ECurrentAbility::ECA_SSphere);
 }
 
 void APlayerCharacterMagicTrigger::AutoRunning()
@@ -814,9 +810,29 @@ void APlayerCharacterMagicTrigger::InteractCollisionEndOverlap(UPrimitiveCompone
 	ShowOrHideInteractionText(false, OtherActor);
 }
 
-void APlayerCharacterMagicTrigger::MeleeAttack()
+bool APlayerCharacterMagicTrigger::IsFalling()
 {
-	AnimationManagerComponent->AttackAnimation();
+	return GetMovementComponent()->IsFalling();
+}
+
+void APlayerCharacterMagicTrigger::SetPlayingAnimationLiftUp2Hands(bool InbPlaying)
+{
+	AnimationManagerComponent->SetPlayingAnimationLiftUp2Hands(InbPlaying);
+}
+
+void APlayerCharacterMagicTrigger::SetPlayingAnimationLiftUp1Hand(bool InbPlaying)
+{
+	AnimationManagerComponent->SetPlayingAnimationLiftUp1Hand(InbPlaying);
+}
+
+void APlayerCharacterMagicTrigger::SetPlayingAnimationPutDown2Hands(bool InbPlaying)
+{
+	AnimationManagerComponent->SetPlayingAnimationPutDown2Hands(InbPlaying);
+}
+
+void APlayerCharacterMagicTrigger::SetCanInteract(bool InbCanInteract)
+{
+	AnimationManagerComponent->bCanInteract = InbCanInteract;
 }
 
 FVector APlayerCharacterMagicTrigger::GetForwardVectorArrowLeftFoot()
@@ -871,59 +887,17 @@ float APlayerCharacterMagicTrigger::CalcScaleMovementInput(float AxisValue)
 	return ScaleValue;
 }
 
-void APlayerCharacterMagicTrigger::SpawnThrowableRock(AThrowableRock* ThrowableRock)
+void APlayerCharacterMagicTrigger::SetEnableMovement(bool bInEnable)
 {
-	if (!GetWorld())
+	bMoveEnable = bInEnable;
+	if (bInEnable)
 	{
-		DEBUGMESSAGE("!GetWorld()");
-		return;
-	}
-
-	TSubclassOf<AThrowableRock> RockClass;
-	FName AttachSocket = ThrowableRock->AttachSocket;
-	FTransform SocketTransform = GetMesh()->GetSocketTransform(AttachSocket);
-	FTransform SpawnTransform;
-	SpawnTransform.SetLocation(SocketTransform.GetLocation());
-	SpawnTransform.SetRotation(SocketTransform.GetRotation());
-	SpawnTransform.SetScale3D(ThrowableRock->GetActorScale3D());
-	FActorSpawnParameters ActorSpawnParameters;
-	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	UpDownLiftingItemComponent->DestroyLiftingActor();
-
-	AThrowableRock* NewRock = GetWorld()->SpawnActor<AThrowableRock>(RockClass, SpawnTransform, ActorSpawnParameters);
-
-	if (!NewRock)
-	{
-		DEBUGMESSAGE("!NewRock");
-		return;
-	}
-
-	NewRock->Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-
-	if (TargetSelectionComponent->GetObservedActor())
-	{
-		FVector LaunchVelocity;
-		bool bCalcVelocitySuccessful = UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), LaunchVelocity, NewRock->GetActorLocation(), TargetSelectionComponent->GetObservedActor()->GetActorLocation(), 0, ThrowableRock->ArcParam);
-		if (!bCalcVelocitySuccessful)
-		{
-			DEBUGMESSAGE("!bCalcVelocitySuccessful");
-			return;
-		}
-
-		NewRock->ProjectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
-
+		MovementStatus = EMovementStatus::EMM_Walking;
 	}
 	else
 	{
-		FVector UnitRockVelocity = UKismetMathLibrary::VLerp(GetActorForwardVector(), GetActorUpVector(), ThrowableRock->ArcAlpha);
-		FVector RockVelocity = UnitRockVelocity * ThrowableRock->Speed;
-		FVector LaunchVelocity = RockVelocity + GetCharacterMovement()->Velocity;
-		NewRock->ProjectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
-
+		MovementStatus = EMovementStatus::EMM_Stop;
 	}
-
-	NewRock->ProjectileMovementComponent->ProjectileGravityScale = 1;
 }
 
 UTextureRenderTarget2D* APlayerCharacterMagicTrigger::CreateScreenShot()
@@ -1023,32 +997,7 @@ float APlayerCharacterMagicTrigger::GetLife()
 	return Life;
 }
 
-void APlayerCharacterMagicTrigger::SetPlayingAnimationPutDown2Hand_IF_Implementation(bool bPlaying)
-{
-	AnimationManagerComponent->SetPlayingAnimationPutDown2Hands(bPlaying);
-}
-
-void APlayerCharacterMagicTrigger::SetPlayingAnimationLiftUp2Hand_IF_Implementation(bool bPlaying)
-{
-	AnimationManagerComponent->SetPlayingAnimationLiftUp2Hands(bPlaying);
-}
-
-void APlayerCharacterMagicTrigger::SetPlayingAnimationPutDown1Hand_IF_Implementation(bool bPlaying)
-{
-	AnimationManagerComponent->SetPlayingAnimationPutDown1Hand(bPlaying);
-}
-
-void APlayerCharacterMagicTrigger::SetPlayingAnimationLiftUp1Hand_IF_Implementation(bool bPlaying)
-{
-	AnimationManagerComponent->SetPlayingAnimationLiftUp1Hand(bPlaying);
-}
-
-UActorComponent* APlayerCharacterMagicTrigger::GetAnimationManagerComponent_IF_Implementation() const
-{
-	return AnimationManagerComponent;
-}
-
-void APlayerCharacterMagicTrigger::ReportNoise_IF_Implementation()
+void APlayerCharacterMagicTrigger::ReportNoise()
 {
 	if (!GetWorld())
 	{
@@ -1059,61 +1008,63 @@ void APlayerCharacterMagicTrigger::ReportNoise_IF_Implementation()
 	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), 1, this);
 }
 
-void APlayerCharacterMagicTrigger::DetachLiftingActor_IF_Implementation()
+void APlayerCharacterMagicTrigger::AttachLiftUpItem()
 {
-	UpDownLiftingItemComponent->DetachLiftingActor();
+	UpDownLiftUpItemComponent->AttachLiftUpItem();
 }
 
-void APlayerCharacterMagicTrigger::AttachLiftingActor_IF_Implementation()
+void APlayerCharacterMagicTrigger::PickUpPickUpItem()
 {
-	UpDownLiftingItemComponent->AttachLiftingActor();
+	UpDownLiftUpItemComponent->PickUpPickUpItem();
 }
 
-void APlayerCharacterMagicTrigger::AttachThrowableActor_IF_Implementation()
+void APlayerCharacterMagicTrigger::SpawnThrowableItem()
 {
-	UpDownLiftingItemComponent->AttachLiftingActor();
+	AbilitySystemManager->SpawnThrowableItem();
 }
 
-void APlayerCharacterMagicTrigger::SpawnThrowableActor_IF_Implementation()
-{
-	AThrowableRock* Rock = Cast<AThrowableRock>(UpDownLiftingItemComponent->LiftUpObject);
-	ASevenfoldShere* Sphere = Cast<ASevenfoldShere>(UpDownLiftingItemComponent->LiftUpObject);
-
-	if (Rock)
-	{
-		SpawnThrowableRock(Rock);
-	}
-	if (Sphere)
-	{
-		//SevenfoldSphereComponent->UseSevenfoldSphereAbility();
-	}
-	if (!Rock && !Sphere)
-	{
-		DEBUGMESSAGE("!Rock && !Sphere");
-	}
-}
-
-void APlayerCharacterMagicTrigger::StopTraceAttackLeftFoot_IF_Implementation()
+void APlayerCharacterMagicTrigger::StopTraceAttackLeftFoot()
 {
 	AbilitySystemManager->StopTraceAttackLeftFoot();
 }
 
-void APlayerCharacterMagicTrigger::StartTraceAttackLeftFoot_IF_Implementation()
+void APlayerCharacterMagicTrigger::StartTraceAttackLeftFoot()
 {
 	AbilitySystemManager->StartTraceAttackLeftFoot();
 }
 
-void APlayerCharacterMagicTrigger::StopTraceAttackRightFoot_IF_Implementation()
+void APlayerCharacterMagicTrigger::StopTraceAttackRightFoot()
 {
 	AbilitySystemManager->StopTraceAttackRightFoot();
 }
 
-void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot_IF_Implementation()
+void APlayerCharacterMagicTrigger::PickUpThrowableItem()
+{
+	AbilitySystemManager->IncreaseCountOfThrowableItem();
+	UpDownLiftUpItemComponent->DestroyLiftUpItem();
+}
+
+FVector APlayerCharacterMagicTrigger::GetVelocity() const
+{
+	return GetCharacterMovement()->Velocity;
+}
+
+void APlayerCharacterMagicTrigger::ThrowThrowableItem()
+{
+	AbilitySystemManager->ThrowThrowableItem();
+}
+
+void APlayerCharacterMagicTrigger::SwitchOnSSphereAbility()
+{
+	AbilitySystemManager->SwitchOnSSphereAbility();
+}
+
+void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot()
 {
 	AbilitySystemManager->StartTraceAttackRightFoot();
 }
 
-void APlayerCharacterMagicTrigger::OffWatchingActors_IF_Implementation()
+void APlayerCharacterMagicTrigger::OffWatchingActors()
 {
 	TargetSelectionComponent->OffWatchingActors();
 	AnimationManagerComponent->bWatchingNow = TargetSelectionComponent->GetIsWatchingNow();
@@ -1124,7 +1075,7 @@ void APlayerCharacterMagicTrigger::RemoveAndSwitchActors_IF_Implementation(AActo
 	RemoveAndSwitchActors(RemovingActor);
 }
 
-AActor* APlayerCharacterMagicTrigger::GetObservedActor_IF_Implementation() const
+AActor* APlayerCharacterMagicTrigger::GetObservedActor() const
 {
 	return TargetSelectionComponent->GetObservedActor();
 }
@@ -1134,37 +1085,23 @@ UTextureRenderTarget2D* APlayerCharacterMagicTrigger::CreateScreenShot_IF_Implem
 	return CreateScreenShot();
 }
 
-void APlayerCharacterMagicTrigger::DestroyLiftUpObject_IF_Implementation()
-{
-	UpDownLiftingItemComponent->DestroyLiftingActor();
-}
-
-FTransform APlayerCharacterMagicTrigger::GetSocketTransform_IF_Implementation(FName& SocketName) const
+FTransform APlayerCharacterMagicTrigger::GetSocketTransform(FName& SocketName) const
 {
 	return GetMesh()->GetSocketTransform(SocketName);
 }
 
-UCapsuleComponent* APlayerCharacterMagicTrigger::GetInteractCollision_IF_Implementation() const
-{
-	return InteractCollision;
-}
-
-FVector APlayerCharacterMagicTrigger::GetUpDownLiftingArrowForwardVector_IF_Implementation() const
+FVector APlayerCharacterMagicTrigger::GetUpDownLiftingArrowForwardVector() const
 {
 	return UpDownLiftingArrow->GetForwardVector();
 }
 
-FTransform APlayerCharacterMagicTrigger::GetPointPutDownTransform_IF_Implementation() const
+FTransform APlayerCharacterMagicTrigger::GetPointPutDownTransform() const
 {
 	return PointPutDown->GetComponentTransform();
 }
 
-FTransform APlayerCharacterMagicTrigger::GetPointStartTraceToPutDownPointTransform_IF_Implementation() const
+FTransform APlayerCharacterMagicTrigger::GetPointStartTraceToPutDownPointTransform() const
 {
 	return PointStartTraceToPutDownPoint->GetComponentTransform();
 }
 
-USkeletalMeshComponent* APlayerCharacterMagicTrigger::GetMesh_IF_Implementation() const
-{
-	return GetMesh();
-}

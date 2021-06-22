@@ -2,6 +2,7 @@
 
 /**
  * Содержит логику и данные для абилок. Абилки содержаться как актор-компоненты. Сам менеджер спавнится в классе перса.
+ Для удобной настройки нужно выбрать бп-наследника менеджера в бп-классе перса.
  */
 
 #pragma once
@@ -18,6 +19,7 @@ class USevenfoldSphereComponent;
 class APlayerCharacterMagicTrigger;
 class AHUDMagicTrigger;
 class UParentUserWidgetMT;
+class USkeletalMeshComponent;
 
 UCLASS()
 class MAGICTRIGGER_API AAbilitySystemManager : public AActor
@@ -69,6 +71,25 @@ public:
 	void StartTraceAttackRightFoot();
 	void StopTraceAttackLeftFoot();
 	void StopTraceAttackRightFoot();
+
+	/**
+	 * Throw
+	 */
+	void IncreaseCountOfThrowableItem();
+	void SetCountOfThrowableItemText();
+	void SpawnThrowableItem();
+	void ThrowThrowableItem();
+	FTransform GetSocketTransform(FName& SocketName) const;
+	USkeletalMeshComponent* GetPlayerCharacterMesh() const;
+	AActor* GetObservedActor() const;
+	FVector GetPlayerCharacterForwardVector() const;
+	FVector GetPlayerCharacterUpVector() const;
+	FVector GetPlayerCharacterVelocity() const;
+
+	/**
+	 * SSphere
+	 */
+	void SwitchOnSSphereAbility();
 
 
 };

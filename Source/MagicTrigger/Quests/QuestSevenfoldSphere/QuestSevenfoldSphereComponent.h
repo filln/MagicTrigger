@@ -13,6 +13,7 @@ class APlatformForBoxParent;
 class APlatformForBox4;
 class APlatformForBox5;
 class ARockDoor;
+class APlayerCharacterMagicTrigger;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MAGICTRIGGER_API UQuestSevenfoldSphereComponent : public UActorComponent
@@ -89,7 +90,7 @@ private:
 	//Контролирует срабатывание логики при овелапе персом лифта.
 	bool bDisableOverlapCharacter;
 	FVector CurrentLocation;
-	ACharacter* PlayerCharacter;
+	APlayerCharacterMagicTrigger* PlayerCharacter;
 	UPROPERTY()
 		FTimerHandle MoveCameraTimer;
 

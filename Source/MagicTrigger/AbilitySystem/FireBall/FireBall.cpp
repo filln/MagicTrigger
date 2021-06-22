@@ -57,7 +57,7 @@ AFireBall::AFireBall()
 		DEBUGMESSAGE("!TextureObject.Succeeded()");
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SourceMaterialObject(TEXT("/Game/MagicTrigger/Materials/M_AttackAbility"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SourceMaterialObject(TEXT("/Game/MagicTrigger/Materials/AbilitySystem/M_AttackAbility"));
 	if (SourceMaterialObject.Succeeded())
 	{
 		SourceMaterial = SourceMaterialObject.Object;

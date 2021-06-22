@@ -30,7 +30,7 @@ public:
 		UImage* IconImage;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "ThrowAbilityUserWidget")
 		UTextBlock* CountText;
-	int Count;
+
 	/**
 	 * Methods
 	 */

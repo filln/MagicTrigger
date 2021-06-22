@@ -5,8 +5,6 @@
 
 
 #include "AnimationManagerComponent.h"
-//#include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "MagicTrigger\Data\DebugMessage.h"
 
@@ -37,7 +35,7 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	bCanRun = true;
 
 	CheckStopJumpAnimationTimerRate = 1.9;
-	CheckStopAttackAnimationTimerRate = 1.5;
+	CheckStopMeleeAttackAnimationTimerRate = 1.5;
 	CheckStopThrowAnimationTimerRate = 1.1;
 }
 
@@ -47,7 +45,7 @@ void UAnimationManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	PlayerCharacter = Cast<ACharacter>(GetOwner());
 	if (PlayerCharacter)
 	{
 		USkeletalMeshComponent* Mesh = PlayerCharacter->GetMesh();
@@ -57,13 +55,6 @@ void UAnimationManagerComponent::BeginPlay()
 	{
 		DEBUGMESSAGE("!PlayerCharacter")
 	}
-
-	Owner = GetOwner();
-	if (!Owner)
-	{
-		DEBUGMESSAGE("!Owner")
-	}
-
 }
 
 void UAnimationManagerComponent::StartJump()
@@ -72,40 +63,25 @@ void UAnimationManagerComponent::StartJump()
 	{
 		return;
 	}
-
-	if (PlayerCharacter)
+	if (!PlayerCharacter)
 	{
-		SetPlayingAnimationJump(true);
-		PlayerCharacter->Jump();
-		GetWorld()->GetTimerManager().SetTimer(CheckStopJumpAnimationTimer, this, &UAnimationManagerComponent::CheckStopJumpAnimation, CheckStopJumpAnimationTimerRate);
-
+		return;
 	}
+	SetPlayingAnimationJump(true);
+	PlayerCharacter->Jump();
 
-
-}
-
-void UAnimationManagerComponent::CheckStopJumpAnimation()
-{
-	if (bJumping)
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
 	{
-		SetPlayingAnimationJump(false);
+		if (bJumping)
+		{
+			SetPlayingAnimationJump(false);
+		}
 	}
-}
-
-void UAnimationManagerComponent::CheckStopAttackAnimation()
-{
-	if (bAttacking)
-	{
-		SetPlayingAnimationAttack(false);
-	}
-}
-
-void UAnimationManagerComponent::CheckStopThrowAnimation()
-{
-	if (bThrowing)
-	{
-		SetPlayingAnimationThrow(false);
-	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(CheckStopJumpAnimationTimer, TmpDelegate, CheckStopJumpAnimationTimerRate, false);
 }
 
 void UAnimationManagerComponent::StopJump()
@@ -117,7 +93,7 @@ void UAnimationManagerComponent::StopJump()
 	}
 }
 
-void UAnimationManagerComponent::AttackAnimation()
+void UAnimationManagerComponent::MeleeAttackAnimation()
 {
 	if (!bCanAttack)
 	{
@@ -126,7 +102,18 @@ void UAnimationManagerComponent::AttackAnimation()
 
 	SetPlayingAnimationAttack(true);
 
-	GetWorld()->GetTimerManager().SetTimer(CheckStopAttackAnimationTimer, this, &UAnimationManagerComponent::CheckStopAttackAnimation, CheckStopAttackAnimationTimerRate);
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		if (bAttacking)
+		{
+			SetPlayingAnimationAttack(false);
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(CheckStopMeleeAttackAnimationTimer, TmpDelegate, CheckStopMeleeAttackAnimationTimerRate, false);
 }
 
 void UAnimationManagerComponent::ThrowAnimation()
@@ -138,7 +125,18 @@ void UAnimationManagerComponent::ThrowAnimation()
 
 	SetPlayingAnimationThrow(true);
 
-	GetWorld()->GetTimerManager().SetTimer(CheckStopThrowAnimationTimer, this, &UAnimationManagerComponent::CheckStopThrowAnimation, CheckStopThrowAnimationTimerRate);
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		if (bThrowing)
+		{
+			SetPlayingAnimationThrow(false);
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(CheckStopThrowAnimationTimer, TmpDelegate, CheckStopThrowAnimationTimerRate, false);
 }
 
 void UAnimationManagerComponent::SetPlayingAnimationThrow(bool bPlaying)
@@ -309,252 +307,10 @@ void UAnimationManagerComponent::StopAnimations()
 /**
  * Setters
  */
-void UAnimationManagerComponent::SetPlayingAnimationAttack_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationAttack(bPlaying);
-}
 
-void UAnimationManagerComponent::SetPlayingAnimationThrow_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationThrow(bPlaying);
-}
+//void UAnimationManagerComponent::SetGettingDamage_IF_Implementation(bool bInGettingDamage)
+//{
+//	bGettingDamage = bInGettingDamage;
+//}
 
-void UAnimationManagerComponent::SetPlayingAnimationJump_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationJump(bPlaying);
-}
-
-void UAnimationManagerComponent::SetPlayingAnimationLiftUp1Hand_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationLiftUp1Hand(bPlaying);
-}
-
-void UAnimationManagerComponent::SetPlayingAnimationPutDown1Hand_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationPutDown1Hand(bPlaying);
-}
-
-void UAnimationManagerComponent::SetPlayingAnimationLiftUp2Hand_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationLiftUp2Hands(bPlaying);
-}
-
-void UAnimationManagerComponent::SetPlayingAnimationPutDown2Hand_IF_Implementation(bool bPlaying)
-{
-	SetPlayingAnimationPutDown2Hands(bPlaying);
-}
-
-void UAnimationManagerComponent::SetGettingDamage_IF_Implementation(bool bInGettingDamage)
-{
-	bGettingDamage = bInGettingDamage;
-}
-
-void UAnimationManagerComponent::SetCarrying_IF_Implementation(bool bInCarrying)
-{
-	bCarrying = bInCarrying;
-}
-
-void UAnimationManagerComponent::SetCanInteract_IF_Implementation(bool bInCanInteract)
-{
-	bCanInteract = bInCanInteract;
-}
-
-/**
-* AnimationManagerInterface methods.
-*/
-/**
- * Getters
- */
-
-bool UAnimationManagerComponent::GetAttacking_IF_Implementation() const
-{
-	return bAttacking;
-}
-
-bool UAnimationManagerComponent::GetWatchingNow_IF_Implementation() const
-{
-	return bWatchingNow;
-}
-
-bool UAnimationManagerComponent::GetLiftingUp2Hands_IF_Implementation() const
-{
-	return bLiftingUp2Hands;
-}
-
-bool UAnimationManagerComponent::GetLiftingUp1Hand_IF_Implementation() const
-{
-	return bLiftingUp1Hand;
-}
-
-bool UAnimationManagerComponent::GetPutingDown1Hand_IF_Implementation() const
-{
-	return bPutingDown1Hand;
-}
-
-bool UAnimationManagerComponent::GetThrowing_IF_Implementation() const
-{
-	return bThrowing;
-}
-
-bool UAnimationManagerComponent::GetGettingDamage_IF_Implementation() const
-{
-	return bGettingDamage;
-}
-
-bool UAnimationManagerComponent::GetDying_IF_Implementation() const
-{
-	return bDying;
-}
-
-bool UAnimationManagerComponent::GetCarrying_IF_Implementation() const
-{
-	return bCarrying;
-}
-
-bool UAnimationManagerComponent::GetShortWalk_IF_Implementation() const
-{
-	return bShortWalk;
-}
-
-/**
-* AnimationManagerInterface methods.
-*/
-/**
- * Other methods.
- */
-
-void UAnimationManagerComponent::StartTraceAttackRightFoot_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_StartTraceAttackRightFoot_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::StopTraceAttackRightFoot_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_StopTraceAttackRightFoot_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::StartTraceAttackLeftFoot_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_StartTraceAttackLeftFoot_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::StopTraceAttackLeftFoot_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::SpawnThrowableActor_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_SpawnThrowableActor_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::AttachThrowableActor_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_AttachThrowableActor_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::AttachLiftingActor_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_AttachLiftingActor_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::DetachLiftingActor_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_DetachLiftingActor_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
-
-void UAnimationManagerComponent::ReportNoise_IF_Implementation()
-{
-	if (Owner)
-	{
-		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
-		{
-			IAnimationManagerInterface::Execute_ReportNoise_IF(Owner);
-		}
-		else
-		{
-			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
-		}
-	}
-}
 

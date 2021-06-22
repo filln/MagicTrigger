@@ -7,7 +7,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MagicTrigger/Interfaces/AnimationManagerInterface.h"
 #include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
 #include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
 #include "MagicTrigger\Data\MovementStatusEnum.h"
@@ -19,7 +18,7 @@ class UCapsuleComponent;
 class UArrowComponent;
 class UMeleeAttackComponent;
 class USceneComponent;
-class UUpDownLiftingItemComponent;
+class UUpDownLiftUpItemComponent;
 class UAnimationManagerComponent;
 class USevenfoldSphereComponent;
 class UTargetSelectionComponent;
@@ -29,14 +28,12 @@ class UCameraComponent;
 class USpringArmComponent;
 class AController;
 class APlayerController;
-class AThrowableRock;
 class AHUD;
 class AGameModeBase;
 class AAbilitySystemManager;
 
 UCLASS()
 class MAGICTRIGGER_API APlayerCharacterMagicTrigger : public ACharacter,
-	public IAnimationManagerInterface,
 	public IOwnerTargetSelectionInterface,
 	public IPlayerCharacterInterface
 {
@@ -68,7 +65,7 @@ public:
 	*
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Components")
-		UUpDownLiftingItemComponent* UpDownLiftingItemComponent;
+		UUpDownLiftUpItemComponent* UpDownLiftUpItemComponent;
 	/**
 	* Для трейса препятствия поставить поднимаемый актор.
 	*/
@@ -185,7 +182,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharacterMagicTrigger|Settings")
 		float LifeSpan;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger|Settings")
-	TSubclassOf<AAbilitySystemManager> AbilitySystemManagerClass;
+		TSubclassOf<AAbilitySystemManager> AbilitySystemManagerClass;
 	/**
 	 * Умножается на AxisValue из InputAxis для изменения скорости передвижения.
 	 */
@@ -207,6 +204,8 @@ private:
 	AHUD* HUD;
 	AGameModeBase* GameMode;
 	AAbilitySystemManager* AbilitySystemManager;
+	//Регулирует какое-либо движение: ходьба, бег, прыжок, атаку и пр.
+	bool bMoveEnable;
 
 	/**
 	 * Methods
@@ -238,13 +237,8 @@ public:
 	void ZoomDown_InAct();
 
 	void Attack_InAct();
-	void Throw_InAct();
 	void ShowGameMenu_InAct();
-	void UseSevenfoldSphereAbility_InAct();
 	void AutoRunning_InAct();
-
-	void LiftUpLiftingItem_InAct();
-	void PutDownLiftingItem_InAct();
 
 	void WatchEnemies_InAct(FKey InputKey);
 	void WatchOtherActors_InAct(FKey InputKey);
@@ -254,7 +248,7 @@ public:
 
 	void MeleeAbility_InAct();
 	void ThrowAbility_InAct();
-	void SFSphereAbility_InAct();
+	void SSphereAbility_InAct();
 
 	/**
 	 * Other
@@ -265,23 +259,57 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser);
 	void RotateToTarget();
 	UFUNCTION()
-	void InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-	void InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+		void InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	bool IsFalling();
+	void SpawnThrowableItem();
+	void ReportNoise();
+	FTransform GetPointPutDownTransform() const;
+	FTransform GetPointStartTraceToPutDownPointTransform() const;
+	FTransform GetSocketTransform(FName& SocketName) const;
+	FVector GetUpDownLiftingArrowForwardVector() const;
 
-	void MeleeAttack();
+	/**
+	 * AnimationManagerComponent
+	 */
+	void SetPlayingAnimationLiftUp2Hands(bool InbPlaying);
+	void SetPlayingAnimationLiftUp1Hand(bool InbPlaying);
+	void SetPlayingAnimationPutDown2Hands(bool InbPlaying);
+	void SetCanInteract(bool InbCanInteract);
+
 	FVector GetForwardVectorArrowLeftFoot();
 	FVector GetForwardVectorArrowRightFoot();
 	FVector GetArrowLeftFootSocketLocation();
 	FVector GetArrowRightFootSocketLocation();
+
+	/**
+	 * UpDownLiftUpItemComponent
+	 */
+	void LiftUpLiftUpItem();
+	void DetachLiftUpItem();
+	void AttachLiftUpItem();
+	void PickUpPickUpItem();
+
+	/**
+	 * AbilitySystemManager
+	 */
 	void SpawnAbilitySystemManager();
+	void StartTraceAttackLeftFoot();
+	void StopTraceAttackLeftFoot();
+	void StartTraceAttackRightFoot();
+	void StopTraceAttackRightFoot();
+	void PickUpThrowableItem();
+	FVector GetVelocity() const;
+	void ThrowThrowableItem();
+	void SwitchOnSSphereAbility();
 
 	/**
 	 * Изменяет значение AxisValue для AddMovementInput() при контроле игроком скорости передвижения.
 	 */
 	float CalcScaleMovementInput(float AxisValue);
+	void SetEnableMovement(bool bInEnable);
 
-	void SpawnThrowableRock(AThrowableRock* ThrowableRock);
 	UTextureRenderTarget2D* CreateScreenShot();
 
 	/**
@@ -290,10 +318,11 @@ public:
 
 	void RemoveAndSwitchActors(AActor* RemovingActor);
 	UFUNCTION()
-	void TargetSelectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void TargetSelectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-	void TargetSelectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
+		void TargetSelectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	AActor* GetObservedActor() const;
+	void OffWatchingActors();
 	/**
 	 * PlayerState
 	 */
@@ -311,76 +340,14 @@ public:
 		 * InterfaceMethods
 		 */
 		 /**
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		 * AnimationManagerInterface methods.
-		 */
-		 /**
-		  * Setters
-		  */
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Setters")
-		void SetPlayingAnimationPutDown2Hand_IF(bool bPlaying);
-	virtual void SetPlayingAnimationPutDown2Hand_IF_Implementation(bool bPlaying) override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Setters")
-		void SetPlayingAnimationLiftUp2Hand_IF(bool bPlaying);
-	virtual void SetPlayingAnimationLiftUp2Hand_IF_Implementation(bool bPlaying) override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Setters")
-		void SetPlayingAnimationPutDown1Hand_IF(bool bPlaying);
-	virtual void SetPlayingAnimationPutDown1Hand_IF_Implementation(bool bPlaying) override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Setters")
-		void SetPlayingAnimationLiftUp1Hand_IF(bool bPlaying);
-	virtual void SetPlayingAnimationLiftUp1Hand_IF_Implementation(bool bPlaying) override;
-
-	/**
-	  * Getters
-	  */
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface|Getters")
-		UActorComponent* GetAnimationManagerComponent_IF() const;
-	virtual UActorComponent* GetAnimationManagerComponent_IF_Implementation() const override;
-
-	/**
-	 * Other
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void ReportNoise_IF();
-	virtual void ReportNoise_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void DetachLiftingActor_IF();
-	virtual void DetachLiftingActor_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void AttachLiftingActor_IF();
-	virtual void AttachLiftingActor_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void AttachThrowableActor_IF();
-	virtual void AttachThrowableActor_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void SpawnThrowableActor_IF();
-	virtual void SpawnThrowableActor_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void StopTraceAttackLeftFoot_IF();
-	virtual void StopTraceAttackLeftFoot_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void StartTraceAttackLeftFoot_IF();
-	virtual void StartTraceAttackLeftFoot_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void StopTraceAttackRightFoot_IF();
-	virtual void StopTraceAttackRightFoot_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "AnimationManagerInterface")
-		void StartTraceAttackRightFoot_IF();
-	virtual void StartTraceAttackRightFoot_IF_Implementation() override;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 * OwnerTargetSelectionInterface
 		 */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "OwnerTargetSelectionInterface")
-		void OffWatchingActors_IF();
-	virtual void OffWatchingActors_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "OwnerTargetSelectionInterface")
 		void RemoveAndSwitchActors_IF(AActor* RemovingActor);
 	virtual void RemoveAndSwitchActors_IF_Implementation(AActor* RemovingActor) override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "OwnerTargetSelectionInterface")
-		AActor* GetObservedActor_IF() const;
-	virtual AActor* GetObservedActor_IF_Implementation() const override;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -390,32 +357,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface")
 		UTextureRenderTarget2D* CreateScreenShot_IF();
 	virtual UTextureRenderTarget2D* CreateScreenShot_IF_Implementation() override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface")
-		void DestroyLiftUpObject_IF();
-	virtual void DestroyLiftUpObject_IF_Implementation() override;
-
-	/**
-	 * Getters
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetSocketTransform_IF(FName& SocketName) const;
-	virtual FTransform GetSocketTransform_IF_Implementation(FName& SocketName) const override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		UCapsuleComponent* GetInteractCollision_IF() const;
-	virtual UCapsuleComponent* GetInteractCollision_IF_Implementation() const override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FVector GetUpDownLiftingArrowForwardVector_IF() const;
-	virtual FVector GetUpDownLiftingArrowForwardVector_IF_Implementation() const override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetPointPutDownTransform_IF() const;
-	virtual FTransform GetPointPutDownTransform_IF_Implementation() const override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		FTransform GetPointStartTraceToPutDownPointTransform_IF() const;
-	virtual FTransform GetPointStartTraceToPutDownPointTransform_IF_Implementation() const override;
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerCharacterInterface|Getters")
-		USkeletalMeshComponent* GetMesh_IF() const;
-	virtual USkeletalMeshComponent* GetMesh_IF_Implementation() const override;
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

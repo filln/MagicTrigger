@@ -16,7 +16,7 @@ UTargetSelectionComponent::UTargetSelectionComponent()
 
 	/*Create and set up a collision*/
 	TargetSelectionCollision = CreateDefaultSubobject<USphereComponent>(TEXT("TargetSelectionCollision"));
-	TargetSelectionCollision->SetSphereRadius(1500);
+	TargetSelectionCollision->SetSphereRadius(3000);
 	TargetSelectionCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	TargetSelectionCollision->SetCollisionObjectType(ECC_Pawn);
 	TargetSelectionCollision->SetCollisionResponseToAllChannels(ECR_Overlap);

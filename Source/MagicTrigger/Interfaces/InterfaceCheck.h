@@ -27,3 +27,17 @@ FORCEINLINE bool IsInterfaceImplementedBy(const UObject* const object)
 			// But blueprint implementation pass only this check
 			object->GetClass()->ImplementsInterface(TIInterfaceType::UClassType::StaticClass()));
 }
+
+/**
+ * 	if (Owner)
+	{
+		if (IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner))
+		{
+			IAnimationManagerInterface::Execute_StopTraceAttackLeftFoot_IF(Owner);
+		}
+		else
+		{
+			DEBUGMESSAGE("!IsInterfaceImplementedBy<IAnimationManagerInterface>(Owner)")
+		}
+	}
+ */

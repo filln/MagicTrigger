@@ -10,7 +10,9 @@
 #define CUR_LINE  (FString::FromInt(__LINE__))
 #define DEBUGMESSAGE(x) UE_LOG(LogTemp, Warning, TEXT("%s <<%s>> ---> %s"), *CUR_CLASS_FUNC, *CUR_LINE, *FString(TEXT(x))); if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + x));}
 #define DEBUGSTRING(x) UE_LOG(LogTemp, Warning, TEXT("%s <<%s>> ---> %s"), *CUR_CLASS_FUNC, *CUR_LINE, *x); if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + x));}
-//#define DEBUGMESSAGE(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + x));}
+#define DEBUGVECTOR(x) UE_LOG(LogTemp, Warning, TEXT("%s <<%s>> ---> %s"), *CUR_CLASS_FUNC, *CUR_LINE, *x.ToString()); if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + *x.ToString()));}
+#define DEBUGFLOAT(x) UE_LOG(LogTemp, Warning, TEXT("%s <<%s>> ---> %f"), *CUR_CLASS_FUNC, *CUR_LINE, x); if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + FString::SanitizeFloat(x)));}
+ //#define DEBUGMESSAGE(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, *(CUR_CLASS_FUNC + " <<" + CUR_LINE + ">> " + "---> " + x));}
 //#define DEBUGMESSAGE(x) if(GEngine){GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT(x));}
 
  /**
