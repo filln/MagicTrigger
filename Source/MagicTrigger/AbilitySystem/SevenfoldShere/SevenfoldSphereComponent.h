@@ -31,7 +31,7 @@ public:
 	 * 
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SevenfoldSphereComponent")
-		void UseSevenfoldSphereAbility();
+		void Use();
 
 		
 };

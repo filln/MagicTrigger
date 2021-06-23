@@ -48,13 +48,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bAttacking;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
+		bool bThrowing;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
+		bool bSpawningSSphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bLiftingUp1Hand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bLiftingUp2Hands;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bPutingDown1Hand;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
-		bool bThrowing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bDying;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
@@ -102,12 +104,16 @@ public:
 		void MeleeAttackAnimation();
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void ThrowAnimation();
+	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
+		void SpawnSSphereAnimation();
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SetPlayingAnimationThrow(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SetPlayingAnimationAttack(bool bPlaying);
+	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
+		void SetPlayingAnimationSpawnSSphere(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SetPlayingAnimationJump(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")

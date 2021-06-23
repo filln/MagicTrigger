@@ -17,10 +17,11 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 
 	bAttacking = false;
+	bThrowing = false;
+	bSpawningSSphere = false;
 	bLiftingUp1Hand = false;
 	bLiftingUp2Hands = false;
 	bPutingDown1Hand = false;
-	bThrowing = false;
 	bDying = false;
 	bGettingDamage = false;
 	bWatchingNow = false;
@@ -139,6 +140,27 @@ void UAnimationManagerComponent::ThrowAnimation()
 	GetWorld()->GetTimerManager().SetTimer(CheckStopThrowAnimationTimer, TmpDelegate, CheckStopThrowAnimationTimerRate, false);
 }
 
+void UAnimationManagerComponent::SpawnSSphereAnimation()
+{
+	if (!bCanAttack)
+	{
+		return;
+	}
+	SetPlayingAnimationSpawnSSphere(true);
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		if (bSpawningSSphere)
+		{
+			SetPlayingAnimationSpawnSSphere(false);
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(CheckStopThrowAnimationTimer, TmpDelegate, CheckStopThrowAnimationTimerRate, false);
+}
+
 void UAnimationManagerComponent::SetPlayingAnimationThrow(bool bPlaying)
 {
 	if (bPlaying)
@@ -180,6 +202,26 @@ void UAnimationManagerComponent::SetPlayingAnimationAttack(bool bPlaying)
 		bCanJump = true;
 
 		bAttacking = false;
+	}
+}
+
+void UAnimationManagerComponent::SetPlayingAnimationSpawnSSphere(bool bPlaying)
+{
+	if (bPlaying)
+	{
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+
+		bSpawningSSphere = true;
+	}
+	else
+	{
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+
+		bSpawningSSphere = false;
 	}
 }
 

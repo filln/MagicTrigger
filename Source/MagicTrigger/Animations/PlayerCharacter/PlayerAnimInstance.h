@@ -43,6 +43,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bAttacking;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+		bool bSpawningSSphere;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bShortWalk;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bWatchingNow;

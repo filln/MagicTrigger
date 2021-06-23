@@ -57,7 +57,7 @@ void AAbilitySystemManager::Attack()
 		PlayerCharacter->AnimationManagerComponent->ThrowAnimation();
 		break;
 	case ECurrentAbility::ECA_SSphere:
-		DEBUGMESSAGE("Attack SSphere ");
+		SevenfoldSphereComponent->Use();
 		break;
 	}
 }
@@ -228,5 +228,10 @@ void AAbilitySystemManager::SwitchOnSSphereAbility()
 {
 	SevenfoldSphereComponent->Activate();
 	AvaliabilityAbilities.bSFSphere = true;
+}
+
+void AAbilitySystemManager::SpawnSSphereAnimation()
+{
+	PlayerCharacter->AnimationManagerComponent->SpawnSSphereAnimation();
 }
 

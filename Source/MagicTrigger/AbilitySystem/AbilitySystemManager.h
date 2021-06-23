@@ -90,6 +90,6 @@ public:
 	 * SSphere
 	 */
 	void SwitchOnSSphereAbility();
-
+	void SpawnSSphereAnimation();
 
 };

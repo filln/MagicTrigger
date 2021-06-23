@@ -12,6 +12,7 @@ UPlayerAnimInstance::UPlayerAnimInstance()
 	bMoving = false;
 	bInAir = false;
 	bAttacking = false;
+	bSpawningSSphere = false;
 	bShortWalk = false;
 	bWatchingNow = false;
 	bLiftingUp2Hands = false;
@@ -63,6 +64,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bInAir = PlayerCharacter->IsFalling();
 
 	bAttacking = AnimationManagerComponent->bAttacking;
+	bSpawningSSphere = AnimationManagerComponent->bSpawningSSphere;
 	bWatchingNow = AnimationManagerComponent->bWatchingNow;
 	bShortWalk = AnimationManagerComponent->bShortWalk;
 	bLiftingUp2Hands = AnimationManagerComponent->bLiftingUp2Hands;
