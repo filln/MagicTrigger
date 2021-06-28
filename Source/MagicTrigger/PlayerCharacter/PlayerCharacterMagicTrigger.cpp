@@ -1059,6 +1059,11 @@ void APlayerCharacterMagicTrigger::SwitchOnSSphereAbility()
 	AbilitySystemManager->SwitchOnSSphereAbility();
 }
 
+void APlayerCharacterMagicTrigger::SpawnSSphere()
+{
+	AbilitySystemManager->SpawnSSphere();
+}
+
 void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot()
 {
 	AbilitySystemManager->StartTraceAttackRightFoot();
@@ -1093,6 +1098,11 @@ FTransform APlayerCharacterMagicTrigger::GetSocketTransform(FName& SocketName) c
 FVector APlayerCharacterMagicTrigger::GetUpDownLiftingArrowForwardVector() const
 {
 	return UpDownLiftingArrow->GetForwardVector();
+}
+
+APlayerController* APlayerCharacterMagicTrigger::GetPlayerController() const
+{
+	return PlayerController;
 }
 
 FTransform APlayerCharacterMagicTrigger::GetPointPutDownTransform() const

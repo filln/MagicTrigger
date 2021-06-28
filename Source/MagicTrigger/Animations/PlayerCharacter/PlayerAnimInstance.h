@@ -127,6 +127,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void ReportNoise();
 
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
+		void SpawnSSphere();
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
+		void EndAnimationSpawnSSphere();
 
 
 };

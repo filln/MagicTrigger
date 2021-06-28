@@ -64,6 +64,9 @@ private:
 public:
 	void Attack();
 	void SetCurrentAbility(ECurrentAbility InCurrentAbility);
+	APlayerCharacterMagicTrigger* GetPlayerCharacter() const;
+	APlayerController* GetPlayerController() const;
+
 	/**
 	 * Melee
 	 */
@@ -91,5 +94,7 @@ public:
 	 */
 	void SwitchOnSSphereAbility();
 	void SpawnSSphereAnimation();
+	void SpawnSSphere();
+
 
 };

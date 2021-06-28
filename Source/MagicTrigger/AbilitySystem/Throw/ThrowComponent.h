@@ -32,11 +32,12 @@ private:
 	AAbilitySystemManager* AbilitySystemManager;
 	USkeletalMeshComponent* PlayerCharacterMesh;
 	int CountOfThrowableItem;
-	FName AttachSocket;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ThrowComponent")
 		TSubclassOf<AThrowableItem> ThrowableItemClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ThrowComponent")
+		FName AttachSocket;
 	UPROPERTY()
 		AThrowableItem* ThrowableItemInHand;
 	UPROPERTY()

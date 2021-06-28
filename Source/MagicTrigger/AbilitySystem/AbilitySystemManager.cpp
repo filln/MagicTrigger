@@ -28,7 +28,7 @@ AAbilitySystemManager::AAbilitySystemManager()
 	MeleeAttackComponent = CreateDefaultSubobject<UMeleeAttackComponent>(TEXT("MeleeAttackComponent"));
 	ThrowComponent = CreateDefaultSubobject<UThrowComponent>(TEXT("ThrowComponent"));
 	SevenfoldSphereComponent = CreateDefaultSubobject<USevenfoldSphereComponent>(TEXT("SevenfoldSphereComponent"));
-	SevenfoldSphereComponent->Deactivate();
+	//SevenfoldSphereComponent->Deactivate();
 
 	AvaliabilityAbilities = FAvaliabilityAbilitiesStruct();
 	CurrentAbility = ECurrentAbility::ECA_Melee;
@@ -115,6 +115,16 @@ void AAbilitySystemManager::SetCurrentAbility(ECurrentAbility InCurrentAbility)
 	}
 
 	CurrentAbility = InCurrentAbility;
+}
+
+APlayerCharacterMagicTrigger* AAbilitySystemManager::GetPlayerCharacter() const
+{
+	return PlayerCharacter;
+}
+
+APlayerController* AAbilitySystemManager::GetPlayerController() const
+{
+	return PlayerCharacter->GetPlayerController();
 }
 
 void AAbilitySystemManager::StartTraceAttackLeftFoot()
@@ -233,5 +243,10 @@ void AAbilitySystemManager::SwitchOnSSphereAbility()
 void AAbilitySystemManager::SpawnSSphereAnimation()
 {
 	PlayerCharacter->AnimationManagerComponent->SpawnSSphereAnimation();
+}
+
+void AAbilitySystemManager::SpawnSSphere()
+{
+	SevenfoldSphereComponent->SpawnSSphere();
 }
 

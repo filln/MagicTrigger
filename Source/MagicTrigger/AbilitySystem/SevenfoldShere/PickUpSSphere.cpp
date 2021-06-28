@@ -169,7 +169,7 @@ APickUpSSphere::APickUpSSphere()
 	}
 	else
 	{
-		DEBUGMESSAGE("!SourceMaterialTranslucentInterfaceObj.Succeeded()");
+		DEBUGMESSAGE("!SourceMaterialOpaqueInterfaceObj.Succeeded()");
 	}
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SourceMaterialTranslucentInterfaceObj(TEXT("/Game/MagicTrigger/Materials/AbilitySystem/M_AttackAbility_Translucent"));
 	if (SourceMaterialTranslucentInterfaceObj.Succeeded())

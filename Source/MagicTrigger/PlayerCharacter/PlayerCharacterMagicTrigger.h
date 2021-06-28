@@ -26,7 +26,6 @@ class UAIPerceptionStimuliSourceComponent;
 class USceneCaptureComponent2D;
 class UCameraComponent;
 class USpringArmComponent;
-class AController;
 class APlayerController;
 class AHUD;
 class AGameModeBase;
@@ -193,8 +192,9 @@ public:
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
 		EMovementStatus MovementStatus;
-
 	APlayerController* PlayerController;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
+		AAbilitySystemManager* AbilitySystemManager;
 
 private:
 	/**
@@ -203,7 +203,6 @@ private:
 	FTimerHandle AutoRunningTimer;
 	AHUD* HUD;
 	AGameModeBase* GameMode;
-	AAbilitySystemManager* AbilitySystemManager;
 	//Регулирует какое-либо движение: ходьба, бег, прыжок, атаку и пр.
 	bool bMoveEnable;
 
@@ -269,6 +268,7 @@ public:
 	FTransform GetPointStartTraceToPutDownPointTransform() const;
 	FTransform GetSocketTransform(FName& SocketName) const;
 	FVector GetUpDownLiftingArrowForwardVector() const;
+	APlayerController* GetPlayerController() const;
 
 	/**
 	 * AnimationManagerComponent
@@ -303,6 +303,7 @@ public:
 	FVector GetVelocity() const;
 	void ThrowThrowableItem();
 	void SwitchOnSSphereAbility();
+	void SpawnSSphere();
 
 	/**
 	 * Изменяет значение AxisValue для AddMovementInput() при контроле игроком скорости передвижения.

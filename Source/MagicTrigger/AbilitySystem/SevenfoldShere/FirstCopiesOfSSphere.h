@@ -7,7 +7,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/SevenfoldShere/SevenfoldShere.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldShere/SevenfoldShere.h"
 #include "FirstCopiesOfSSphere.generated.h"
 
 /**
@@ -18,4 +18,5 @@ class MAGICTRIGGER_API AFirstCopiesOfSSphere : public ASevenfoldShere
 {
 	GENERATED_BODY()
 	
+
 };

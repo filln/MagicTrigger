@@ -225,3 +225,13 @@ void UPlayerAnimInstance::ReportNoise()
 {
 	PlayerCharacter->ReportNoise();
 }
+
+void UPlayerAnimInstance::SpawnSSphere()
+{
+	PlayerCharacter->SpawnSSphere();
+}
+
+void UPlayerAnimInstance::EndAnimationSpawnSSphere()
+{
+	AnimationManagerComponent->SetPlayingAnimationSpawnSSphere(false);
+}
