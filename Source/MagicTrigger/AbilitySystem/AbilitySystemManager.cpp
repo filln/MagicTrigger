@@ -250,3 +250,9 @@ void AAbilitySystemManager::SpawnSSphere()
 	SevenfoldSphereComponent->SpawnSSphere();
 }
 
+void AAbilitySystemManager::SetCountOfSpheresText()
+{
+	FString CountString = FString::FromInt(SevenfoldSphereComponent->GetCountOfSpheres());
+	HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereAbilityUserWidget->CountText->SetText(FText::FromString(CountString));
+}
+

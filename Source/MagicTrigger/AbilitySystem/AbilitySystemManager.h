@@ -95,6 +95,7 @@ public:
 	void SwitchOnSSphereAbility();
 	void SpawnSSphereAnimation();
 	void SpawnSSphere();
+	void SetCountOfSpheresText();
 
 
 };

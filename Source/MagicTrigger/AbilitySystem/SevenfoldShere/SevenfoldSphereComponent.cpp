@@ -31,9 +31,9 @@ USevenfoldSphereComponent::USevenfoldSphereComponent()
 	CurrentScaleLastSphereMultiplier = 1;
 	IncreaseMiddleScaleLastSphereTime = 0.5;
 	IncreaseScaleAndEmissiveLastSphereTime = 0.5;
-	MaxEmissiveLastSphere = 70;
+	MaxEmissiveLastSphere = 400;
 	MaxMiddleScaleLastSphereMultiplier = 5;
-	MaxScaleLastSphereMultiplier = 2.5;
+	MaxScaleLastSphereMultiplier = 3;
 	CurrentOpacityLastSphere = 1;
 	TimersDeltaTime = 0.017;
 	Damage = 100;
@@ -98,7 +98,7 @@ void USevenfoldSphereComponent::SpawnSSphere()
 		LastSSphere = GetWorld()->SpawnActor<ALastCopyOfSSphere>(ALastCopyOfSSphere::StaticClass(), SpawnTransform, ActorSpawnParameters);
 		if (LastSSphere)
 		{
-			CountOfSpheres++;
+			IncreaseCountOfSpheres();
 		}
 	}
 	else
@@ -107,10 +107,27 @@ void USevenfoldSphereComponent::SpawnSSphere()
 		if (FirstCopyOfSphere)
 		{
 			SpheresArray.Add(FirstCopyOfSphere);
-			CountOfSpheres++;
+			IncreaseCountOfSpheres();
 		}
 	}
 
+}
+
+int USevenfoldSphereComponent::GetCountOfSpheres() const
+{
+	return CountOfSpheres;
+}
+
+void USevenfoldSphereComponent::IncreaseCountOfSpheres()
+{
+	CountOfSpheres++;
+	AbilitySystemManager->SetCountOfSpheresText();
+}
+
+void USevenfoldSphereComponent::ResetCountOfSpheres()
+{
+	CountOfSpheres = 0;
+	AbilitySystemManager->SetCountOfSpheresText();
 }
 
 void USevenfoldSphereComponent::ActivateAbility()
@@ -313,7 +330,7 @@ void USevenfoldSphereComponent::DecreaseOpacityLastSphere()
 
 void USevenfoldSphereComponent::Finish()
 {
-	CountOfSpheres = 0;
+	ResetCountOfSpheres();
 	bUsePossible = true;
 	LastSSphere->Destroy();
 }

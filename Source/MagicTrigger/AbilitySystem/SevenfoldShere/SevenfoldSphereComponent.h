@@ -85,7 +85,7 @@ private:
 public:
 
 	/**
-	 *Вызывается после нажатия клавиши атаки.
+	 *Вызывается после нажатия клавиши атаки. BlueprintCallable для тестирования, можно вызвать в BP_AbilitySystemManager.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SevenfoldSphereComponent")
 		void Use();
@@ -93,8 +93,11 @@ public:
 	 * Вызывается из анимации AS_Player_SpawnSSphere с помощью AnimNotify
 	 */
 	void SpawnSSphere();
+	int GetCountOfSpheres() const;
 
 private:
+	void IncreaseCountOfSpheres();
+	void ResetCountOfSpheres();
 	/**
 	 * Начать работу абилки: визуальная часть, нанесение урона.
 	 */
