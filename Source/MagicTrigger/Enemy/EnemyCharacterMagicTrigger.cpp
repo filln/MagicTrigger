@@ -83,9 +83,6 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	MaxLife = 100;
 	MaxDefence = 100;
 	MaxDamage = 100;
-	Life = MaxLife;
-	Defence = MaxDefence;
-	Damage = MaxDamage;
 	LifeSpan = 120;
 	InitialMovementMode = EMovementMode::MOVE_Walking;
 }
@@ -94,7 +91,9 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 void AEnemyCharacterMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Life = MaxLife;
+	Defence = MaxDefence;
+	Damage = MaxDamage;
 	RunAISphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnRunAI);
 	RunAISphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacterMagicTrigger::OnStopAI);
 }

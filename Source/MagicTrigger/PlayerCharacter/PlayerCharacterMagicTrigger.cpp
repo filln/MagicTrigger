@@ -7,7 +7,7 @@
 
 #include "PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger\AbilitySystem\AbilitySystemManager.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldShere\SevenfoldShere.h"
+#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphere.h"
 #include "MagicTrigger\PlayerCharacter\UpDownLiftUpItemComponent.h"
 #include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
@@ -1062,6 +1062,11 @@ void APlayerCharacterMagicTrigger::SwitchOnSSphereAbility()
 void APlayerCharacterMagicTrigger::SpawnSSphere()
 {
 	AbilitySystemManager->SpawnSSphere();
+}
+
+USevenfoldSphereComponent* APlayerCharacterMagicTrigger::GetSevenfoldSphereComponent() const
+{
+	return AbilitySystemManager->SevenfoldSphereComponent;
 }
 
 void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot()

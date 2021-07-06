@@ -3,7 +3,7 @@
 
 #include "AbilitySystemManager.h"
 #include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldShere\SevenfoldSphereComponent.h"
+#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphereComponent.h"
 #include "MagicTrigger\AbilitySystem\Throw\ThrowComponent.h"
 #include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
