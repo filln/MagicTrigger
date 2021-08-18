@@ -6,7 +6,11 @@
 #include "Components\SphereComponent.h"
 #include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
 #include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphere.h"
+#include "MagicTrigger\Quests\QuestOpenLastDoor\InflatedSphere.h"
+#include "MagicTrigger\Quests\QuestOpenLastDoor\QuestOpenLastDoorManager.h"
 #include "Materials\MaterialInterface.h"
+#include "Kismet\KismetSystemLibrary.h"
 
 AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 {
@@ -23,6 +27,23 @@ AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 	CurrentEmissive = TotalEmissive / CountOfSpheres;
 	MaxEmissive = CurrentEmissive;
 	IndicationEmissive = 5;
+	TimersDeltaTime = 0.017;
+	DeltaRotationBuffFloor = -2;
+	Max1DeltaRotationSpheres = 1;
+	Max2DeltaRotationSpheres = 5;
+	Max3DeltaRotationSpheres = 20;
+	RotationAndEmissiveSpheresTime = 1;
+	MinEmissive = 1;
+	MoveSpheresTime = 1;
+	MoveSpheresHalfTime = 0.5;
+	ChangeRotationSpheresTime = 2;
+	MaxCountOfUpInflates = 3;
+	MaxCountOfDownInflates = MaxCountOfUpInflates + 1;
+	bCanWork = true;
+	bRightPlacing = false;
+	IncreaseScaleInflateBigDelta = FVector(0.1);
+	ScaleInflateBigDelta = FVector(0, 0, 0.3);
+
 
 	/**
 	 * Setup Components
@@ -32,6 +53,7 @@ AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 		HighPoint = CreateDefaultSubobject<USceneComponent>(TEXT("HighPoint"));
 		LowerPoint = CreateDefaultSubobject<USceneComponent>(TEXT("LowerPoint"));
 		SpheresCentralPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpheresCentralPoint"));
+		InflateSphereSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("InflateSphereSpawnPoint"));
 		Ruins_Player_Pedestal_Inner = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ruins_Player_Pedestal_Inner"));
 		Ruins_GreenBuffFloor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ruins_GreenBuffFloor"));
 		Ruins_Buff_Floor_Lower = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ruins_Buff_Floor_Lower"));
@@ -45,7 +67,7 @@ AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 		Sphere6 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sphere6"));
 		Sphere7 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sphere7"));
 
-		FHitResult HitResultTmp = FHitResult();
+		HitResultTmp = FHitResult();
 
 		//SphereCollision
 		SetRootComponent(SphereCollision);
@@ -65,6 +87,10 @@ AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 		//SpheresCentralPoint
 		SpheresCentralPoint->SetupAttachment(GetRootComponent());
 		SpheresCentralPoint->SetRelativeLocation(FVector(0, 0, LowerPointZLocation), false, &HitResultTmp, ETeleportType::None);
+
+		//InflateSphereSpawnPoint
+		InflateSphereSpawnPoint->SetupAttachment(GetRootComponent());
+		InflateSphereSpawnPoint->SetRelativeLocation(FVector(0, 0, 365), false, &HitResultTmp, ETeleportType::None);
 
 		//Ruins_Player_Pedestal_Inner
 		Ruins_Player_Pedestal_Inner->SetupAttachment(GetRootComponent());
@@ -189,12 +215,176 @@ AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 			DEBUGMESSAGE("!SourceMaterialInterfaceObj.Succeeded()");
 		}
 	}
+
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AOpenLastDoorPedestalParent::Activate);
 }
 
 void AOpenLastDoorPedestalParent::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupMaterials();
+	
+	CurrentDeltaRotationSpheres = Max1DeltaRotationSpheres;
+	GetWorld()->GetTimerManager().SetTimer(RotationComponentsTimer, this, &AOpenLastDoorPedestalParent::RotationComponentsUpdate, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::ReturnToBeginAfterWrongSummaryPlacings()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+	float Step = ChangeRotationSpheresTime / TimersDeltaTime;
+	RotationSpheresDeltaValue = CurrentDeltaRotationSpheres / Step;
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::DecreaseRotationFromMax2ToZeroUpdate, TimersDeltaTime, true);
+
+	FTimerHandle TmpTimer;
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		bCanWork = true;
+		QuestOpenLastDoorManager->bCanWork = true;
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, ChangeRotationSpheresTime + RotationAndEmissiveSpheresTime + MoveSpheresTime, false);
+}
+
+void AOpenLastDoorPedestalParent::IncreaseRotationSpheresToMax3()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+	RotationSpheresDeltaValue = (Max3DeltaRotationSpheres - CurrentDeltaRotationSpheres) / (ChangeRotationSpheresTime / TimersDeltaTime);
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::IncreaseRotationSpheresToMax3Update, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::IncreaseRotationSpheresToMax3Update()
+{
+	CurrentDeltaRotationSpheres += RotationSpheresDeltaValue;
+	if (CurrentDeltaRotationSpheres < Max3DeltaRotationSpheres)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = Max3DeltaRotationSpheres;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+	SwitchOnPump();
+}
+
+void AOpenLastDoorPedestalParent::SwitchOnPump()
+{
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(InflateSphereSpawnPoint->K2_GetComponentLocation());
+	SpawnTransform.SetRotation(FQuat(FRotator(0)));
+	SpawnTransform.SetScale3D(FVector(0));
+	FActorSpawnParameters ActorSpawnParameters;
+	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	InflatedSphere = GetWorld()->SpawnActor<AInflatedSphere>(AInflatedSphere::StaticClass(), SpawnTransform, ActorSpawnParameters);
+
+	CountOfUpInflates = 0;
+	MovePumpDeltaZ = (HighPoint->GetRelativeLocation().Z - LowerPoint->GetRelativeLocation().Z) / (MoveSpheresHalfTime / TimersDeltaTime);
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::MovePumpDownUpdate, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::MovePumpDownUpdate()
+{
+
+	if (SpheresCentralPoint->GetRelativeLocation().Z <= LowerPoint->GetRelativeLocation().Z)
+	{
+		SpheresCentralPoint->SetRelativeLocation(LowerPoint->GetRelativeLocation(), false, &HitResultTmp, ETeleportType::None);
+		GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+		CountOfDownInflates++;
+		if (CountOfUpInflates < MaxCountOfUpInflates)
+		{
+			InflateSphere();
+			GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::MovePumpUpUpdate, TimersDeltaTime, true);
+		} 
+		else
+		{
+			MoveIflateSphereToPedestal7();
+		}
+	} 
+	else
+	{
+		SpheresCentralPoint->AddRelativeLocation(FVector(0, 0, MovePumpDeltaZ * -1), false, &HitResultTmp, ETeleportType::None);
+	}
+}
+
+void AOpenLastDoorPedestalParent::InflateSphere()
+{
+	ScaleInflateBigDelta += IncreaseScaleInflateBigDelta;
+	ScaleInflateDeltaZ = (ScaleInflateBigDelta.Z - InflatedSphere->GetActorScale3D().Z) / (MoveSpheresHalfTime / TimersDeltaTime);
+	ScaleInflateDeltaXY = (ScaleInflateBigDelta.X - InflatedSphere->GetActorScale3D().X) / (MoveSpheresHalfTime / TimersDeltaTime);
+	GetWorld()->GetTimerManager().SetTimer(InflateSphereTimer, this, &AOpenLastDoorPedestalParent::InflateSphereUpdate, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::InflateSphereUpdate()
+{
+	bool ZReached = InflatedSphere->GetActorScale3D().Z >= ScaleInflateBigDelta.Z;
+	bool XYReached = InflatedSphere->GetActorScale3D().X >= ScaleInflateBigDelta.X;
+	if (ZReached && XYReached)
+	{
+		InflatedSphere->SetActorScale3D(ScaleInflateBigDelta);
+		GetWorld()->GetTimerManager().ClearTimer(InflateSphereTimer);
+	} 
+	else
+	{
+		FVector ScaleInflateLittle = FVector
+		(
+			InflatedSphere->GetActorScale3D().X + ScaleInflateDeltaXY,
+			InflatedSphere->GetActorScale3D().Y + ScaleInflateDeltaXY,
+			InflatedSphere->GetActorScale3D().Z + ScaleInflateDeltaZ
+		);
+		InflatedSphere->SetActorScale3D(ScaleInflateLittle);
+	}
+}
+
+void AOpenLastDoorPedestalParent::MovePumpUpUpdate()
+{
+	if (SpheresCentralPoint->GetRelativeLocation().Z >= HighPoint->GetRelativeLocation().Z)
+	{
+		SpheresCentralPoint->SetRelativeLocation(HighPoint->GetRelativeLocation(), false, &HitResultTmp, ETeleportType::None);
+		GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+		CountOfUpInflates++;
+		if (CountOfDownInflates < MaxCountOfDownInflates)
+		{
+			GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::MovePumpDownUpdate, TimersDeltaTime, true, MoveSpheresTime);
+		}
+	}
+	else
+	{
+		SpheresCentralPoint->AddRelativeLocation(FVector(0, 0, MovePumpDeltaZ), false, &HitResultTmp, ETeleportType::None);
+	}
+}
+
+void AOpenLastDoorPedestalParent::MoveIflateSphereToPedestal7()
+{
+	FVector TargetRelativeLocation = QuestOpenLastDoorManager->PedestalsArray[6]->InflateSphereSpawnPoint->K2_GetComponentLocation();
+	FRotator TargetRelativeRotation = InflatedSphere->GetRootComponent()->GetRelativeRotation();
+	FLatentActionInfo LatentInfo = FLatentActionInfo();
+	LatentInfo.CallbackTarget = this;
+	UKismetSystemLibrary::MoveComponentTo
+	(
+		InflatedSphere->GetRootComponent(),
+		TargetRelativeLocation,
+		TargetRelativeRotation,
+		true,
+		true,
+		MoveSpheresTime,
+		false,
+		EMoveComponentAction::Move,
+		LatentInfo
+	);
+	FTimerHandle TmpTimer;
+	GetWorld()->GetTimerManager().SetTimer(TmpTimer, this, &AOpenLastDoorPedestalParent::DeleteUnusedInflateSpheres, MoveSpheresTime, false);
+}
+
+void AOpenLastDoorPedestalParent::DeleteUnusedInflateSpheres()
+{
+	if (QuestOpenLastDoorManager->PedestalsArray[6] != this)
+	{
+		InflatedSphere->Destroy();
+	} 
+	else
+	{
+		QuestOpenLastDoorManager->IncreaseEmissiveLastInflateSphere();
+	}
 }
 
 void AOpenLastDoorPedestalParent::FindAndSetStaticMesh(UStaticMeshComponent* InStaticMeshComponent, ConstructorHelpers::FObjectFinder<UStaticMesh>& InMeshObj)
@@ -241,3 +431,190 @@ void AOpenLastDoorPedestalParent::SetupMaterials()
 	IndicationMaterial->SetScalarParameterValue(EmissivePowerName, IndicationEmissive);
 
 }
+
+void AOpenLastDoorPedestalParent::RotationComponentsUpdate()
+{
+	SpheresCentralPoint->AddLocalRotation(FRotator(0, CurrentDeltaRotationSpheres, 0), false, &HitResultTmp, ETeleportType::None);
+	Ruins_GreenBuffFloor->AddLocalRotation(FRotator(0, DeltaRotationBuffFloor, 0), false, &HitResultTmp, ETeleportType::None);
+}
+
+void AOpenLastDoorPedestalParent::Activate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!bCanWork)
+	{
+		return;
+	}
+	SevenfoldSphere = Cast<ASevenfoldSphere>(OtherActor);
+	if (!SevenfoldSphere)
+	{
+		return;
+	}
+	bCanWork = false;
+	float Step = RotationAndEmissiveSpheresTime / TimersDeltaTime;
+	RotationSpheresDeltaValue = Max1DeltaRotationSpheres / Step;
+	EmissiveSpheresDeltaValue = MaxEmissive / Step;
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::DecreaseRotationAndEmissiveSpheresUpdate, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::DecreaseRotationAndEmissiveSpheresUpdate()
+{
+	CurrentDeltaRotationSpheres -= RotationSpheresDeltaValue;
+	if (CurrentEmissive > MinEmissive)
+	{
+		CurrentEmissive -= EmissiveSpheresDeltaValue;
+		SpheresMaterial->SetScalarParameterValue(EmissiveMultiplierName, CurrentEmissive);
+	}
+	if (CurrentDeltaRotationSpheres > 0)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = 0;
+	CurrentEmissive = MinEmissive;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+	MoveSpheresToHighPoint();
+
+}
+
+void AOpenLastDoorPedestalParent::MoveSpheresToHighPoint()
+{
+	FVector TargetRelativeLocation = HighPoint->GetRelativeLocation();
+	FRotator TargetRelativeRotation = SpheresCentralPoint->GetRelativeRotation();
+	FLatentActionInfo LatentInfo = FLatentActionInfo();
+	LatentInfo.CallbackTarget = this;
+	UKismetSystemLibrary::MoveComponentTo
+	(
+		SpheresCentralPoint,
+		TargetRelativeLocation,
+		TargetRelativeRotation,
+		true,
+		true,
+		MoveSpheresTime,
+		false,
+		EMoveComponentAction::Move,
+		LatentInfo
+	);
+	FTimerHandle TmpTimer;
+	GetWorld()->GetTimerManager().SetTimer(TmpTimer, this, &AOpenLastDoorPedestalParent::CheckOnRightPlacingInThisPedestal, MoveSpheresTime + 1, false);
+
+}
+
+void AOpenLastDoorPedestalParent::CheckOnRightPlacingInThisPedestal()
+{
+	if (!SevenfoldSphere)
+	{
+		bRightPlacing = false;
+		ReturnToBeginAfterWrongPlacing();
+	}
+	if (SevenfoldSphere->Number == CountOfSpheres)
+	{
+		bRightPlacing = true;
+		ContinueAfterRightPlacing();
+	}
+	else
+	{
+		bRightPlacing = false;
+		ReturnToBeginAfterWrongPlacing();
+	}
+}
+
+void AOpenLastDoorPedestalParent::ContinueAfterRightPlacing()
+{
+	RotationSpheresDeltaValue = Max2DeltaRotationSpheres / (ChangeRotationSpheresTime / TimersDeltaTime);
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::IncreaseRotationSpheresToMax2Update, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::IncreaseRotationSpheresToMax2Update()
+{
+	CurrentDeltaRotationSpheres += RotationSpheresDeltaValue;
+	if (CurrentDeltaRotationSpheres < Max2DeltaRotationSpheres)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = Max2DeltaRotationSpheres;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+}
+void AOpenLastDoorPedestalParent::ReturnToBeginAfterWrongPlacing()
+{
+	FVector TargetRelativeLocation = LowerPoint->GetRelativeLocation();
+	FRotator TargetRelativeRotation = SpheresCentralPoint->GetRelativeRotation();
+	FLatentActionInfo LatentInfo = FLatentActionInfo();
+	LatentInfo.CallbackTarget = this;
+	UKismetSystemLibrary::MoveComponentTo
+	(
+		SpheresCentralPoint,
+		TargetRelativeLocation,
+		TargetRelativeRotation,
+		true,
+		true,
+		MoveSpheresTime,
+		false,
+		EMoveComponentAction::Move,
+		LatentInfo
+	);
+	FTimerHandle TmpTimer;
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::IncreaseRotationAndEmissiveSpheresUpdate, TimersDeltaTime, true);
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, MoveSpheresTime, false);
+}
+
+void AOpenLastDoorPedestalParent::IncreaseRotationAndEmissiveSpheresUpdate()
+{
+	CurrentDeltaRotationSpheres += RotationSpheresDeltaValue;
+	if (CurrentEmissive < MaxEmissive)
+	{
+		CurrentEmissive += EmissiveSpheresDeltaValue;
+		SpheresMaterial->SetScalarParameterValue(EmissiveMultiplierName, CurrentEmissive);
+	}
+	if (CurrentDeltaRotationSpheres < Max1DeltaRotationSpheres)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = Max1DeltaRotationSpheres;
+	CurrentEmissive = MaxEmissive;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+}
+
+void AOpenLastDoorPedestalParent::DecreaseRotationFromMax2ToZeroUpdate()
+{
+	CurrentDeltaRotationSpheres -= RotationSpheresDeltaValue;
+	if (CurrentDeltaRotationSpheres > 0)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = 0;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+	ReturnToBeginAfterWrongPlacing();
+}
+
+void AOpenLastDoorPedestalParent::Deactivate()
+{
+	EmissiveSpheresDeltaValue = CurrentEmissive / (ChangeRotationSpheresTime / TimersDeltaTime);
+	RotationSpheresDeltaValue = CurrentDeltaRotationSpheres / (ChangeRotationSpheresTime / TimersDeltaTime);
+	GetWorld()->GetTimerManager().SetTimer(MainTimer, this, &AOpenLastDoorPedestalParent::DeactivateUpdate, TimersDeltaTime, true);
+}
+
+void AOpenLastDoorPedestalParent::DeactivateUpdate()
+{
+	CurrentDeltaRotationSpheres -= RotationSpheresDeltaValue;
+	if (CurrentEmissive > 0)
+	{
+		CurrentEmissive -= EmissiveSpheresDeltaValue;
+		SpheresMaterial->SetScalarParameterValue(EmissiveMultiplierName, CurrentEmissive);
+	}
+	if (CurrentDeltaRotationSpheres > 0)
+	{
+		return;
+	}
+	CurrentDeltaRotationSpheres = 0;
+	CurrentEmissive = 0;
+	SpheresMaterial->SetScalarParameterValue(EmissiveMultiplierName, CurrentEmissive);
+	DeltaRotationBuffFloor = 0;
+	GetWorld()->GetTimerManager().ClearTimer(MainTimer);
+}
+
