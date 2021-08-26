@@ -17,6 +17,7 @@
 #include "Components\Border.h"
 #include "Components\TextBlock.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet\GameplayStatics.h"
 
 // Sets default values
 AAbilitySystemManager::AAbilitySystemManager()
@@ -39,6 +40,22 @@ AAbilitySystemManager::AAbilitySystemManager()
 void AAbilitySystemManager::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!PlayerCharacter)
+	{
+		PlayerCharacter = Cast<APlayerCharacterMagicTrigger>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (!PlayerCharacter)
+		{
+			DEBUGMESSAGE("!PlayerCharacter");
+		}
+		else
+		{
+			MeleeAttackComponent->IgnoredActors.Add(PlayerCharacter);
+		}
+	}
+	else
+	{
+		MeleeAttackComponent->IgnoredActors.Add(PlayerCharacter);
+	}
 
 }
 
@@ -129,53 +146,37 @@ APlayerController* AAbilitySystemManager::GetPlayerController() const
 
 void AAbilitySystemManager::StartTraceAttackLeftFoot()
 {
-	FTimerDelegate TmpDelegate;
-	TmpDelegate.BindLambda
-	(
-		[=]()
-	{
-		TArray<AActor*> IgnoredActors;
-		MeleeAttackComponent->DoAttack(
-			PlayerCharacter->GetArrowLeftFootSocketLocation(),
-			PlayerCharacter->GetForwardVectorArrowLeftFoot(),
-			IgnoredActors,
-			PlayerCharacter->GetAllDamage(),
-			PlayerCharacter->PlayerController,
-			this
-		);
-	}
+	//DEBUGMESSAGE("StartTraceAttackLeftFoot");
+	MeleeAttackComponent->StartAttackTimer(
+		PlayerCharacter->GetArrowLeftFootSocketLocation(),
+		PlayerCharacter->GetForwardVectorArrowLeftFoot(),
+		PlayerCharacter->GetAllDamage(),
+		PlayerCharacter->PlayerController,
+		PlayerCharacter
 	);
-	GetWorld()->GetTimerManager().SetTimer(MeleeAttackComponent->AttackTimer, TmpDelegate, MeleeAttackComponent->AttackTimerDeltaTime, true);
 }
 
 void AAbilitySystemManager::StartTraceAttackRightFoot()
 {
-	FTimerDelegate TmpDelegate;
-	TmpDelegate.BindLambda
-	(
-		[=]()
-	{
-		TArray<AActor*> IgnoredActors;
-		MeleeAttackComponent->DoAttack(
-			PlayerCharacter->GetArrowRightFootSocketLocation(),
-			PlayerCharacter->GetForwardVectorArrowRightFoot(),
-			IgnoredActors,
-			PlayerCharacter->GetAllDamage(),
-			PlayerCharacter->PlayerController,
-			this
-		);
-	}
+	//DEBUGMESSAGE("StartTraceAttackRightFoot");
+	MeleeAttackComponent->StartAttackTimer(
+		PlayerCharacter->GetArrowRightFootSocketLocation(),
+		PlayerCharacter->GetForwardVectorArrowRightFoot(),
+		PlayerCharacter->GetAllDamage(),
+		PlayerCharacter->PlayerController,
+		PlayerCharacter
 	);
-	GetWorld()->GetTimerManager().SetTimer(MeleeAttackComponent->AttackTimer, TmpDelegate, MeleeAttackComponent->AttackTimerDeltaTime, true);
 }
 
 void AAbilitySystemManager::StopTraceAttackLeftFoot()
 {
+	//DEBUGMESSAGE("StopTraceAttackLeftFoot");
 	MeleeAttackComponent->StopAttackTimer();
 }
 
 void AAbilitySystemManager::StopTraceAttackRightFoot()
 {
+	//DEBUGMESSAGE("StopTraceAttackRightFoot");
 	MeleeAttackComponent->StopAttackTimer();
 }
 

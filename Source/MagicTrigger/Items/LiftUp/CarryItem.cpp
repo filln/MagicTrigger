@@ -12,7 +12,17 @@
 ACarryItem::ACarryItem()
 {
 	AttachSocket = FName(TEXT("CarryRightHand"));
+}
 
+void ACarryItem::BeginPlay()
+{
+	Super::BeginPlay();
+	InteractionText = FText::FromStringTable("/Game/MagicTrigger/Data/ST_Interaction.ST_Interaction", "CarryTip");
+	if (InteractionText.IsEmpty())
+	{
+		DEBUGMESSAGE("InteractionText.IsEmpty()");
+
+	}
 	StaticMesh->SetSimulatePhysics(true);
 	StaticMesh->SetLinearDamping(10);
 	StaticMesh->SetAngularDamping(50);
@@ -27,24 +37,11 @@ ACarryItem::ACarryItem()
 	if (BodyInst)
 	{
 		BodyInst->InertiaTensorScale = FVector(0.05);
+		BodyInst->UpdateMassProperties();
 	}
 	else
 	{
 		DEBUGMESSAGE("!BodyInst");
-	}
-	BodyInst->UpdateMassProperties();
-
-
-}
-
-void ACarryItem::BeginPlay()
-{
-	Super::BeginPlay();
-	InteractionText = FText::FromStringTable("/Game/MagicTrigger/Data/ST_Interaction.ST_Interaction", "CarryTip");
-	if (InteractionText.IsEmpty())
-	{
-		DEBUGMESSAGE("InteractionText.IsEmpty()");
-
 	}
 }
 

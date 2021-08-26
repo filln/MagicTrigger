@@ -113,6 +113,7 @@ float ADemonCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const&
 
 	if (Life <= 0)
 	{
+		FireBallComponent->DestroyAllFireBalls();
 		Die();
 	}
 

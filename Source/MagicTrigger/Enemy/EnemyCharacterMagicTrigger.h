@@ -62,6 +62,7 @@ public:
 		float MaxDefence;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|Settings")
 		float MaxDamage;
+	//Задает SetLifeSpan(LifeSpan) в методе Die() 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger|Settings")
 		float LifeSpan;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "EnemyCharacterMagicTrigger")

@@ -327,7 +327,7 @@ bool UUpDownLiftUpItemComponent::TracePutDownPoint()
 
 	FCollisionResponseParams CollisionResponseParams;
 
-
+#if WITH_EDITOR
 	if (bDrawDebugTrace)
 	{
 		GetWorld()->DebugDrawTraceTag = TraceTag;
@@ -336,6 +336,7 @@ bool UUpDownLiftUpItemComponent::TracePutDownPoint()
 	{
 		GetWorld()->DebugDrawTraceTag = FName();
 	}
+#endif
 
 	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(DetachLiftUpItemTraceOut, StartTrace, EndTrace, TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);
 
@@ -364,7 +365,7 @@ bool UUpDownLiftUpItemComponent::TraceObstacle()
 
 	FCollisionResponseParams CollisionResponseParams;
 
-
+#if WITH_EDITOR
 	if (bDrawDebugTrace)
 	{
 		GetWorld()->DebugDrawTraceTag = TraceTag;
@@ -373,6 +374,7 @@ bool UUpDownLiftUpItemComponent::TraceObstacle()
 	{
 		GetWorld()->DebugDrawTraceTag = FName();
 	}
+#endif
 
 	FHitResult HitResultTmp;
 	bool bTraceResult = GetWorld()->LineTraceSingleByChannel(HitResultTmp, StartTrace, EndTrace, TraceCollisionChannel, CollisionQueryParams, CollisionResponseParams);

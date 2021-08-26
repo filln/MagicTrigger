@@ -151,9 +151,7 @@ void AMutantCharacter::TraceAttack(bool bRightHand)
 	}
 
 	FHitResult TraceAttackHitResult;
-	TArray<AActor*> IgnoredActors;
-
-	bool bTraceResult = MeleeAttackComponent->TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit, IgnoredActors);
+	bool bTraceResult = MeleeAttackComponent->TraceAttack(TraceAttackHitResult, StartTrace, EndTraceUnit);
 	if (!bTraceResult)
 	{
 		//DEBUGMESSAGE("!bTraceResult");

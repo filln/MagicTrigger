@@ -1,4 +1,7 @@
 ﻿// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved.
+/**
+ * Сохраненная игра.
+ */
 
 #pragma once
 

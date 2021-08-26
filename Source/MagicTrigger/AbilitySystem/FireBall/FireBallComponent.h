@@ -136,6 +136,8 @@ public:
 	 */
 	void MoveFireBallToTarget(AController* OwnersController, AActor* BallsTarget);
 
+	void DestroyAllFireBalls();
+
 private:
 
 	/**

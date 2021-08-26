@@ -163,6 +163,20 @@ void UFireBallComponent::MoveFireBallToTarget(AController* OwnersController, AAc
 	FireBallInFly->MoveToTarget(FireBallMoveToTargetInputsStruct);
 }
 
+void UFireBallComponent::DestroyAllFireBalls()
+{
+	if (FireBallInHands)
+	{
+		FireBallInHands->Destroy();
+		FireBallInHands = nullptr;
+	}
+	if (FireBallInFly)
+	{
+		FireBallInFly->Destroy();
+		FireBallInFly = nullptr;
+	}
+}
+
 float UFireBallComponent::CalcDeltaEveryTick(float MaxValue, float CurrentValue, float CountOfTicks)
 {
 	float Delta = MaxValue - CurrentValue;
