@@ -7,10 +7,10 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "MagicTrigger\Interfaces\EnemyCharacterInterface.h"
-#include "MagicTrigger\Interfaces\BeginPlayInterface.h"
+#include "MagicTrigger/Interfaces/EnemyCharacterInterface.h"
+#include "MagicTrigger/Interfaces/BeginPlayInterface.h"
 #include "Perception/AIPerceptionTypes.h"
-#include "MagicTrigger\Data\AI\BlackboardKeyNamesStruct.h"
+#include "MagicTrigger/Data/AI/BlackboardKeyNamesStruct.h"
 #include "EnemyAIController.generated.h"
 
 class ACharacter;

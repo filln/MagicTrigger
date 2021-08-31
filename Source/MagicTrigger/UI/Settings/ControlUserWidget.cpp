@@ -2,15 +2,13 @@
 
 
 #include "ControlUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Interfaces\PlayerControllerInterface.h"
-#include "MagicTrigger\UI\Settings\SettingsMenuUserWidget.h"
-#include "Kismet\KismetTextLibrary.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/UI/Settings/SettingsMenuUserWidget.h"
+#include "Kismet/KismetTextLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components\Slider.h"
-#include "Components\TextBlock.h"
-#include "GameFramework\PlayerController.h"
+#include "Components/Slider.h"
+#include "Components/TextBlock.h"
 
 UControlUserWidget::UControlUserWidget()
 {
@@ -32,18 +30,8 @@ void UControlUserWidget::SetSliderValue()
 		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	if (!HUDMagicTrigger->PlayerController)
-	{
-		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerController");
-		return;
-	}
-	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController))
-	{
-		//DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController)");
-		return;
-	}
 
-	MouseSensitivity = IPlayerControllerInterface::Execute_GetMouseSensitivity_IF(HUDMagicTrigger->PlayerController);
+	MouseSensitivity = HUDMagicTrigger->GetMouseSensitivity();
 
 	if (MouseSensSliderMultiplier <= 0)
 	{
@@ -51,7 +39,7 @@ void UControlUserWidget::SetSliderValue()
 		MouseSensSlider->SetValue(0);
 	}
 
-	float SliderValue =(MouseSensitivity - MouseSensSliderAddend) / MouseSensSliderMultiplier;
+	float SliderValue = (MouseSensitivity - MouseSensSliderAddend) / MouseSensSliderMultiplier;
 	MouseSensSlider->SetValue(SliderValue);
 	MouseSensTextBlock2->SetText(ConvertMouseSensToText());
 }
@@ -62,18 +50,9 @@ void UControlUserWidget::OnValueChangedMouseSensSlider(float Value)
 		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-	if (!HUDMagicTrigger->PlayerController)
-	{
-		//DEBUGMESSAGE("!HUDMagicTrigger->PlayerController");
-		return;
-	}
-	if (!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerControllerInterface>(HUDMagicTrigger->PlayerController)");
-		return;
-	}
+
 	MouseSensitivity = Value * MouseSensSliderMultiplier + MouseSensSliderAddend;
-	IPlayerControllerInterface::Execute_SetInputRotationScale_IF(HUDMagicTrigger->PlayerController, MouseSensitivity);
+	HUDMagicTrigger->SetInputRotationScale(MouseSensitivity);
 	MouseSensTextBlock2->SetText(ConvertMouseSensToText());
 }
 
@@ -84,6 +63,7 @@ void UControlUserWidget::OnPressedResumeButton()
 		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
+	HUDMagicTrigger->SaveGameSettings();
 	HUDMagicTrigger->SetPauseGame(false, this);
 }
 
@@ -94,11 +74,12 @@ void UControlUserWidget::OnPressedBackMenuButton()
 		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
+	HUDMagicTrigger->SaveGameSettings();
 	if (!HUDMagicTrigger->SettingsMenuUserWidget)
 	{
 		//DEBUGMESSAGE("!HUDMagicTrigger->SettingsMenuUserWidget");
 		return;
-	}
+	}	
 	HUDMagicTrigger->SwitchWidgets(this, HUDMagicTrigger->SettingsMenuUserWidget);
 }
 

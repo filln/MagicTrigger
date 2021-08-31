@@ -2,15 +2,15 @@
 
 
 #include "OpenLastDoorPedestalParent.h"
-#include "Components\StaticMeshComponent.h"
-#include "Components\SphereComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphere.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\InflatedSphere.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\QuestOpenLastDoorManager.h"
-#include "Materials\MaterialInterface.h"
-#include "Kismet\KismetSystemLibrary.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/SevenfoldSphere.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/InflatedSphere.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/QuestOpenLastDoorManager.h"
+#include "Materials/MaterialInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AOpenLastDoorPedestalParent::AOpenLastDoorPedestalParent()
 {

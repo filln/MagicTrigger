@@ -7,7 +7,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Items\LiftUp\LiftUpItem.h"
+#include "MagicTrigger/Items/LiftUp/LiftUpItem.h"
 #include "PickUpItem.generated.h"
 
 /**

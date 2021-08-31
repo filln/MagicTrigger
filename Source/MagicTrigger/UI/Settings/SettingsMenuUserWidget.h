@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "MagicTrigger\UI\ParentUserWidgetMT.h"
+#include "MagicTrigger/UI/ParentUserWidgetMT.h"
 #include "SettingsMenuUserWidget.generated.h"
 
 class UButton;

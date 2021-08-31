@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "MagicTrigger/Interfaces/InterfaceCheck.h"
-#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
+#include "MagicTrigger/Data/SaveGame/PlayerStateSaveGameStruct.h"
 #include "PlayerStateInterface.generated.h"
 
 // This class does not need to be modified.
@@ -46,9 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
 		float GetMultiplierOfDamage_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetBeginGameStates_IF() const;
+		FPlayerStateSaveGameStruct GetBeginGameStates_IF() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetStates_IF() const;
+		FPlayerStateSaveGameStruct GetStates_IF() const;
 
 	/**
 	 * Setters
@@ -69,9 +69,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
 		void SetMultiplierOfDamage_IF(float MultiplierOfDamage);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetBeginGameStates_IF(FPlayerStateMagicTriggerStruct BeginGamePlayerState);
+		void SetBeginGameStates_IF(FPlayerStateSaveGameStruct BeginGamePlayerState);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetStates_IF(FPlayerStateMagicTriggerStruct PlayerState);
+		void SetStates_IF(FPlayerStateSaveGameStruct PlayerState);
 
 
 

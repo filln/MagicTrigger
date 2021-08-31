@@ -2,15 +2,15 @@
 
 
 #include "ListOfSavedGamesUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\UI\SaveGame\SavedGameUserWidget.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Components\ScrollBox.h"
-#include "Components\Image.h"
-#include "Components\TextBlock.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
+#include "MagicTrigger/UI/SaveGame/SavedGameUserWidget.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Components/ScrollBox.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework\PlayerController.h"
+#include "GameFramework/PlayerController.h"
 
 void UListOfSavedGamesUserWidget::NativeOnInitialized()
 {

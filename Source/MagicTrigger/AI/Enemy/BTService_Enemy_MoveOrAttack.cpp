@@ -8,9 +8,9 @@
 
 #include "BTService_Enemy_MoveOrAttack.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 UBTService_Enemy_MoveOrAttack::UBTService_Enemy_MoveOrAttack()
 {

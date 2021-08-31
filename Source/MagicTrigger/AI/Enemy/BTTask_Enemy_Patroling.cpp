@@ -7,13 +7,13 @@
 
 
 #include "BTTask_Enemy_Patroling.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Kismet\GameplayStatics.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Kismet/GameplayStatics.h"
 #include "NavigationSystem.h"
-#include "NavMesh\RecastNavMesh.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "NavMesh/RecastNavMesh.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 UBTTask_Enemy_Patroling::UBTTask_Enemy_Patroling()
 {

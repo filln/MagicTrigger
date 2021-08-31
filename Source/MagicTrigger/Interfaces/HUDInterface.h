@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "MagicTrigger/Interfaces/InterfaceCheck.h"
-#include "MagicTrigger\Data\InputModeEnum.h"
+#include "MagicTrigger/Data/InputModeEnum.h"
 #include "HUDInterface.generated.h"
 
 class AActor;

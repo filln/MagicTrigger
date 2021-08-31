@@ -8,7 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MagicTrigger\Data\GameSettingsStruct.h"
+#include "MagicTrigger/Data/GameSettingsStruct.h"
 #include "SaveGameManager.generated.h"
 
 class UGameInstanceMagicTrigger;
@@ -76,15 +76,21 @@ public:
 	 */
 	void ResetGameSettings();
 
-	void SaveLevelName(USaveGameMT* InSavingGame);
+	void SaveLevelData(USaveGameMT* InSavingGame);
 
 private:
-
+	////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Подметоды LoadAll(). Количество этих методов должно быть равно MaxCountOfLoadedElements
+	 */
 	void CheckHUD();
 	void LoadPlayerCharacter(USaveGameMT* InLoadingGame);
-	void SavePlayerCharacter(USaveGameMT* InSavingGame);
-
 	void LoadPlayerState(USaveGameMT* InLoadingGame);
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	void SavePlayerCharacter(USaveGameMT* InSavingGame);
 	void SavePlayerState(USaveGameMT* InSavingGame);
 
 };

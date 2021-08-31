@@ -1,16 +1,16 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved.
 /**
- * Абстрактный родительский
-класс для всех типов сфер.
+ * РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№
+РєР»Р°СЃСЃ РґР»СЏ РІСЃРµС… С‚РёРїРѕРІ СЃС„РµСЂ.
  */
 
 
 #include "SevenfoldSphere.h"
-#include "Components\BoxComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "Materials\MaterialInterface.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "Materials/MaterialInterface.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 
 ASevenfoldSphere::ASevenfoldSphere()

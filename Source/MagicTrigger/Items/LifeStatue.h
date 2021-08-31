@@ -7,9 +7,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MagicTrigger\Interfaces\InteractionInterface.h"
-#include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
-#include "Components\TimelineComponent.h"
+#include "MagicTrigger/Interfaces/InteractionInterface.h"
+#include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
+#include "Components/TimelineComponent.h"
 #include "LifeStatue.generated.h"
 
 class APlayerCharacterMagicTrigger;

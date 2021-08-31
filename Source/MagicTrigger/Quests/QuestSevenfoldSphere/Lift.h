@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
+#include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
 #include "Lift.generated.h"
 
 class UBoxComponent;

@@ -5,9 +5,9 @@
 
 
 #include "CarryItem.h"
-#include "MagicTrigger\Interfaces\AnimationManagerInterface.h"
+#include "MagicTrigger/Interfaces/AnimationManagerInterface.h"
 #include "Components/BoxComponent.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 
 ACarryItem::ACarryItem()
 {

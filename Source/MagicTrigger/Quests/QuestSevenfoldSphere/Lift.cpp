@@ -5,14 +5,14 @@
 
 
 #include "Lift.h"
-#include "NavAreas\NavArea_Obstacle.h"
-#include "Components\BoxComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\QuestSevenfoldSphereComponent.h"
-#include "Kismet\GameplayStatics.h"
-#include "GameFramework\Character.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/QuestSevenfoldSphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 // Sets default values
 ALift::ALift()

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBoxParent.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/PlatformForBoxParent.h"
 #include "PlatformForBox5.generated.h"
 
  /**

@@ -2,7 +2,7 @@
 
 
 #include "InteractionUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
 
 FText UInteractionUserWidget::GetInteractionText()
 {

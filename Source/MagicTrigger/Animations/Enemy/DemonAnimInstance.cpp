@@ -5,8 +5,8 @@
  */
 
 #include "DemonAnimInstance.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Enemy\DemonCharacter.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/Enemy/DemonCharacter.h"
 
 UDemonAnimInstance::UDemonAnimInstance()
 {

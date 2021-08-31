@@ -6,8 +6,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MagicTrigger\Data\AbilitySystem\FireBallStruct.h"
-#include "MagicTrigger\Data\AbilitySystem\FireBallMoveToTargetInputsStruct.h"
+#include "MagicTrigger/Data/AbilitySystem/FireBallStruct.h"
+#include "MagicTrigger/Data/AbilitySystem/FireBallMoveToTargetInputsStruct.h"
 #include "FireBallComponent.generated.h"
 
 class USkeletalMeshComponent;

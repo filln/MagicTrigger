@@ -5,10 +5,10 @@
 
 
 #include "PlayerStateMagicTrigger.h"
-#include "MagicTrigger\SaveGame\SaveGameManager.h"
-#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Kismet\GameplayStatics.h"
+#include "MagicTrigger/SaveGame/SaveGameManager.h"
+#include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APlayerStateMagicTrigger::APlayerStateMagicTrigger()
@@ -24,7 +24,7 @@ APlayerStateMagicTrigger::APlayerStateMagicTrigger()
 	Damage = MaxDamage;
 	MultiplierOfDamage = 1;
 
-	BeginGameStates = FPlayerStateMagicTriggerStruct();
+	BeginGameStates = FPlayerStateSaveGameStruct();
 }
 
 void APlayerStateMagicTrigger::BeginPlay()
@@ -42,9 +42,9 @@ void APlayerStateMagicTrigger::BeginPlay()
 	}
 }
 
-FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates() const
+FPlayerStateSaveGameStruct APlayerStateMagicTrigger::GetStates() const
 {
-	return FPlayerStateMagicTriggerStruct
+	return FPlayerStateSaveGameStruct
 	(
 		Life,
 		Defence,
@@ -57,7 +57,7 @@ FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates() const
 
 }
 
-void APlayerStateMagicTrigger::SetStates(FPlayerStateMagicTriggerStruct InStates)
+void APlayerStateMagicTrigger::SetStates(FPlayerStateSaveGameStruct InStates)
 {
 	Life = InStates.Life;
 	Defence = InStates.Defence;
@@ -104,12 +104,12 @@ float APlayerStateMagicTrigger::GetMultiplierOfDamage_IF_Implementation() const
 	return MultiplierOfDamage;
 }
 
-FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetBeginGameStates_IF_Implementation() const
+FPlayerStateSaveGameStruct APlayerStateMagicTrigger::GetBeginGameStates_IF_Implementation() const
 {
 	return BeginGameStates;
 }
 
-FPlayerStateMagicTriggerStruct APlayerStateMagicTrigger::GetStates_IF_Implementation() const
+FPlayerStateSaveGameStruct APlayerStateMagicTrigger::GetStates_IF_Implementation() const
 {
 	return GetStates();
 }
@@ -149,12 +149,12 @@ void APlayerStateMagicTrigger::SetMultiplierOfDamage_IF_Implementation(float InM
 	MultiplierOfDamage = InMultiplierOfDamage;
 }
 
-void APlayerStateMagicTrigger::SetBeginGameStates_IF_Implementation(FPlayerStateMagicTriggerStruct InBeginGameStates)
+void APlayerStateMagicTrigger::SetBeginGameStates_IF_Implementation(FPlayerStateSaveGameStruct InBeginGameStates)
 {
 	BeginGameStates = InBeginGameStates;
 }
 
-void APlayerStateMagicTrigger::SetStates_IF_Implementation(FPlayerStateMagicTriggerStruct InStates)
+void APlayerStateMagicTrigger::SetStates_IF_Implementation(FPlayerStateSaveGameStruct InStates)
 {
 	SetStates(InStates);
 }

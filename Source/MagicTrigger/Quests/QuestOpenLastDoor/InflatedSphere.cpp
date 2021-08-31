@@ -2,9 +2,9 @@
 
 
 #include "InflatedSphere.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Components\StaticMeshComponent.h"
-#include "Materials\MaterialInterface.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInterface.h"
 
 // Sets default values
 AInflatedSphere::AInflatedSphere()

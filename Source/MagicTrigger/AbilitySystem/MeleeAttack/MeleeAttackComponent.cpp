@@ -6,9 +6,8 @@
 
 #include "MeleeAttackComponent.h"
 #include "Kismet/GameplayStatics.h"
-//#include "Kismet\KismetSystemLibrary.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
  // Sets default values for this component's properties
 UMeleeAttackComponent::UMeleeAttackComponent()
@@ -36,7 +35,7 @@ UMeleeAttackComponent::UMeleeAttackComponent()
 
 void UMeleeAttackComponent::BeginPlay()
 {
-
+	Super::BeginPlay();
 }
 
 void UMeleeAttackComponent::DoAttack(FVector StartTrace, FVector EndTraceUnit, float BaseDamage, AController* EventInstigator, AActor* DamageCauser)

@@ -1,6 +1,6 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Проиграть анимацию рычания, когда найден пес и заблокировать повторное выполнение в дереве.
+ * РџСЂРѕРёРіСЂР°С‚СЊ Р°РЅРёРјР°С†РёСЋ СЂС‹С‡Р°РЅРёСЏ, РєРѕРіРґР° РЅР°Р№РґРµРЅ РїРµСЃ Рё Р·Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ РїРѕРІС‚РѕСЂРЅРѕРµ РІС‹РїРѕР»РЅРµРЅРёРµ РІ РґРµСЂРµРІРµ.
  */
 
 
@@ -9,9 +9,9 @@
 
 #include "BTTask_PlayRoaring.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 #include "GameFramework/Character.h"
 
 UBTTask_PlayRoaring::UBTTask_PlayRoaring(const FObjectInitializer& ObjectInitializer)

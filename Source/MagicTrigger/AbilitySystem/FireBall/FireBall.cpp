@@ -4,13 +4,13 @@
  */
 
 #include "FireBall.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Components\SphereComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "Particles\ParticleSystem.h"
-#include "Kismet\KismetSystemLibrary.h"
-#include "Kismet\GameplayStatics.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFireBall::AFireBall()

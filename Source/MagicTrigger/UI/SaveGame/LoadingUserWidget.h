@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "MagicTrigger\UI\ParentUserWidgetMT.h"
+#include "MagicTrigger/UI/ParentUserWidgetMT.h"
 #include "LoadingUserWidget.generated.h"
 
 /**

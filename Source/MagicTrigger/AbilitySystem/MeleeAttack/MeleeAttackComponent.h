@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
- #include "Kismet\KismetSystemLibrary.h"
+ #include "Kismet/KismetSystemLibrary.h"
 #include "MeleeAttackComponent.generated.h"
 
 class UDamageType;
@@ -92,6 +92,7 @@ public:
 
 private:
 	FTimerHandle CheckAttackTimerTimer;
+	
 	/**
 	 * Methods
 	 */

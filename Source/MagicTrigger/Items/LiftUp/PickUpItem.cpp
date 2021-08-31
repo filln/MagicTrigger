@@ -2,7 +2,7 @@
 
 
 #include "PickUpItem.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 
 APickUpItem::APickUpItem()
 {

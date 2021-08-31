@@ -2,15 +2,15 @@
 
 
 #include "SaveGameManager.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
-#include "MagicTrigger\CoreClasses\PlayerStateMagicTrigger.h"
-#include "MagicTrigger\CoreClasses\PlayerControllerMagicTrigger.h"
-#include "MagicTrigger\SaveGame\SaveGameMT.h"
-#include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\UI\SaveGame\LoadingUserWidget.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
+#include "MagicTrigger/CoreClasses/PlayerStateMagicTrigger.h"
+#include "MagicTrigger/CoreClasses/PlayerControllerMagicTrigger.h"
+#include "MagicTrigger/SaveGame/SaveGameMT.h"
+#include "MagicTrigger/SaveGame/GameSettingsSaveGameMT.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/UI/SaveGame/LoadingUserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 USaveGameManager::USaveGameManager()
@@ -41,7 +41,7 @@ void USaveGameManager::LoadAll(USaveGameMT* InLoadingGame)
 			}
 			HUDLoc->ShowPlayerGUIWidget();
 			HUDLoc->SetInputMode(EInputMode::EIM_GameOnly);
-			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
+			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);			
 		}
 	}
 	);
@@ -57,7 +57,7 @@ void USaveGameManager::SaveAll(USaveGameMT* InSavingGame)
 {
 	SavePlayerCharacter(InSavingGame);
 	SavePlayerState(InSavingGame);
-	SaveLevelName(InSavingGame);
+	SaveLevelData(InSavingGame);
 }
 
 
@@ -103,7 +103,7 @@ void USaveGameManager::LoadPlayerCharacter(USaveGameMT* InLoadingGame)
 		if (PlayerLoc)
 		{
 			FHitResult OutSweepHitResult;
-			FVector Location = FVector(InLoadingGame->PlayerLocation.X, InLoadingGame->PlayerLocation.Y, InLoadingGame->PlayerLocation.Z + 40);
+			FVector Location = FVector(InLoadingGame->PlayerCharacterSaveGameStruct.Location.X, InLoadingGame->PlayerCharacterSaveGameStruct.Location.Y, InLoadingGame->PlayerCharacterSaveGameStruct.Location.Z + 40);
 			PlayerLoc->SetActorLocation(Location, false, &OutSweepHitResult, ETeleportType::None);
 			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 			(*Count)++;
@@ -125,8 +125,8 @@ void USaveGameManager::SavePlayerCharacter(USaveGameMT* InSavingGame)
 		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	InSavingGame->PlayerLocation = PlayerCharacter->GetActorLocation();
-	InSavingGame->ScreenShot = PlayerCharacter->CreateScreenShot();
+	InSavingGame->PlayerCharacterSaveGameStruct.Location = PlayerCharacter->GetActorLocation();
+
 }
 
 void USaveGameManager::LoadPlayerState(USaveGameMT* InLoadingGame)
@@ -185,8 +185,8 @@ void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 	}
 	FTimerDelegate TmpDelegate;
 	FTimerHandle* TmpTimer = &(LoadSettingsTimer);
-	//Íóæåí äâîéíîé óêàçàòåëü, ò.ê. â ìîìåíò ïðèñâàèâàíèÿ óêàçàòåëü åùå íåâàëèäåí, â ëÿìáäó ïåðåäàåòñÿ åãî êîïèÿ. Ïåðåäàòü ïî ññûëêå íå ïîëó÷èòñÿ, ò.ê.
-	//ïðè ïåðåõîäå â ëÿìáäó ïðîèçîéäåò âûõîä èç ýòîé ôóíêöèè è âñå åå ëîê. ïåðåìåííûå óíè÷òîæàòñÿ. 
+	//ÐÑƒÐ¶ÐµÐ½ Ð´Ð²Ð¾Ð¹Ð½Ð¾Ð¹ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ, Ñ‚.Ðº. Ð² Ð¼Ð¾Ð¼ÐµÐ½Ñ‚ Ð¿Ñ€Ð¸ÑÐ²Ð°Ð¸Ð²Ð°Ð½Ð¸Ñ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ ÐµÑ‰Ðµ Ð½ÐµÐ²Ð°Ð»Ð¸Ð´ÐµÐ½, Ð² Ð»ÑÐ¼Ð±Ð´Ñƒ Ð¿ÐµÑ€ÐµÐ´Ð°ÐµÑ‚ÑÑ ÐµÐ³Ð¾ ÐºÐ¾Ð¿Ð¸Ñ. ÐŸÐµÑ€ÐµÐ´Ð°Ñ‚ÑŒ Ð¿Ð¾ ÑÑÑ‹Ð»ÐºÐµ Ð½Ðµ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑÑ, Ñ‚.Ðº.
+	//Ð¿Ñ€Ð¸ Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ðµ Ð² Ð»ÑÐ¼Ð±Ð´Ñƒ Ð¿Ñ€Ð¾Ð¸Ð·Ð¾Ð¹Ð´ÐµÑ‚ Ð²Ñ‹Ñ…Ð¾Ð´ Ð¸Ð· ÑÑ‚Ð¾Ð¹ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð¸ Ð²ÑÐµ ÐµÐµ Ð»Ð¾Ðº. Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð°Ñ‚ÑÑ. 
 	APlayerControllerMagicTrigger** PlayerControllerLoc = &(PlayerController);
 	UGameInstanceMagicTrigger* GameInstanceLoc = GameInstance;
 	TmpDelegate.BindLambda
@@ -251,7 +251,8 @@ void USaveGameManager::ResetGameSettings()
 	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
-void USaveGameManager::SaveLevelName(USaveGameMT* InSavingGame)
+void USaveGameManager::SaveLevelData(USaveGameMT* InSavingGame)
 {
-	InSavingGame->LevelName = GameInstance->GetNameOfCurrentLevel();
+	InSavingGame->LevelSaveGameStruct.LevelName = GameInstance->GetNameOfCurrentLevel();
+	InSavingGame->LevelSaveGameStruct.ScreenShot = PlayerCharacter->CreateScreenShot();
 }

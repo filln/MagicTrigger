@@ -2,9 +2,9 @@
 
 
 #include "SettingsMenuUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\UI\MenuUserWidget.h"
-#include "MagicTrigger\UI\Settings\ControlUserWidget.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/UI/MenuUserWidget.h"
+#include "MagicTrigger/UI/Settings/ControlUserWidget.h"
 
 void USettingsMenuUserWidget::OnPressedBackMenuButton()
 {

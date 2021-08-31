@@ -8,7 +8,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
+#include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
 #include "PlatformForBoxParent.generated.h"
 
 class UBoxComponent;

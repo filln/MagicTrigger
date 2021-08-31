@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\Data\GameSettingsStruct.h"
+#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
+#include "MagicTrigger/Data/GameSettingsStruct.h"
 #include "GameInstanceMagicTrigger.generated.h"
 
 class USaveGameMT;
 class USaveGameManager;
 class ULoadingUserWidget;
+class AHUDMagicTrigger;
 
 /**
  *
@@ -42,13 +43,20 @@ public:
 
 	UPROPERTY()
 		USaveGameMT* CurrentLoadingGame;
+
+	UPROPERTY()
+	AHUDMagicTrigger* HUDMT;
+	UPROPERTY()
+	APlayerController* PlayerController;
+	UPROPERTY()
+	AHUD* HUD;
 private:
 	/**
-	 * Показывает, что уровень загрузился. Меняется на true в левел-блюпринтах после загрузки стриминг-левелов.
+	 * РџРѕРєР°Р·С‹РІР°РµС‚, С‡С‚Рѕ СѓСЂРѕРІРµРЅСЊ Р·Р°РіСЂСѓР·РёР»СЃСЏ. РњРµРЅСЏРµС‚СЃСЏ РЅР° true РІ Р»РµРІРµР»-Р±Р»СЋРїСЂРёРЅС‚Р°С… РїРѕСЃР»Рµ Р·Р°РіСЂСѓР·РєРё СЃС‚СЂРёРјРёРЅРі-Р»РµРІРµР»РѕРІ.
 	 */
 	bool bLevelLoaded;
 	/**
-	 * Для ожидания загрузки уровня.
+	 * Р”Р»СЏ РѕР¶РёРґР°РЅРёСЏ Р·Р°РіСЂСѓР·РєРё СѓСЂРѕРІРЅСЏ.
 	 */
 	FTimerHandle LoadingGameTimer;
 	/**
@@ -59,9 +67,7 @@ private:
 	 *
 	 */
 	FTimerHandle ShowGameMenuTimer;
-	/**
-	 *
-	 */
+
 
 
 	/**
@@ -76,7 +82,7 @@ protected:
 
 public:
 	/**
-	 *Не используется?
+	 *РќРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ?
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		bool LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList);
@@ -106,17 +112,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		bool MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList);
 	/**
-	 * Перенос настроек из виджетов в PlayerController и в сохранение. Вызывается, когда нажимаем кнопку "сохранить настройки".
+	 * РџРµСЂРµРЅРѕСЃ РЅР°СЃС‚СЂРѕРµРє РёР· РІРёРґР¶РµС‚РѕРІ РІ PlayerController Рё РІ СЃРѕС…СЂР°РЅРµРЅРёРµ. Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° РЅР°Р¶РёРјР°РµРј РєРЅРѕРїРєСѓ "СЃРѕС…СЂР°РЅРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё".
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		void SaveGameSettings();
 	/**
-	 * Перенос настроек из сохранения в PlayerController и виджеты. Вызывается, когда заходим в игру.
+	 * РџРµСЂРµРЅРѕСЃ РЅР°СЃС‚СЂРѕРµРє РёР· СЃРѕС…СЂР°РЅРµРЅРёСЏ РІ PlayerController Рё РІРёРґР¶РµС‚С‹. Р’С‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° Р·Р°С…РѕРґРёРј РІ РёРіСЂСѓ.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		void LoadGameSettings();
 	/**
-	 *Сброс настроек к дефолтным. переносятся все настройки из структуры FGameSettingsStruct в виджеты и PlayerController, применение настроек.
+	 *РЎР±СЂРѕСЃ РЅР°СЃС‚СЂРѕРµРє Рє РґРµС„РѕР»С‚РЅС‹Рј. РїРµСЂРµРЅРѕСЃСЏС‚СЃСЏ РІСЃРµ РЅР°СЃС‚СЂРѕР№РєРё РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ FGameSettingsStruct РІ РІРёРґР¶РµС‚С‹ Рё PlayerController, РїСЂРёРјРµРЅРµРЅРёРµ РЅР°СЃС‚СЂРѕРµРє.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		void ResetGameSettings();
@@ -159,6 +165,7 @@ private:
 	 */
 	bool SaveCurrentGame(const FString& NameOfSaveGame);
 
+	AHUDMagicTrigger* SetAndGetHUDMT();
 
 	/**
 	 * GameInstanceInterface methods
@@ -200,9 +207,14 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void ResetGameSettings_IF();
 	virtual void ResetGameSettings_IF_Implementation() override;
+
+	/**
+	 * Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ Р»РµРІРµР»-Р±Р»СЋРїСЂРёРЅС‚ MenuLevel
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		void ShowGameMenu_IF();
 	virtual void ShowGameMenu_IF_Implementation() override;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "GameInstanceInterface")
 		FString GetGamesListName_IF();
 	virtual FString GetGamesListName_IF_Implementation() override;

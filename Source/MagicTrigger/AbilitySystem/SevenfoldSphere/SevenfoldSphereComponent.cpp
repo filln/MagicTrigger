@@ -2,14 +2,14 @@
 
 
 #include "SevenfoldSphereComponent.h"
-#include "MagicTrigger\AbilitySystem\AbilitySystemManager.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\FirstCopiesOfSSphere.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\LastCopyOfSSphere.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "Components\BoxComponent.h"
-#include "Kismet\KismetSystemLibrary.h"
+#include "MagicTrigger/AbilitySystem/AbilitySystemManager.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/FirstCopiesOfSSphere.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/LastCopyOfSSphere.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -74,7 +74,7 @@ void USevenfoldSphereComponent::Use()
 	}
 	if (CountOfSpheres < 7)
 	{
-		AbilitySystemManager->SpawnSSphereAnimation();
+		AbilitySystemManager->UseSSphereAttack();
 	}
 	if (CountOfSpheres == 7)
 	{

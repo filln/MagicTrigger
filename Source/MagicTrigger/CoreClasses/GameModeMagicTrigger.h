@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "MagicTrigger\Interfaces\GameModeInterface.h"
+#include "MagicTrigger/Interfaces/GameModeInterface.h"
 #include "GameModeMagicTrigger.generated.h"
 
 /**

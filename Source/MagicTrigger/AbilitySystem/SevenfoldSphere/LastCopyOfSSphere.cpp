@@ -2,11 +2,11 @@
 
 
 #include "LastCopyOfSSphere.h"
-#include "Components\BoxComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\FirstCopiesOfSSphere.h"
-#include "GameFramework\RotatingMovementComponent.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "Components/BoxComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/FirstCopiesOfSSphere.h"
+#include "GameFramework/RotatingMovementComponent.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 ALastCopyOfSSphere::ALastCopyOfSSphere()
 {

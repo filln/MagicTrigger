@@ -2,22 +2,21 @@
 
 
 #include "AbilitySystemManager.h"
-#include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphereComponent.h"
-#include "MagicTrigger\AbilitySystem\Throw\ThrowComponent.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\UI\PlayerGUIUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\PanelAbilityUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\MeleeAbilityUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\ThrowAbilityUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\SFSphereAbilityUserWidget.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Components\Border.h"
-#include "Components\TextBlock.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Kismet\GameplayStatics.h"
+#include "MagicTrigger/AbilitySystem/MeleeAttack/MeleeAttackComponent.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/SevenfoldSphereComponent.h"
+#include "MagicTrigger/AbilitySystem/Throw/ThrowComponent.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/AnimationManagerComponent.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/UI/PlayerGUIUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/PanelAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/MeleeAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/ThrowAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/SFSphereAbilityUserWidget.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Components/Border.h"
+#include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AAbilitySystemManager::AAbilitySystemManager()
@@ -64,14 +63,10 @@ void AAbilitySystemManager::Attack()
 	switch (CurrentAbility)
 	{
 	case ECurrentAbility::ECA_Melee:
-		PlayerCharacter->AnimationManagerComponent->MeleeAttackAnimation();
+		UseMeleeAttack();
 		break;
 	case ECurrentAbility::ECA_Throw:
-		if (ThrowComponent->GetCountOfThrowableItem() < 1)
-		{
-			break;
-		}
-		PlayerCharacter->AnimationManagerComponent->ThrowAnimation();
+		ThrowComponent->Use();
 		break;
 	case ECurrentAbility::ECA_SSphere:
 		SevenfoldSphereComponent->Use();
@@ -144,6 +139,11 @@ APlayerController* AAbilitySystemManager::GetPlayerController() const
 	return PlayerCharacter->GetPlayerController();
 }
 
+void AAbilitySystemManager::UseMeleeAttack()
+{
+	PlayerCharacter->AnimationManagerComponent->MeleeAttackAnimation();
+}
+
 void AAbilitySystemManager::StartTraceAttackLeftFoot()
 {
 	//DEBUGMESSAGE("StartTraceAttackLeftFoot");
@@ -178,6 +178,11 @@ void AAbilitySystemManager::StopTraceAttackRightFoot()
 {
 	//DEBUGMESSAGE("StopTraceAttackRightFoot");
 	MeleeAttackComponent->StopAttackTimer();
+}
+
+void AAbilitySystemManager::UseThrowAttack()
+{
+	PlayerCharacter->AnimationManagerComponent->ThrowAnimation();
 }
 
 void AAbilitySystemManager::IncreaseCountOfThrowableItem()
@@ -241,7 +246,7 @@ void AAbilitySystemManager::SwitchOnSSphereAbility()
 	AvaliabilityAbilities.bSFSphere = true;
 }
 
-void AAbilitySystemManager::SpawnSSphereAnimation()
+void AAbilitySystemManager::UseSSphereAttack()
 {
 	PlayerCharacter->AnimationManagerComponent->SpawnSSphereAnimation();
 }

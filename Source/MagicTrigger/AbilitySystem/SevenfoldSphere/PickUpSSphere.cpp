@@ -2,16 +2,16 @@
 
 
 #include "PickUpSSphere.h"
-#include "Components\BoxComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "Components\BillboardComponent.h"
-#include "Components\SpotLightComponent.h"
-#include "GameFramework\RotatingMovementComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "Materials\MaterialInterface.h"
-#include "Kismet\KismetSystemLibrary.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/BillboardComponent.h"
+#include "Components/SpotLightComponent.h"
+#include "GameFramework/RotatingMovementComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "Materials/MaterialInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 APickUpSSphere::APickUpSSphere()

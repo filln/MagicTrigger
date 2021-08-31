@@ -2,10 +2,10 @@
 
 
 #include "ObserveEnemyUserWidget.h"
-#include "MagicTrigger\Interfaces\EnemyCharacterInterface.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "Kismet\KismetTextLibrary.h"
+#include "MagicTrigger/Interfaces/EnemyCharacterInterface.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "Kismet/KismetTextLibrary.h"
 
 class UTexture2D;
 

@@ -2,12 +2,11 @@
 
 
 #include "LoadGameMenuUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\UI\MenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGame\SavedGameUserWidget.h"
-#include "Components\TextBlock.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/UI/MenuUserWidget.h"
+#include "MagicTrigger/UI/SaveGame/SavedGameUserWidget.h"
+#include "Components/TextBlock.h"
 
 bool ULoadGameMenuUserWidget::CheckLastSavedGame()
 {
@@ -26,12 +25,6 @@ void ULoadGameMenuUserWidget::OnPressedResumeButton()
 
 void ULoadGameMenuUserWidget::OnPressedLoadButton()
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy(HUDMagicTrigger->GameInstance)");
-		return;
-	}
-
 	FString NameOfLoadGame = HUDMagicTrigger->LastSavedGame->NameOfSavedGame->GetText().ToString();
-	IGameInstanceInterface::Execute_MainLoadGame_IF(HUDMagicTrigger->GameInstance, NameOfLoadGame);
+	HUDMagicTrigger->MainLoadGame(NameOfLoadGame);
 }

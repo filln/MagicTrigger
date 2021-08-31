@@ -7,9 +7,9 @@
 
 
 #include "BTTask_Enemy_MoveToPlayer.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 
 UBTTask_Enemy_MoveToPlayer::UBTTask_Enemy_MoveToPlayer()

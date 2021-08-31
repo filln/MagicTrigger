@@ -2,10 +2,10 @@
 
 
 #include "SavedGameUserWidget.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework\PlayerController.h"
+#include "GameFramework/PlayerController.h"
 
 void USavedGameUserWidget::NativeOnInitialized()
 {

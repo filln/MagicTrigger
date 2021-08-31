@@ -7,9 +7,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
-#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
-#include "MagicTrigger\Data\MovementStatusEnum.h"
+#include "MagicTrigger/Interfaces/OwnerTargetSelectionInterface.h"
+#include "MagicTrigger/Interfaces/PlayerCharacterInterface.h"
+#include "MagicTrigger/Data/MovementStatusEnum.h"
 #include "InputCoreTypes.h"
 #include "PlayerCharacterMagicTrigger.generated.h"
 

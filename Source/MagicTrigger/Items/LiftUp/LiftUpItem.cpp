@@ -7,10 +7,10 @@
 #include "LiftUpItem.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-#include "Kismet\GameplayStatics.h"
-#include "NavAreas\NavArea_Obstacle.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "Kismet/GameplayStatics.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 
  // Sets default values
 ALiftUpItem::ALiftUpItem()

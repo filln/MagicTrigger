@@ -12,9 +12,9 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\AbilitySystem\MeleeAttack\MeleeAttackComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/MeleeAttack/MeleeAttackComponent.h"
 
 class UAnimInstance;
 class UAnimationAsset;

@@ -2,10 +2,10 @@
 
 
 #include "RockDoor.h"
-#include "NavAreas\NavArea_Obstacle.h"
-#include "Components\SphereComponent.h"
-#include "Components\BoxComponent.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
 
 // Sets default values
 ARockDoor::ARockDoor()

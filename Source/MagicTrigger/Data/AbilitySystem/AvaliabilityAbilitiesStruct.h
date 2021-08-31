@@ -18,6 +18,11 @@ struct FAvaliabilityAbilitiesStruct
 		bool bThrow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AvaliabilityAbilitiesStruct")
 		bool bSFSphere;
+	
+	/**
+	 *true - абилка доступна
+	 *false - абилка недоступна
+	 */
 	FAvaliabilityAbilitiesStruct()
 	{
 		bMelee = true;

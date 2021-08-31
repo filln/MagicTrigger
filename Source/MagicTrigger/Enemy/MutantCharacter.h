@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Interfaces\TrowableRockResponseInterface.h"
+#include "MagicTrigger/Interfaces/TrowableRockResponseInterface.h"
 #include "MutantCharacter.generated.h"
 
 class UMeleeAttackComponent;

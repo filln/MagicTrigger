@@ -8,9 +8,9 @@
 
 #include "BTTask_Enemy_Attack.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 UBTTask_Enemy_Attack::UBTTask_Enemy_Attack()
 {

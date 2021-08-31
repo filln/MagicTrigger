@@ -1,11 +1,11 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * боксы для расстановки на платформы для квеста.
+ * Р±РѕРєСЃС‹ РґР»СЏ СЂР°СЃСЃС‚Р°РЅРѕРІРєРё РЅР° РїР»Р°С‚С„РѕСЂРјС‹ РґР»СЏ РєРІРµСЃС‚Р°.
  */
 
 
 #include "BoxForPlatformParent.h"
-#include "Kismet\KismetSystemLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 ABoxForPlatformParent::ABoxForPlatformParent()
 {

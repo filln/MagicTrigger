@@ -2,17 +2,17 @@
 
 
 #include "QuestOpenLastDoorManager.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\AbilitySystem\SevenfoldSphere\SevenfoldSphereComponent.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal1.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal2.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal3.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal4.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal5.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal6.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\OpenLastDoorPedestal7.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\LastDoorLevel1.h"
-#include "MagicTrigger\Quests\QuestOpenLastDoor\InflatedSphere.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/AbilitySystem/SevenfoldSphere/SevenfoldSphereComponent.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal1.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal2.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal3.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal4.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal5.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal6.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/OpenLastDoorPedestal7.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/LastDoorLevel1.h"
+#include "MagicTrigger/Quests/QuestOpenLastDoor/InflatedSphere.h"
 #include "Kismet/GameplayStatics.h"
  
 // Sets default values

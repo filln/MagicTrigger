@@ -7,10 +7,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "MagicTrigger\Data\PlayerStateMagicTriggerStruct.h"
+#include "MagicTrigger/Data/SaveGame/PlayerStateSaveGameStruct.h"
+#include "MagicTrigger/Data/SaveGame/PlayerCharacterSaveGameStruct.h"
+#include "MagicTrigger/Data/SaveGame/LevelSaveGameStruct.h"
 #include "SaveGameMT.generated.h"
 
-class UTextureRenderTarget2D;
 
 /**
  *
@@ -22,12 +23,10 @@ class MAGICTRIGGER_API USaveGameMT : public USaveGame
 
 public:
 	UPROPERTY()
-		UTextureRenderTarget2D* ScreenShot;
+		FLevelSaveGameStruct LevelSaveGameStruct;
 	UPROPERTY()
-		FVector PlayerLocation;
+		FPlayerCharacterSaveGameStruct PlayerCharacterSaveGameStruct;
 	UPROPERTY()
-		FName LevelName;
-	UPROPERTY()
-		FPlayerStateMagicTriggerStruct StatesStruct;
+		FPlayerStateSaveGameStruct StatesStruct;
 
 };

@@ -47,6 +47,7 @@ public:
 	 * Methods
 	 */
 public:
+	void Use();
 	int GetCountOfThrowableItem() const;
 	void SetCountOfThrowableItem(int InCount);
 	void IncreaseCountOfThrowableItem();

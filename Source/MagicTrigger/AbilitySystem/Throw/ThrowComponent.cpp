@@ -2,11 +2,11 @@
 
 
 #include "ThrowComponent.h"
-#include "MagicTrigger\AbilitySystem\Throw\ThrowableItem.h"
-#include "MagicTrigger\AbilitySystem\AbilitySystemManager.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/Throw/ThrowableItem.h"
+#include "MagicTrigger/AbilitySystem/AbilitySystemManager.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet\KismetMathLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 UThrowComponent::UThrowComponent()
@@ -39,6 +39,15 @@ void UThrowComponent::BeginPlay()
 		DEBUGMESSAGE("!AbilitySystemManager");
 		return;
 	}
+}
+
+void UThrowComponent::Use()
+{
+	if (GetCountOfThrowableItem() < 1)
+	{
+		return;
+	}
+	AbilitySystemManager->UseThrowAttack();
 }
 
 int UThrowComponent::GetCountOfThrowableItem() const

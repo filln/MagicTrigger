@@ -5,12 +5,12 @@
 
 
 #include "ThrowableItem.h"
-#include "MagicTrigger\Interfaces\AnimationManagerInterface.h"
-#include "MagicTrigger\Interfaces\TrowableRockResponseInterface.h"
+#include "MagicTrigger/Interfaces/AnimationManagerInterface.h"
+#include "MagicTrigger/Interfaces/TrowableRockResponseInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework\ProjectileMovementComponent.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 
 AThrowableItem::AThrowableItem()
 {

@@ -3,9 +3,9 @@
 
 #include "PlayerControllerMagicTrigger.h"
 #include "Kismet/GameplayStatics.h"
-#include "MagicTrigger\CoreClasses\GameInstanceMagicTrigger.h"
-#include "MagicTrigger\SaveGame\SaveGameManager.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
+#include "MagicTrigger/SaveGame/SaveGameManager.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 {
@@ -55,6 +55,11 @@ void APlayerControllerMagicTrigger::SetInputRotationScale(float InMouseSensitivi
 
 }
 
+float APlayerControllerMagicTrigger::GetMouseSensitivity() const
+{
+	return MouseSensitivity;
+}
+
 void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(float InMouseSensitivity)
 {
 	SetInputRotationScale(InMouseSensitivity);
@@ -62,5 +67,5 @@ void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(floa
 
 float APlayerControllerMagicTrigger::GetMouseSensitivity_IF_Implementation()
 {
-	return MouseSensitivity;
+	return GetMouseSensitivity();
 }

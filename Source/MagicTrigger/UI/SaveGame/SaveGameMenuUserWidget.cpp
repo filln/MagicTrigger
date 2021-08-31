@@ -2,16 +2,16 @@
 
 
 #include "SaveGameMenuUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\UI\SaveGame\ListOfSavedGamesUserWidget.h"
-#include "MagicTrigger\UI\MenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGame\SavedGameUserWidget.h"
-#include "MagicTrigger\Interfaces\PlayerCharacterInterface.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/UI/SaveGame/ListOfSavedGamesUserWidget.h"
+#include "MagicTrigger/UI/MenuUserWidget.h"
+#include "MagicTrigger/UI/SaveGame/SavedGameUserWidget.h"
+#include "MagicTrigger/Interfaces/PlayerCharacterInterface.h"
+#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
 
-#include "Components\EditableTextBox.h"
-#include "Components\TextBlock.h"
+#include "Components/EditableTextBox.h"
+#include "Components/TextBlock.h"
 #include "GameFramework/Character.h"
 
 class UTextureRenderTarget2D;
@@ -57,12 +57,6 @@ void USaveGameMenuUserWidget::OnPressedResumeButton()
 
 void USaveGameMenuUserWidget::OnClickedSaveButton()
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance)");
-		return;
-	}
-
 	if (NameOfCurrentSaveGame->GetText().IsEmpty())
 	{
 		DEBUGMESSAGE("NameOfCurrentSaveGame->GetText().IsEmpty()");
@@ -71,7 +65,7 @@ void USaveGameMenuUserWidget::OnClickedSaveButton()
 
 	FString InNameOfSaveGame = NameOfCurrentSaveGame->GetText().ToString();
 	TArray<FString> GamesList;
-	if (IGameInstanceInterface::Execute_MainSaveGame_IF(HUDMagicTrigger->GameInstance, InNameOfSaveGame, GamesList))
+	if (HUDMagicTrigger->MainSaveGame(InNameOfSaveGame, GamesList))
 	{
 		ListOfSavedGamesUserWidget->RefreshWithoutLoadData(GamesList);
 	}

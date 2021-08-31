@@ -7,9 +7,9 @@
 
 
 #include "BTTask_WaitPatroling.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 #include <stdlib.h> //rand()
 
 UBTTask_WaitPatroling::UBTTask_WaitPatroling(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

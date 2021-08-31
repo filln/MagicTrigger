@@ -5,29 +5,29 @@
 
 #pragma once
 
-#include "PlayerStateMagicTriggerStruct.generated.h"
+#include "PlayerStateSaveGameStruct.generated.h"
 
 USTRUCT(BlueprintType)
-struct FPlayerStateMagicTriggerStruct
+struct FPlayerStateSaveGameStruct
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float Life;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float Defence;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float Damage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float MaxLife;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float MaxDefence;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float MaxDamage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTriggerStruct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateSaveGameStruct")
 		float MultiplierOfDamage;
 
-	FPlayerStateMagicTriggerStruct()
+	FPlayerStateSaveGameStruct()
 	{
 		Life = 100;
 		Defence = 100;
@@ -38,7 +38,7 @@ struct FPlayerStateMagicTriggerStruct
 		MultiplierOfDamage = 1;
 	}
 
-	FPlayerStateMagicTriggerStruct
+	FPlayerStateSaveGameStruct
 	(
 		float InLife,
 		float InDefence,

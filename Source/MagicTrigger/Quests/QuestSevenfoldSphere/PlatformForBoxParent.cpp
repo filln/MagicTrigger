@@ -5,13 +5,13 @@
 
 
 #include "PlatformForBoxParent.h"
-#include "NavAreas\NavArea_Obstacle.h"
-#include "Components\BoxComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "Kismet\KismetSystemLibrary.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\BoxForPlatformParent.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/BoxForPlatformParent.h"
 
 
 // Sets default values

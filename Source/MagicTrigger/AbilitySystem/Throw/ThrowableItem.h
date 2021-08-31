@@ -6,7 +6,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Items\LiftUp\PickUpItem.h"
+#include "MagicTrigger/Items/LiftUp/PickUpItem.h"
 #include "ThrowableItem.generated.h"
 
 class UProjectileMovementComponent;

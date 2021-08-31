@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "MagicTrigger\UI\ParentUserWidgetMT.h"
+#include "MagicTrigger/UI/ParentUserWidgetMT.h"
 #include "LoadGameMenuUserWidget.generated.h"
 
 class UListOfSavedGamesUserWidget;

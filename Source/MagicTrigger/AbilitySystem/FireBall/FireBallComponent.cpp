@@ -1,13 +1,13 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Компонент атакующей абилки фаербола.
+ * РљРѕРјРїРѕРЅРµРЅС‚ Р°С‚Р°РєСѓСЋС‰РµР№ Р°Р±РёР»РєРё С„Р°РµСЂР±РѕР»Р°.
  */
 
 #pragma once
 
 #include "FireBallComponent.h"
-#include "MagicTrigger\AbilitySystem\FireBall\FireBall.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/FireBall/FireBall.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 // Sets default values for this component's properties
 UFireBallComponent::UFireBallComponent()

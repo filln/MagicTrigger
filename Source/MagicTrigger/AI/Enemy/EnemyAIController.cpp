@@ -8,25 +8,25 @@
 #include "EnemyAIController.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "MagicTrigger\Enemy\EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/Enemy/EnemyCharacterMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "Perception\AISenseConfig_Sight.h"
-#include "Perception\AISenseConfig_Hearing.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISense_Hearing.h"
 
-#include "BehaviorTree\BehaviorTree.h"
-#include "BehaviorTree\BlackboardData.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-#include "NavMesh\RecastNavMesh.h"
-#include "NavAreas\NavArea_Obstacle.h"
-#include "Components\SphereComponent.h"
+#include "NavMesh/RecastNavMesh.h"
+#include "NavAreas/NavArea_Obstacle.h"
+#include "Components/SphereComponent.h"
 
 class UAISense_Sight;
 

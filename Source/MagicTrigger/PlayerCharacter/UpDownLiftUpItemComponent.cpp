@@ -1,17 +1,17 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Для поднимания или опускания поднимаемых предметов.
+ * Р”Р»СЏ РїРѕРґРЅРёРјР°РЅРёСЏ РёР»Рё РѕРїСѓСЃРєР°РЅРёСЏ РїРѕРґРЅРёРјР°РµРјС‹С… РїСЂРµРґРјРµС‚РѕРІ.
  */
 
 
 #include "UpDownLiftUpItemComponent.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\Interfaces\LiftUpItemInterface.h"
-#include "MagicTrigger\Items\LiftUp\LiftUpItem.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/Interfaces/LiftUpItemInterface.h"
+#include "MagicTrigger/Items/LiftUp/LiftUpItem.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 class ALiftUpItem;
 

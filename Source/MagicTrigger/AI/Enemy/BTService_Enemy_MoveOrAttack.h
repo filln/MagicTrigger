@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "MagicTrigger\Data\AI\BlackboardKeyNamesStruct.h"
+#include "MagicTrigger/Data/AI/BlackboardKeyNamesStruct.h"
 #include "BTService_Enemy_MoveOrAttack.generated.h"
 
 

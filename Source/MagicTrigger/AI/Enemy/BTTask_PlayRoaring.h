@@ -12,7 +12,7 @@
 #include "TimerManager.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "MagicTrigger\Data\AI\BlackboardKeyNamesStruct.h"
+#include "MagicTrigger/Data/AI/BlackboardKeyNamesStruct.h"
 #include "BTTask_PlayRoaring.generated.h"
 
  /**

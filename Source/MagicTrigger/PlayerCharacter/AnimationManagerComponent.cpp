@@ -6,7 +6,7 @@
 
 #include "AnimationManagerComponent.h"
 #include "GameFramework/Character.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
  // Sets default values for this component's properties
 UAnimationManagerComponent::UAnimationManagerComponent()

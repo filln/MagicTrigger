@@ -2,9 +2,9 @@
 
 
 #include "PlayerAnimInstance.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "MagicTrigger\PlayerCharacter\AnimationManagerComponent.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "MagicTrigger/PlayerCharacter/AnimationManagerComponent.h"
 
 UPlayerAnimInstance::UPlayerAnimInstance()
 {

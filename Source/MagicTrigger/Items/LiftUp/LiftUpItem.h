@@ -7,12 +7,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MagicTrigger\Interfaces\LiftUpItemInterface.h"
-#include "MagicTrigger\Interfaces\InteractionInterface.h"
-#include "MagicTrigger\Interfaces\BeginPlayInterface.h"
-#include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/Interfaces/LiftUpItemInterface.h"
+#include "MagicTrigger/Interfaces/InteractionInterface.h"
+#include "MagicTrigger/Interfaces/BeginPlayInterface.h"
+#include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 #include "LiftUpItem.generated.h"
 
 class UBoxComponent;

@@ -2,9 +2,9 @@
 
 
 #include "ParentUserWidgetMT.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "Kismet\GameplayStatics.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AHUDMagicTrigger* UParentUserWidgetMT::GetHUDMagicTrigger()

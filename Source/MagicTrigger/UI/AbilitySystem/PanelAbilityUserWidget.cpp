@@ -2,10 +2,10 @@
 
 
 #include "PanelAbilityUserWidget.h"
-#include "Components\Border.h"
-#include "MagicTrigger\UI\AbilitySystem\MeleeAbilityUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\ThrowAbilityUserWidget.h"
-#include "MagicTrigger\UI\AbilitySystem\SFSphereAbilityUserWidget.h"
+#include "Components/Border.h"
+#include "MagicTrigger/UI/AbilitySystem/MeleeAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/ThrowAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/SFSphereAbilityUserWidget.h"
 
 void UPanelAbilityUserWidget::SetActiveColor()
 {

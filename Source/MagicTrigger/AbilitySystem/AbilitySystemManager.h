@@ -9,8 +9,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MagicTrigger\Data\AbilitySystem\CurrentAbilityEnum.h"
-#include "MagicTrigger\Data\AbilitySystem\AvaliabilityAbilitiesStruct.h"
+#include "MagicTrigger/Data/AbilitySystem/CurrentAbilityEnum.h"
+#include "MagicTrigger/Data/AbilitySystem/AvaliabilityAbilitiesStruct.h"
 #include "AbilitySystemManager.generated.h"
 
 class UMeleeAttackComponent;
@@ -70,6 +70,7 @@ public:
 	/**
 	 * Melee
 	 */
+	void UseMeleeAttack();
 	void StartTraceAttackLeftFoot();
 	void StartTraceAttackRightFoot();
 	void StopTraceAttackLeftFoot();
@@ -78,6 +79,7 @@ public:
 	/**
 	 * Throw
 	 */
+	void UseThrowAttack();
 	void IncreaseCountOfThrowableItem();
 	void SetCountOfThrowableItemText();
 	void SpawnThrowableItem();
@@ -93,7 +95,7 @@ public:
 	 * SSphere
 	 */
 	void SwitchOnSSphereAbility();
-	void SpawnSSphereAnimation();
+	void UseSSphereAttack();
 	void SpawnSSphere();
 	void SetCountOfSpheresText();
 

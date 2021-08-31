@@ -2,12 +2,12 @@
 
 
 #include "PlayerGUIUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "Kismet\KismetTextLibrary.h"
-#include "GameFramework\Character.h"
-#include "GameFramework\PlayerState.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Interfaces/PlayerStateInterface.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "Kismet/KismetTextLibrary.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/PlayerState.h"
 
 float UPlayerGUIUserWidget::GetLife()
 {

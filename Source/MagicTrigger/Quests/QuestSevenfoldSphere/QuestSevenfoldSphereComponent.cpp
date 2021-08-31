@@ -2,19 +2,19 @@
 
 
 #include "QuestSevenfoldSphereComponent.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBox4.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBox5.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\RockDoor.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\BoxForPlatformParent.h"
-#include "MagicTrigger\PlayerCharacter\PlayerCharacterMagicTrigger.h"
-#include "Components\BoxComponent.h"
-#include "Components\SphereComponent.h"
-#include "Components\StaticMeshComponent.h"
-#include "Components\CapsuleComponent.h"
-#include "GameFramework\CharacterMovementComponent.h"
-#include "Kismet\GameplayStatics.h"
-#include "Kismet\KismetSystemLibrary.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/PlatformForBox4.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/PlatformForBox5.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/RockDoor.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/BoxForPlatformParent.h"
+#include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
+#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -112,7 +112,7 @@ void UQuestSevenfoldSphereComponent::BeginOverlapMoveDown()
 		CurrentLocation = UpLocation;
 	}
 
-	//Лифт опускается на расстояние своей высоты ExtentZ.
+	//Р›РёС„С‚ РѕРїСѓСЃРєР°РµС‚СЃСЏ РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРµ СЃРІРѕРµР№ РІС‹СЃРѕС‚С‹ ExtentZ.
 	float ExtentZ = 2 * Mesh->Bounds.BoxExtent.Z;
 	float TargetLocationZ = CurrentLocation.Z - ExtentZ;
 
@@ -175,7 +175,7 @@ void UQuestSevenfoldSphereComponent::CheckKey()
 		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	//Не проверять и не двигать лифт, если перса нет на лифте.
+	//РќРµ РїСЂРѕРІРµСЂСЏС‚СЊ Рё РЅРµ РґРІРёРіР°С‚СЊ Р»РёС„С‚, РµСЃР»Рё РїРµСЂСЃР° РЅРµС‚ РЅР° Р»РёС„С‚Рµ.
 	bool bOverlappingPlayerCharacter = OverlapCollision->IsOverlappingComponent(PlayerCharacter->GetCapsuleComponent());
 	if (!bOverlappingPlayerCharacter)
 	{
@@ -208,7 +208,7 @@ void UQuestSevenfoldSphereComponent::CheckKey()
 
 bool UQuestSevenfoldSphereComponent::IsRightPlacingsDown()
 {
-	//Все нижние платформы должны иметь правильные боксы.
+	//Р’СЃРµ РЅРёР¶РЅРёРµ РїР»Р°С‚С„РѕСЂРјС‹ РґРѕР»Р¶РЅС‹ РёРјРµС‚СЊ РїСЂР°РІРёР»СЊРЅС‹Рµ Р±РѕРєСЃС‹.
 	for (auto CurrentPlatform : PlatformsForBoxDown)
 	{
 		if (!CurrentPlatform->CurrentBox)
@@ -229,7 +229,7 @@ bool UQuestSevenfoldSphereComponent::IsRightPlacingsDown()
 
 bool UQuestSevenfoldSphereComponent::IsRightPlacingsUp()
 {
-	//Любая одна из верхних платформ должна иметь правильный бокс.
+	//Р›СЋР±Р°СЏ РѕРґРЅР° РёР· РІРµСЂС…РЅРёС… РїР»Р°С‚С„РѕСЂРј РґРѕР»Р¶РЅР° РёРјРµС‚СЊ РїСЂР°РІРёР»СЊРЅС‹Р№ Р±РѕРєСЃ.
 	for (auto CurrentPlatform : PlatformsForBoxUp)
 	{
 		if (!CurrentPlatform->CurrentBox)
@@ -255,7 +255,7 @@ void UQuestSevenfoldSphereComponent::LiftIsOpen()
 		DEBUGMESSAGE("!PlayerCharacter");
 		return;
 	}
-	//Двигать лифт вверх или вниз в зависимости от bLiftDown.
+	//Р”РІРёРіР°С‚СЊ Р»РёС„С‚ РІРІРµСЂС… РёР»Рё РІРЅРёР· РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ bLiftDown.
 	SetCharacterParameters(true);
 	MoveCharacterToCenterLift();
 	FTimerHandle TimerHandle;
@@ -266,7 +266,7 @@ void UQuestSevenfoldSphereComponent::LiftIsOpen()
 void UQuestSevenfoldSphereComponent::LiftIsClosed()
 {
 	/**
-	 * Переместить боксы к начальному положению.
+	 * РџРµСЂРµРјРµСЃС‚РёС‚СЊ Р±РѕРєСЃС‹ Рє РЅР°С‡Р°Р»СЊРЅРѕРјСѓ РїРѕР»РѕР¶РµРЅРёСЋ.
 	 */
 	if (bLiftDown)
 	{
@@ -353,7 +353,7 @@ void UQuestSevenfoldSphereComponent::MoveLift(bool bMoveUp)
 	);
 	GetWorld()->GetTimerManager().SetTimer(TmpTimer, TmpDelegate, MoveLiftOverTime, false);
 
-	//Вращать камеру, пока двигается лифт.
+	//Р’СЂР°С‰Р°С‚СЊ РєР°РјРµСЂСѓ, РїРѕРєР° РґРІРёРіР°РµС‚СЃСЏ Р»РёС„С‚.
 	FTimerDelegate MoveCameraTmpDelegate;
 	MoveCameraTmpDelegate.BindLambda
 	(

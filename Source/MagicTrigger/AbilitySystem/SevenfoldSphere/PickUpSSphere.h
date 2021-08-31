@@ -1,16 +1,16 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved.
 /**
- * Служит для визуализации
-приобретения абилки.
-При оверлапе персом
-включается и двигается
- к нему
+ * РЎР»СѓР¶РёС‚ РґР»СЏ РІРёР·СѓР°Р»РёР·Р°С†РёРё
+РїСЂРёРѕР±СЂРµС‚РµРЅРёСЏ Р°Р±РёР»РєРё.
+РџСЂРё РѕРІРµСЂР»Р°РїРµ РїРµСЂСЃРѕРј
+РІРєР»СЋС‡Р°РµС‚СЃСЏ Рё РґРІРёРіР°РµС‚СЃСЏ
+ Рє РЅРµРјСѓ
  */
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components\TimelineComponent.h"
+#include "Components/TimelineComponent.h"
 #include "PickUpSSphere.generated.h"
 
 class UBoxComponent;
@@ -40,7 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Components")
 		UBoxComponent* SwitchOnCollision;
 	/**
-	 * Для оверлапа перса, когда включаются фонарики.
+	 * Р”Р»СЏ РѕРІРµСЂР»Р°РїР° РїРµСЂСЃР°, РєРѕРіРґР° РІРєР»СЋС‡Р°СЋС‚СЃСЏ С„РѕРЅР°СЂРёРєРё.
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Components")
 		UBoxComponent* LittleSphereCentralPointCollision;
@@ -65,7 +65,7 @@ public:
 		UStaticMeshComponent* LittleSphere7;
 
 	/**
-	 * Точки, в которые будут двигаться маленькие сферы.
+	 * РўРѕС‡РєРё, РІ РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ РґРІРёРіР°С‚СЊСЃСЏ РјР°Р»РµРЅСЊРєРёРµ СЃС„РµСЂС‹.
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Components")
 		UBillboardComponent* LittleSpherePoint1;
@@ -103,7 +103,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Settings")
 		float MoveUpOverTime;
-	//Высота подъема сферы относительно высоты перса.
+	//Р’С‹СЃРѕС‚Р° РїРѕРґСЉРµРјР° СЃС„РµСЂС‹ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РІС‹СЃРѕС‚С‹ РїРµСЂСЃР°.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Settings")
 		float MoveUpHeigh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUpSSphere|Settings")

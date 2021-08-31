@@ -1,20 +1,20 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Родительский класс врагов.
+ * Р РѕРґРёС‚РµР»СЊСЃРєРёР№ РєР»Р°СЃСЃ РІСЂР°РіРѕРІ.
  */
 
 #include "EnemyCharacterMagicTrigger.h"
-#include "MagicTrigger\Data\CollisionChannelsMagicTrigger.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\AI\Enemy\EnemyAIController.h"
-#include "MagicTrigger\Interfaces\OwnerTargetSelectionInterface.h"
-#include "MagicTrigger\Interfaces\HUDInterface.h"
+#include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/AI/Enemy/EnemyAIController.h"
+#include "MagicTrigger/Interfaces/OwnerTargetSelectionInterface.h"
+#include "MagicTrigger/Interfaces/HUDInterface.h"
 #include "Kismet/GameplayStatics.h"
-#include "NavAreas\NavArea_Obstacle.h"
+#include "NavAreas/NavArea_Obstacle.h"
 #include "Components/CapsuleComponent.h"
-#include "Components\SphereComponent.h"
-#include "GameFramework\CharacterMovementComponent.h"
-#include "GameFramework\HUD.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/HUD.h"
 
  // Sets default values
 AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()

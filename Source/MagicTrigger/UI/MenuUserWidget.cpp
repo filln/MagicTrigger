@@ -2,19 +2,19 @@
 
 
 #include "MenuUserWidget.h"
-#include "MagicTrigger\CoreClasses\HUDMagicTrigger.h"
-#include "MagicTrigger\Interfaces\GameInstanceInterface.h"
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\UI\Settings\SettingsMenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGame\SaveGameMenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGame\LoadGameMenuUserWidget.h"
-#include "MagicTrigger\UI\SaveGame\ListOfSavedGamesUserWidget.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/UI/Settings/SettingsMenuUserWidget.h"
+#include "MagicTrigger/UI/SaveGame/SaveGameMenuUserWidget.h"
+#include "MagicTrigger/UI/SaveGame/LoadGameMenuUserWidget.h"
+#include "MagicTrigger/UI/SaveGame/ListOfSavedGamesUserWidget.h"
 
-#include "Kismet\KismetSystemLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "Components\Button.h"
-#include "Components\Spacer.h"
+#include "Components/Button.h"
+#include "Components/Spacer.h"
 
 void UMenuUserWidget::NativeOnInitialized()
 {
@@ -58,13 +58,7 @@ void UMenuUserWidget::OnPressedExitButton()
 
 void UMenuUserWidget::OnPressedNewGameButton()
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy(HUDMagicTrigger->GameInstance)");
-		return;
-	}
-
-	IGameInstanceInterface::Execute_BeginNewGame_IF(HUDMagicTrigger->GameInstance);
+	HUDMagicTrigger->BeginNewGame();
 }
 
 void UMenuUserWidget::OnPressedSaveGameMenuButton()

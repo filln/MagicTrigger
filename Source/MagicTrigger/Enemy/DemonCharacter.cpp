@@ -4,12 +4,12 @@
  */
 
 #include "DemonCharacter.h"
-#include "MagicTrigger\AbilitySystem\FireBall\FireBallComponent.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/AbilitySystem/FireBall/FireBallComponent.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 #include "Components/CapsuleComponent.h"
-#include "Components\SphereComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "GameFramework\CharacterMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 class UAnimInstance;

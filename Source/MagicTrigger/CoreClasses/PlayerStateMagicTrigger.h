@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
-#include "MagicTrigger\Interfaces\PlayerStateInterface.h"
+#include "MagicTrigger/Interfaces/PlayerStateInterface.h"
 #include "PlayerStateMagicTrigger.generated.h"
 
 /**
@@ -43,15 +43,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTrigger")
 	float MultiplierOfDamage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStateMagicTrigger")
-	FPlayerStateMagicTriggerStruct BeginGameStates;
+	FPlayerStateSaveGameStruct BeginGameStates;
 	
 	
 	/**
 	 * Methods
 	 */
 public:
-	FPlayerStateMagicTriggerStruct GetStates() const;
-	void SetStates(FPlayerStateMagicTriggerStruct InStates);
+	FPlayerStateSaveGameStruct GetStates() const;
+	void SetStates(FPlayerStateSaveGameStruct InStates);
 
 	/**
 	 * PlayerStateInterface Methods
@@ -82,11 +82,11 @@ public:
 		float GetMultiplierOfDamage_IF() const;
 	virtual float GetMultiplierOfDamage_IF_Implementation() const override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetBeginGameStates_IF() const;
-	virtual FPlayerStateMagicTriggerStruct GetBeginGameStates_IF_Implementation() const override;
+		FPlayerStateSaveGameStruct GetBeginGameStates_IF() const;
+	virtual FPlayerStateSaveGameStruct GetBeginGameStates_IF_Implementation() const override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Getters")
-		FPlayerStateMagicTriggerStruct GetStates_IF() const;
-	virtual FPlayerStateMagicTriggerStruct GetStates_IF_Implementation() const override;
+		FPlayerStateSaveGameStruct GetStates_IF() const;
+	virtual FPlayerStateSaveGameStruct GetStates_IF_Implementation() const override;
 	/**
 	 * Setters
 	 */
@@ -112,11 +112,11 @@ public:
 		void SetMultiplierOfDamage_IF(float InMultiplierOfDamage);
 	virtual void SetMultiplierOfDamage_IF_Implementation(float InMultiplierOfDamage) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetBeginGameStates_IF(FPlayerStateMagicTriggerStruct InBeginGameStates);
-	virtual void SetBeginGameStates_IF_Implementation(FPlayerStateMagicTriggerStruct InBeginGameStates) override;
+		void SetBeginGameStates_IF(FPlayerStateSaveGameStruct InBeginGameStates);
+	virtual void SetBeginGameStates_IF_Implementation(FPlayerStateSaveGameStruct InBeginGameStates) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerStateInterface|Setters")
-		void SetStates_IF(FPlayerStateMagicTriggerStruct InStates);
-	virtual void SetStates_IF_Implementation(FPlayerStateMagicTriggerStruct InStates) override;
+		void SetStates_IF(FPlayerStateSaveGameStruct InStates);
+	virtual void SetStates_IF_Implementation(FPlayerStateSaveGameStruct InStates) override;
 
 
 	

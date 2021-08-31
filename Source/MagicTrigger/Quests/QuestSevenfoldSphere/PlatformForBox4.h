@@ -1,21 +1,21 @@
 // Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Квестовая платформа, на которую ставятся квестовые боксы. Когда бокс ставится, то платформа плавно опускается как от тяжести бокса.
- Когда бокс поднимается, платформа возвращается.
- Данная платформа отслеживает бокс и дает сигнал на открытие двери-скалы.
+ * РљРІРµСЃС‚РѕРІР°СЏ РїР»Р°С‚С„РѕСЂРјР°, РЅР° РєРѕС‚РѕСЂСѓСЋ СЃС‚Р°РІСЏС‚СЃСЏ РєРІРµСЃС‚РѕРІС‹Рµ Р±РѕРєСЃС‹. РљРѕРіРґР° Р±РѕРєСЃ СЃС‚Р°РІРёС‚СЃСЏ, С‚Рѕ РїР»Р°С‚С„РѕСЂРјР° РїР»Р°РІРЅРѕ РѕРїСѓСЃРєР°РµС‚СЃСЏ РєР°Рє РѕС‚ С‚СЏР¶РµСЃС‚Рё Р±РѕРєСЃР°.
+ РљРѕРіРґР° Р±РѕРєСЃ РїРѕРґРЅРёРјР°РµС‚СЃСЏ, РїР»Р°С‚С„РѕСЂРјР° РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ.
+ Р”Р°РЅРЅР°СЏ РїР»Р°С‚С„РѕСЂРјР° РѕС‚СЃР»РµР¶РёРІР°РµС‚ Р±РѕРєСЃ Рё РґР°РµС‚ СЃРёРіРЅР°Р» РЅР° РѕС‚РєСЂС‹С‚РёРµ РґРІРµСЂРё-СЃРєР°Р»С‹.
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger\Quests\QuestSevenfoldSphere\PlatformForBoxParent.h"
+#include "MagicTrigger/Quests/QuestSevenfoldSphere/PlatformForBoxParent.h"
 #include "PlatformForBox4.generated.h"
 
 /**
  *
  */
 
-//Вызывается в UQuestSevenfoldSphereComponent
+//Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ UQuestSevenfoldSphereComponent
 DECLARE_DELEGATE(FPlatform4OverlapBoxDelegate);
 
 UCLASS()

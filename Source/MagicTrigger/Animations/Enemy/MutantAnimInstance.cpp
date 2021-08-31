@@ -2,8 +2,8 @@
 
 
 #include "MutantAnimInstance.h"
-#include "MagicTrigger\Enemy\MutantCharacter.h"
-#include "MagicTrigger\Data\DebugMessage.h"
+#include "MagicTrigger/Enemy/MutantCharacter.h"
+#include "MagicTrigger/Data/DebugMessage.h"
 
 UMutantAnimInstance::UMutantAnimInstance()
 {

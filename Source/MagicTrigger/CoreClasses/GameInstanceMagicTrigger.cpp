@@ -4,24 +4,22 @@
 #include "GameInstanceMagicTrigger.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "MagicTrigger\Data\DebugMessage.h"
-#include "MagicTrigger\Interfaces\HUDInterface.h"
-#include "MagicTrigger\SaveGame\ListOfSavedGames.h"
-#include "MagicTrigger\SaveGame\SaveGameMT.h"
-#include "MagicTrigger\SaveGame\GameSettingsSaveGameMT.h"
-#include "MagicTrigger\SaveGame\SaveGameManager.h"
-#include "MagicTrigger\UI\SaveGame\LoadingUserWidget.h"
+#include "MagicTrigger/Data/DebugMessage.h"
+#include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/SaveGame/ListOfSavedGames.h"
+#include "MagicTrigger/SaveGame/SaveGameMT.h"
+#include "MagicTrigger/SaveGame/GameSettingsSaveGameMT.h"
+#include "MagicTrigger/SaveGame/SaveGameManager.h"
+#include "MagicTrigger/UI/SaveGame/LoadingUserWidget.h"
 
-#include "GameFramework\PlayerController.h"
-#include "GameFramework\HUD.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/HUD.h"
 
 UGameInstanceMagicTrigger::UGameInstanceMagicTrigger()
 {
 	GamesListName = FString(TEXT("DefaultGamesListName170520191208"));
 	GameSettingsName = FString(TEXT("DefaultGameSettingsSaveName01042021"));
 	GameSettingsStruct = FGameSettingsStruct();
-
-
 	LoadingUserWidgetClass = ULoadingUserWidget::StaticClass();
 }
 
@@ -31,6 +29,7 @@ void UGameInstanceMagicTrigger::Init()
 	SaveGameManager = NewObject<USaveGameManager>(this, USaveGameManager::StaticClass(), FName(TEXT("SaveGameManager")));
 	SaveGameManager->GameInstance = this;
 	LoadingUserWidget = CreateWidget<ULoadingUserWidget>(this, LoadingUserWidgetClass, FName(TEXT("LoadingUserWidget")));
+	//LoadGameSettings();
 	//DEBUGMESSAGE("Init()");
 }
 
@@ -45,7 +44,7 @@ bool UGameInstanceMagicTrigger::SaveCurrentGame(const FString& NameOfSaveGame)
 {
 	if (UGameplayStatics::DoesSaveGameExist(NameOfSaveGame, 0))
 	{
-		DEBUGMESSAGE("UGameplayStatics::DoesSaveGameExist(). ���� � ����� ������ ��� ����������.");
+		DEBUGMESSAGE("UGameplayStatics::DoesSaveGameExist(). Игра с таким именем уже существует.");
 		return false;
 	}
 
@@ -60,6 +59,43 @@ bool UGameInstanceMagicTrigger::SaveCurrentGame(const FString& NameOfSaveGame)
 	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, NameOfSaveGame, 0);
 
 	return bGameSaved;
+}
+
+AHUDMagicTrigger* UGameInstanceMagicTrigger::SetAndGetHUDMT()
+{
+	if (!GetWorld())
+	{
+		DEBUGMESSAGE("!GetWorld()");
+		return nullptr;
+	}
+	if (!PlayerController)
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (!PlayerController)
+		{
+			DEBUGMESSAGE("!PlayerController");
+			return nullptr;
+		}
+	}
+	if (!HUD)
+	{
+		HUD = PlayerController->GetHUD();
+		if (!HUD)
+		{
+			DEBUGMESSAGE("!HUD");
+			return nullptr;
+		}
+	}
+	if (!HUDMT)
+	{
+		HUDMT = Cast<AHUDMagicTrigger>(HUD);
+		if (!HUDMT)
+		{
+			DEBUGMESSAGE("!HUDMT");
+			return nullptr;
+		}
+	}
+	return HUDMT;
 }
 
 bool UGameInstanceMagicTrigger::SaveNameToGamesList(const FString& NameOfSaveGame, TArray<FString>& InGamesList)
@@ -162,7 +198,7 @@ FString UGameInstanceMagicTrigger::ReplaceSpecSymbols(const FString& NameOfSaveG
 {
 	FString NameOfSaveGameTmp = NameOfSaveGame;
 	NameOfSaveGameTmp.RemoveSpacesInline();
-	FString SpecSymbols = FString(TEXT("!@#$%^&*()-=+\\|`'\"~<,.>/?�;:[]{}"));
+	FString SpecSymbols = FString(TEXT("!@#$%^&*()-=+\\|`'\"~<,.>/?№;:[]{}"));
 	FString MainSymbol = FString(TEXT("_"));
 	//////////////////////////////////////////////////////////////////////////
 	//TArray<FString> UKismetStringLibrary::GetCharacterArrayFromString(const FString& SourceString)
@@ -247,25 +283,10 @@ bool UGameInstanceMagicTrigger::MainSaveGame(const FString& NameOfSaveGame, TArr
 
 void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 {
-	//////////////////////////////////////////////////////////////////////////Check
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!PlayerController)
+	if (!SetAndGetHUDMT())
 	{
-		DEBUGMESSAGE("!PlayerController");
 		return;
 	}
-	AHUD* HUD = PlayerController->GetHUD();
-	if (!HUD)
-	{
-		DEBUGMESSAGE("!HUD");
-		return;
-	}
-	if (!IsInterfaceImplementedBy<IHUDInterface>(HUD))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
-		return;
-	}
-	//////////////////////////////////////////////////////////////////////////
 	CurrentLoadingGame = LoadGamesData(NameOfLoadGame);
 	if (!CurrentLoadingGame)
 	{
@@ -273,8 +294,8 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 		return;
 	}
 
-	IHUDInterface::Execute_HideLoadGameMenuWidget_IF(HUD);
-	UGameplayStatics::OpenLevel(GetWorld(), CurrentLoadingGame->LevelName);
+	HUDMT->HideLoadGameMenuWidget();
+	UGameplayStatics::OpenLevel(GetWorld(), CurrentLoadingGame->LevelSaveGameStruct.LevelName);
 	FTimerHandle* TmpTimer = &(LoadingGameTimer);
 	FTimerDelegate TmpDelegate;
 	USaveGameManager* SaveGameManagerLoc = SaveGameManager;
@@ -285,6 +306,7 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 		[=]
 	()
 	{
+		//Вначале проверяется, загрузился ли уровень, и если уровень загрузился, то загружаются данные из объекта сохраненной ранее игры.
 		if (*bLevelLoadedRef)
 		{
 			SaveGameManagerLoc->LoadAll(LoadingGameTmp);
@@ -298,31 +320,12 @@ void UGameInstanceMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 
 void UGameInstanceMagicTrigger::BeginNewGame()
 {
-	//////////////////////////////////////////////////////////////////////////Check
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!PlayerController)
+	if (!SetAndGetHUDMT())
 	{
-		DEBUGMESSAGE("!PlayerController");
 		return;
 	}
-	AHUD* HUD = PlayerController->GetHUD();
-	if (!HUD)
-	{
-		DEBUGMESSAGE("!HUD");
-		return;
-	}
-	if (!IsInterfaceImplementedBy<IHUDInterface>(HUD))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
-		return;
-	}
-	//////////////////////////////////////////////////////////////////////////
-
-	IHUDInterface::Execute_HideMenuWidget_IF(HUD);
+	HUDMT->HideMenuWidget();
 	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("Level1")));
-	//FPlayerStateMagicTriggerStruct States = IPlayerStateInterface::Execute_GetBeginGameStates_IF(PlayerState);
-	//IPlayerStateInterface::Execute_SetStates_IF(PlayerState, States);
-
 	FTimerHandle* TmpTimer = &(BeginNewGameTimer);
 	ULoadingUserWidget* LoadingUserWidgetTmp = LoadingUserWidget;
 	FTimerDelegate TmpDelegate;
@@ -332,47 +335,22 @@ void UGameInstanceMagicTrigger::BeginNewGame()
 		[=]
 	()
 	{
+		//Вначале проверяется, загрузился ли уровень, и если уровень загрузился, то продолжать.
 		if (*bLevelLoadedRef)
 		{
-			if (GetWorld())
+			if (!SetAndGetHUDMT())
 			{
-				APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-				if (PlayerController)
-				{
-					AHUD* HUD = PlayerController->GetHUD();
-					if (HUD)
-					{
-						if (IsInterfaceImplementedBy<IHUDInterface>(HUD))
-						{
-							//DEBUGMESSAGE("IsInterfaceImplementedBy<IHUDInterface>(HUD)");
-							if (LoadingUserWidgetTmp)
-							{
-								LoadingUserWidgetTmp->RemoveFromParent();
-							}
-							IHUDInterface::Execute_ShowPlayerGUIWidget_IF(HUD);
-							IHUDInterface::Execute_SetInputMode_IF(HUD, EInputMode::EIM_GameOnly);
-
-							*bLevelLoadedRef = false;
-						}
-						else
-						{
-							DEBUGMESSAGE("!IsInterfaceImplementedBy<IHUDInterface>(HUD)");
-						}
-					}
-					else
-					{
-						DEBUGMESSAGE("!HUD");
-					}
-				}
-				else
-				{
-					DEBUGMESSAGE("!PlayerController");
-				}
+				return;
 			}
-			else
+			if (LoadingUserWidgetTmp)
 			{
-				DEBUGMESSAGE("!GetWorld()");
+				LoadingUserWidgetTmp->RemoveFromParent();
 			}
+			HUDMT->CreatePlayerGUIUserWidget(PlayerController);
+			HUDMT->ShowPlayerGUIWidget();			
+			PlayerController->bShowMouseCursor = false;
+			FInputModeGameOnly InputModeDataGame;
+			PlayerController->SetInputMode(InputModeDataGame);
 			*bLevelLoadedRef = false;
 			GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 		}
@@ -518,12 +496,6 @@ void UGameInstanceMagicTrigger::ResetGameSettings_IF_Implementation()
 
 void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
 {
-	UWorld* World = GetWorld();
-	if (!World)
-	{
-		DEBUGMESSAGE("!World");
-	}
-
 	FTimerDelegate TmpDelegate;
 	FTimerHandle* TmpTimer = &(BeginNewGameTimer);
 	TmpDelegate.BindLambda
@@ -531,17 +503,12 @@ void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
 		[=]
 	()
 	{
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
-		if (PlayerController)
+		if (SetAndGetHUDMT())
 		{
-			AHUD* HUD = PlayerController->GetHUD();
-			if (IsInterfaceImplementedBy<IHUDInterface>(HUD))
+			if (HUDMT->CheckMenuUserWidget())
 			{
-				if (IHUDInterface::Execute_CheckMenuUserWidget_IF(HUD))
-				{
-					IHUDInterface::Execute_ShowGameMenu_IF(HUD);
-					GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
-				}
+				HUDMT->ShowGameMenu();
+				GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 			}
 		}
 	}

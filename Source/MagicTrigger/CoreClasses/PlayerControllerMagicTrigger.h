@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "MagicTrigger\Interfaces\PlayerControllerInterface.h"
+#include "MagicTrigger/Interfaces/PlayerControllerInterface.h"
 #include "PlayerControllerMagicTrigger.generated.h"
 
 /**
@@ -43,7 +43,7 @@ public:
 	 * Установка чувствительности мыши. 
 	 */
 	void SetInputRotationScale(float InMouseSensitivity);
-
+	float GetMouseSensitivity() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerControllerInterface")
 		void SetInputRotationScale_IF(float InMouseSensitivity);
 	virtual void SetInputRotationScale_IF_Implementation(float InMouseSensitivity) override;

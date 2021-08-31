@@ -7,9 +7,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MagicTrigger\Data\EnemyToBehaviorTreeStruct.h"
-#include "TargetSelectionPlugin\Public\TargetSelectionInterface.h"
-#include "MagicTrigger\Interfaces\EnemyCharacterInterface.h"
+#include "MagicTrigger/Data/EnemyToBehaviorTreeStruct.h"
+#include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
+#include "MagicTrigger/Interfaces/EnemyCharacterInterface.h"
 #include "EnemyCharacterMagicTrigger.generated.h"
 
 class UTexture2D;
