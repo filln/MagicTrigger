@@ -73,6 +73,9 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
+# Rider ignored files
+.idea/*
+
 # Cache files for the editor to use
 DerivedDataCache/*
 Content/Developers/*
