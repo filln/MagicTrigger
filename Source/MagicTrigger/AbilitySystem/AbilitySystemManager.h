@@ -70,7 +70,7 @@ public:
 	/**
 	 * Melee
 	 */
-	void UseMeleeAttack();
+	void UseMeleeAbility();
 	void StartTraceAttackLeftFoot();
 	void StartTraceAttackRightFoot();
 	void StopTraceAttackLeftFoot();
@@ -79,7 +79,7 @@ public:
 	/**
 	 * Throw
 	 */
-	void UseThrowAttack();
+	void UseThrowAbility();
 	void IncreaseCountOfThrowableItem();
 	void SetCountOfThrowableItemText();
 	void SpawnThrowableItem();
@@ -95,7 +95,7 @@ public:
 	 * SSphere
 	 */
 	void SwitchOnSSphereAbility();
-	void UseSSphereAttack();
+	void UseSSphereAbility();
 	void SpawnSSphere();
 	void SetCountOfSpheresText();
 

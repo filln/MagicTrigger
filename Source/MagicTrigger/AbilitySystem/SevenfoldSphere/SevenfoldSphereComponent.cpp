@@ -74,7 +74,7 @@ void USevenfoldSphereComponent::Use()
 	}
 	if (CountOfSpheres < 7)
 	{
-		AbilitySystemManager->UseSSphereAttack();
+		AbilitySystemManager->UseSSphereAbility();
 	}
 	if (CountOfSpheres == 7)
 	{

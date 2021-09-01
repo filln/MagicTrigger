@@ -63,7 +63,7 @@ void AAbilitySystemManager::Attack()
 	switch (CurrentAbility)
 	{
 	case ECurrentAbility::ECA_Melee:
-		UseMeleeAttack();
+		UseMeleeAbility();
 		break;
 	case ECurrentAbility::ECA_Throw:
 		ThrowComponent->Use();
@@ -139,7 +139,7 @@ APlayerController* AAbilitySystemManager::GetPlayerController() const
 	return PlayerCharacter->GetPlayerController();
 }
 
-void AAbilitySystemManager::UseMeleeAttack()
+void AAbilitySystemManager::UseMeleeAbility()
 {
 	PlayerCharacter->AnimationManagerComponent->MeleeAttackAnimation();
 }
@@ -180,7 +180,7 @@ void AAbilitySystemManager::StopTraceAttackRightFoot()
 	MeleeAttackComponent->StopAttackTimer();
 }
 
-void AAbilitySystemManager::UseThrowAttack()
+void AAbilitySystemManager::UseThrowAbility()
 {
 	PlayerCharacter->AnimationManagerComponent->ThrowAnimation();
 }
@@ -246,7 +246,7 @@ void AAbilitySystemManager::SwitchOnSSphereAbility()
 	AvaliabilityAbilities.bSFSphere = true;
 }
 
-void AAbilitySystemManager::UseSSphereAttack()
+void AAbilitySystemManager::UseSSphereAbility()
 {
 	PlayerCharacter->AnimationManagerComponent->SpawnSSphereAnimation();
 }

@@ -47,7 +47,7 @@ void UThrowComponent::Use()
 	{
 		return;
 	}
-	AbilitySystemManager->UseThrowAttack();
+	AbilitySystemManager->UseThrowAbility();
 }
 
 int UThrowComponent::GetCountOfThrowableItem() const
