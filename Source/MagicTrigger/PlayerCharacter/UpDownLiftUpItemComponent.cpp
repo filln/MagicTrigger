@@ -248,18 +248,15 @@ void UUpDownLiftUpItemComponent::DestroyLiftUpItem()
 
 AActor* UUpDownLiftUpItemComponent::FindLiftUpItem()
 {
-	AActor* LiftUpObjectTmp = nullptr;
-
-
 	if (!InterractCollision)
 	{
 		DEBUGMESSAGE("!InterractCollision");
-		return LiftUpObjectTmp;
+		return nullptr;
 	}
 	if (!LiftUpClass)
 	{
 		DEBUGMESSAGE("!LiftUpClass");
-		return LiftUpObjectTmp;
+		return nullptr;
 	}
 
 	TArray<AActor*> OverlappingActorsArr;
@@ -267,7 +264,7 @@ AActor* UUpDownLiftUpItemComponent::FindLiftUpItem()
 
 	if (!OverlappingActorsArr.Num())
 	{
-		return LiftUpObjectTmp;
+		return nullptr;
 	}
 
 	AActor* ObservedActor = PlayerCharacter->GetObservedActor();
@@ -301,7 +298,7 @@ AActor* UUpDownLiftUpItemComponent::FindLiftUpItem()
 		}
 	}
 
-	return LiftUpObjectTmp;
+	return nullptr;
 }
 
 bool UUpDownLiftUpItemComponent::TracePutDownPoint()

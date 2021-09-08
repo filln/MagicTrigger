@@ -86,7 +86,7 @@ public:
 public:
 
 	/**
-	 * LiftingItemInterface
+	 * LiftUpItemInterface
 	 */
 	virtual FName GetAttachSocket_IF_Implementation() const override;
 	virtual void SetSimulatePhysics_IF_Implementation(bool bSimulate) override;
