@@ -192,17 +192,27 @@ public:
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
 		EMovementStatus MovementStatus;
+	
+	UPROPERTY()
 	APlayerController* PlayerController;
+	UPROPERTY()
+	AHUD* HUD;
+	UPROPERTY()
+	AGameModeBase* GameMode;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerCharacterMagicTrigger")
 		AAbilitySystemManager* AbilitySystemManager;
+
+	/**
+	 *Для скриншота сохраненной игры.
+	 */
+	UPROPERTY()
+	UTextureRenderTarget2D* ScreenshotTextureTarget;
 
 private:
 	/**
 	 * Для автобега. Запускает метод AutoRunning().
 	 */
 	FTimerHandle AutoRunningTimer;
-	AHUD* HUD;
-	AGameModeBase* GameMode;
 	//Регулирует какое-либо движение: ходьба, бег, прыжок, атаку и пр.
 	bool bMoveEnable;
 

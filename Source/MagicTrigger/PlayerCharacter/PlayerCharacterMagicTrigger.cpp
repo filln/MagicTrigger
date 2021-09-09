@@ -7,7 +7,6 @@
 
 #include "PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger/AbilitySystem/AbilitySystemManager.h"
-#include "MagicTrigger/AbilitySystem/SevenfoldSphere/SevenfoldSphere.h"
 #include "MagicTrigger/PlayerCharacter/UpDownLiftUpItemComponent.h"
 #include "MagicTrigger/PlayerCharacter/AnimationManagerComponent.h"
 #include "MagicTrigger/Data/CollisionChannelsMagicTrigger.h"
@@ -24,14 +23,12 @@
 #include "MagicTrigger/Interfaces/PlayerStateInterface.h"
 #include "TargetSelectionPlugin/Public/TargetSelectionInterface.h"
 
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/TextureRenderTarget2D.h"
 
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
-#include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
@@ -907,8 +904,8 @@ UTextureRenderTarget2D* APlayerCharacterMagicTrigger::CreateScreenShot()
 		DEBUGMESSAGE("!GetWorld()");
 		return nullptr;
 	}
-	UTextureRenderTarget2D* TextureTarget = UKismetRenderingLibrary::CreateRenderTarget2D(GetWorld());
-	ScreenShotComponent->TextureTarget = TextureTarget;
+	ScreenshotTextureTarget = UKismetRenderingLibrary::CreateRenderTarget2D(GetWorld());
+	ScreenShotComponent->TextureTarget = ScreenshotTextureTarget;
 	ScreenShotComponent->CaptureScene();
 
 	return ScreenShotComponent->TextureTarget;

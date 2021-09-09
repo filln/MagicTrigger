@@ -82,7 +82,7 @@ protected:
 
 public:
 	/**
-	 *Не используется?
+	 *Загрузка списка имен сохраненных игр в массив InSavedGamesNamesList.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "GameInstanceMagicTrigger")
 		bool LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList);
@@ -131,17 +131,7 @@ public:
 	 *
 	 */
 	FName GetNameOfCurrentLevel();
-
-	///**
-	// *
-	// */
-	//UFUNCTION()
-	//	void DoAfterBeginNewGame(AHUD* InHUD);
-	///**
-	// *
-	// */
-	//UFUNCTION()
-	//	void DoAfterMainLoadGame(AHUD* InHUD, USaveGameMT* InLoadingGameTmp);
+	FString GetGamesListName() const;
 
 private:
 	/**

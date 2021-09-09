@@ -26,6 +26,7 @@ class APlayerState;
 class ACharacter;
 class UGameInstance;
 class UGameInstanceMagicTrigger;
+class USaveGameManager;
 class UMaterialInterface;
 
 /**
@@ -107,6 +108,8 @@ public:
 	UPROPERTY()
 	UGameInstanceMagicTrigger* GameInstanceMT;
 	UPROPERTY()
+	USaveGameManager* SaveGameManager;
+	UPROPERTY()
 	APlayerController* PlayerController;
 	UPROPERTY()
 	APlayerControllerMagicTrigger* PlayerControllerMT;
@@ -165,7 +168,7 @@ public:
 	 *Применить скриншот к виджету изображения. Не получится без материала-посредника
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-	void SetScreenShotToImageWidget(UTextureRenderTarget2D* InScreenShot, UImage* InImage);
+	void SetScreenShotToImageWidget(UTexture* InScreenShot, UImage* InImage);
 	/**
 	 *При выходе в меню после первого начала игры показать кнопки для сохранения и продолжения игры
 	 */
@@ -210,9 +213,16 @@ public:
 	 */
 	bool MainSaveGame(const FString& NameOfSaveGame, TArray<FString>& InGamesList);
 	void MainLoadGame(const FString& NameOfLoadGame);
+	bool MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList) const;
 	void BeginNewGame();
 	void SaveGameSettings();
+	bool LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList);
+	FString GetGamesListName() const;
 
+	/**
+	 *SaveGameManager
+	 */
+	UTextureRenderTarget2D* CreateScreenShot() const;
 	/**
 	 *PlayerController
 	 */

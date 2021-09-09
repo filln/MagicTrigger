@@ -3,7 +3,6 @@
 
 #include "ListOfSavedGamesUserWidget.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
-#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
 #include "MagicTrigger/UI/SaveGame/SavedGameUserWidget.h"
 #include "MagicTrigger/Data/DebugMessage.h"
 #include "Components/ScrollBox.h"
@@ -50,15 +49,8 @@ void UListOfSavedGamesUserWidget::Refresh()
 		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance)");
-		SetVisibility(ESlateVisibility::Collapsed);
-		return;
-	}
-
 	TArray<FString> GamesList;
-	bool bLoaded = IGameInstanceInterface::Execute_LoadGamesList_IF(HUDMagicTrigger->GameInstance, GamesList);
+	bool bLoaded = HUDMagicTrigger->LoadGamesNamesList(GamesList); 
 	if (!bLoaded)
 	{
 		DEBUGMESSAGE("!bLoaded");
@@ -79,6 +71,10 @@ void UListOfSavedGamesUserWidget::RefreshWithoutLoadData(const TArray<FString>& 
 		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
+	if (HUDMagicTrigger->LastSavedGame)
+	{
+		HUDMagicTrigger->LastSavedGame = nullptr;
+	}
 	if (!ListOfSavedGamesScrollBox)
 	{
 		DEBUGMESSAGE("!ListOfSavedGamesScrollBox");
@@ -87,17 +83,13 @@ void UListOfSavedGamesUserWidget::RefreshWithoutLoadData(const TArray<FString>& 
 	}
 	if (!InGamesList.Num())
 	{
-		DEBUGMESSAGE("!InGamesList.Num()");
+		//DEBUGMESSAGE("!InGamesList.Num()");
 		SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 	//////////////////////////////////////////////////////////////////////////
 
 	ListOfSavedGamesScrollBox->ClearChildren();
-	if (HUDMagicTrigger->LastSavedGame)
-	{
-		HUDMagicTrigger->LastSavedGame = nullptr;
-	}
 
 	ScreenShotImage->SetVisibility(ESlateVisibility::Hidden);
 

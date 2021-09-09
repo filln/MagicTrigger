@@ -8,7 +8,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MagicTrigger/Data/GameSettingsStruct.h"
 #include "SaveGameManager.generated.h"
 
 class UGameInstanceMagicTrigger;
@@ -34,11 +33,21 @@ public:
 	 * Variables
 	 */
 public:
+	UPROPERTY()
 	UGameInstanceMagicTrigger* GameInstance;
+	UPROPERTY()
 	APlayerCharacterMagicTrigger* PlayerCharacter;
+	UPROPERTY()
 	APlayerStateMagicTrigger* PlayerState;
+	UPROPERTY()
 	APlayerControllerMagicTrigger* PlayerController;
+	UPROPERTY()
 	AHUDMagicTrigger* HUD;
+	/**
+	*Для скриншота сохраненной игры.
+	*/
+	UPROPERTY()
+	UTextureRenderTarget2D* ScreenshotTextureTarget;
 
 private:
 	float AllTimersDeltaTime;
@@ -62,7 +71,7 @@ private:
 	 */
 public:
 	void LoadAll(USaveGameMT* InLoadingGame);
-	void SaveAll(USaveGameMT* InSavingGame);
+	void SaveAll(USaveGameMT* InSavingGame, const FString& InNameOfSavingGame);
 	/**
 	 * Перенос настроек из сохранения в PlayerController и виджеты. Вызывается, когда заходим в игру.
 	 */
@@ -75,9 +84,15 @@ public:
 	 *Сброс настроек к дефолтным. переносятся все настройки из структуры FGameSettingsStruct в виджеты и PlayerController, применение настроек.
 	 */
 	void ResetGameSettings();
+	
+	UTexture2D* LoadScreenshot(const FString& InNameOfSavedGame);
+	void DeleteSavedScreenshot(const FString& InSavedGameName);
 
-	void SaveLevelData(USaveGameMT* InSavingGame);
-
+	/**
+	 *PlayerCharacter
+	 */
+	UTextureRenderTarget2D* CreateScreenShot() const;
+	
 private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	/**
@@ -89,8 +104,13 @@ private:
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-
+private:
 	void SavePlayerCharacter(USaveGameMT* InSavingGame);
 	void SavePlayerState(USaveGameMT* InSavingGame);
-
+/**
+ *Save level's data and screenshot
+ */
+	void SaveLevelData(USaveGameMT* InSavingGame, const FString& InNameOfSavingGame);
+	FString GeneratePathToScreenshot(const FString& InNameOfSavingGame);
+	void SaveScreenshot(UTextureRenderTarget2D* InTextureRenderTarget, const FString& InNameOfSavingGame);	
 };

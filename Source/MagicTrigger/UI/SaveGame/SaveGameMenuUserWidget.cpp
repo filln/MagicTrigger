@@ -7,14 +7,10 @@
 #include "MagicTrigger/UI/SaveGame/ListOfSavedGamesUserWidget.h"
 #include "MagicTrigger/UI/MenuUserWidget.h"
 #include "MagicTrigger/UI/SaveGame/SavedGameUserWidget.h"
-#include "MagicTrigger/Interfaces/PlayerCharacterInterface.h"
-#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
 
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
-#include "GameFramework/Character.h"
-
-class UTextureRenderTarget2D;
+#include "Engine/TextureRenderTarget2D.h"
 
 void USaveGameMenuUserWidget::Prepare()
 {
@@ -29,13 +25,7 @@ void USaveGameMenuUserWidget::Prepare()
 		return;
 	}
 	ListOfSavedGamesUserWidget->Refresh();
-	if (!IsInterfaceImplementedBy<IPlayerCharacterInterface>(HUDMagicTrigger->PlayerCharacter))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerCharacterInterface>(HUDMagicTrigger->PlayerCharacter)");
-		return;
-	}
-
-	UTextureRenderTarget2D* ScreenShot = IPlayerCharacterInterface::Execute_CreateScreenShot_IF(HUDMagicTrigger->PlayerCharacter);
+	UTextureRenderTarget2D* ScreenShot = HUDMagicTrigger->CreateScreenShot();
 	HUDMagicTrigger->SetScreenShotToImageWidget(ScreenShot, ScreenShotOfCurrentSaveGame);
 	NameOfCurrentSaveGame->SetText(HUDMagicTrigger->CurrentDateTime);
 }
@@ -63,7 +53,7 @@ void USaveGameMenuUserWidget::OnClickedSaveButton()
 		return;
 	}
 
-	FString InNameOfSaveGame = NameOfCurrentSaveGame->GetText().ToString();
+	const FString InNameOfSaveGame = NameOfCurrentSaveGame->GetText().ToString();
 	TArray<FString> GamesList;
 	if (HUDMagicTrigger->MainSaveGame(InNameOfSaveGame, GamesList))
 	{
@@ -73,20 +63,14 @@ void USaveGameMenuUserWidget::OnClickedSaveButton()
 
 void USaveGameMenuUserWidget::OnClickedDeleteSaveButton()
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance)");
-		return;
-	}
-
 	if (!HUDMagicTrigger->LastSavedGame)
 	{
 		DEBUGMESSAGE("!HUDMagicTrigger->LastSavedGame");
 		return;
 	}
-	FString InNameOfDeleteGame = HUDMagicTrigger->LastSavedGame->NameOfSavedGame->GetText().ToString();
+	const FString InNameOfDeleteGame = HUDMagicTrigger->LastSavedGame->NameOfSavedGame->GetText().ToString();
 	TArray<FString> GamesList;
-	if (IGameInstanceInterface::Execute_MainDeleteGame_IF(HUDMagicTrigger->GameInstance, InNameOfDeleteGame, GamesList))
+	if (HUDMagicTrigger->MainDeleteGame(InNameOfDeleteGame, GamesList))
 	{
 		ListOfSavedGamesUserWidget->RefreshWithoutLoadData(GamesList);
 	}

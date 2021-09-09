@@ -54,7 +54,7 @@ bool UGameInstanceMagicTrigger::SaveCurrentGame(const FString& NameOfSaveGame)
 		DEBUGMESSAGE("!SaveGameTmp");
 		return false;
 	}
-	SaveGameManager->SaveAll(SaveGameTmp);
+	SaveGameManager->SaveAll(SaveGameTmp, NameOfSaveGame);
 
 	bool bGameSaved = UGameplayStatics::SaveGameToSlot(SaveGameTmp, NameOfSaveGame, 0);
 
@@ -144,7 +144,7 @@ bool UGameInstanceMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGames
 {
 	if (!UGameplayStatics::DoesSaveGameExist(GamesListName, 0))
 	{
-		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(GamesListName, 0)");
+		//DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(GamesListName, 0)");
 		return false;
 	}
 
@@ -152,12 +152,12 @@ bool UGameInstanceMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGames
 	UListOfSavedGames* ListTmp = Cast<UListOfSavedGames>(SaveGameTmp);
 	if (!ListTmp)
 	{
-		DEBUGMESSAGE("!ListTmp");
+		//DEBUGMESSAGE("!ListTmp");
 		return false;
 	}
 	if (!(ListTmp->ListOfSavedGames).Num())
 	{
-		DEBUGMESSAGE("!(ListTmp->ListOfSavedGames).Num()");
+		//DEBUGMESSAGE("!(ListTmp->ListOfSavedGames).Num()");
 		return false;
 	}
 	InSavedGamesNamesList = ListTmp->ListOfSavedGames;
@@ -194,6 +194,11 @@ FName UGameInstanceMagicTrigger::GetNameOfCurrentLevel()
 	return FName(*LevelNameTmp);
 }
 
+FString UGameInstanceMagicTrigger::GetGamesListName() const
+{
+	return GamesListName;
+}
+
 FString UGameInstanceMagicTrigger::ReplaceSpecSymbols(const FString& NameOfSaveGame)
 {
 	FString NameOfSaveGameTmp = NameOfSaveGame;
@@ -223,17 +228,20 @@ FString UGameInstanceMagicTrigger::ReplaceSpecSymbols(const FString& NameOfSaveG
 
 bool UGameInstanceMagicTrigger::DeleteSaveGame(const FString& NameOfDeleteGame)
 {
+	bool bDeleted = false;
 	if (!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0))
 	{
 		DEBUGMESSAGE("!UGameplayStatics::DoesSaveGameExist(NameOfDeleteGame, 0)");
-		return false;
+		return bDeleted;
 	}
 
-	bool bDeleted = UGameplayStatics::DeleteGameInSlot(NameOfDeleteGame, 0);
+	bDeleted = UGameplayStatics::DeleteGameInSlot(NameOfDeleteGame, 0);
 	if (!bDeleted)
 	{
 		DEBUGMESSAGE("!bDeleted");
+		return bDeleted;
 	}
+	SaveGameManager->DeleteSavedScreenshot(NameOfDeleteGame);
 	return bDeleted;
 }
 

@@ -4,8 +4,6 @@
 #include "HUDMagicTrigger.h"
 #include "MagicTrigger/Data/DebugMessage.h"
 
-#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
-#include "MagicTrigger/SaveGame/SaveGameMT.h"
 #include "MagicTrigger/SaveGame/SaveGameManager.h"
 
 #include "MagicTrigger/UI/PlayerGUIUserWidget.h"
@@ -30,9 +28,7 @@
 #include "Components/Button.h"
 #include "Components/Spacer.h"
 #include "Components/Image.h"	//SwitchSavedGames()
-#include "Engine/TextureRenderTarget2D.h"
-
-
+#include "Engine/Texture2D.h"
 
 AHUDMagicTrigger::AHUDMagicTrigger()
 {
@@ -85,7 +81,8 @@ void AHUDMagicTrigger::DoBeginPlay_IF_Implementation()
 	GameInstanceMT = Cast<UGameInstanceMagicTrigger>(GameInstance);
 	if (GameInstanceMT)
 	{
-		GameInstanceMT->SaveGameManager->HUD = this;
+		SaveGameManager = GameInstanceMT->SaveGameManager;
+		SaveGameManager->HUD = this;
 	}
 	else
 	{
@@ -246,11 +243,6 @@ FText AHUDMagicTrigger::GetCurrentDateTime()
 
 void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSavedGameUserWidget)
 {
-	if (!IsInterfaceImplementedBy<IGameInstanceInterface>(GameInstance))
-	{
-		DEBUGMESSAGE("!IsInterfaceImplementedBy<IGameInstanceInterface>(GameInstance)");
-		return;
-	}
 	//активация поля сейва.
 	if (bCheck)
 	{
@@ -263,28 +255,22 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 		} 
 		//Запомнить новое поле.
 		LastSavedGame = InSavedGameUserWidget;
-		//Загрузка и показ скриншота игры. Ссылка на скриншот из сохраненной игры невалидна после перезапуска игры
-		FText TextOfLoadingGame = InSavedGameUserWidget->NameOfSavedGame->GetText();
-		FString StringOfLoadingGame = TextOfLoadingGame.ToString();
+		//Загрузка и показ скриншота игры.
+		FText TextOfSavedGame = InSavedGameUserWidget->NameOfSavedGame->GetText();
+		FString StringOfSavedGame = TextOfSavedGame.ToString();
 		//DEBUGSTRING(StringOfLoadingGame);
-		USaveGameMT* SaveGameMT = IGameInstanceInterface::Execute_LoadGamesData_IF(GameInstance, StringOfLoadingGame);
-		if (!SaveGameMT)
-		{
-			DEBUGMESSAGE("!SaveGameMT");
-			return;
-		}
-		if (!SaveGameMT->LevelSaveGameStruct.ScreenShot)
-		{
-			DEBUGMESSAGE("!SaveGameMT->LevelSaveGameStruct.ScreenShot");
-			return;
-		}
-
 		UImage* SaveGameScreenShotImage = SaveGameMenuUserWidget->ListOfSavedGamesUserWidget->ScreenShotImage;
-		SetScreenShotToImageWidget(SaveGameMT->LevelSaveGameStruct.ScreenShot, SaveGameScreenShotImage);
+		UTexture2D* ScreenshotTmp = SaveGameManager->LoadScreenshot(StringOfSavedGame);
+		if (!ScreenshotTmp)
+		{
+			DEBUGMESSAGE("!ScreenshotTmp");
+			return;
+		}
+		SetScreenShotToImageWidget(ScreenshotTmp, SaveGameScreenShotImage);
 		SaveGameScreenShotImage->SetVisibility(ESlateVisibility::Visible);
 
 		UImage* LoadGameScreenShotImage = LoadGameMenuUserWidget->ListOfSavedGamesUserWidget->ScreenShotImage;
-		SetScreenShotToImageWidget(SaveGameMT->LevelSaveGameStruct.ScreenShot, LoadGameScreenShotImage);
+		SetScreenShotToImageWidget(ScreenshotTmp, LoadGameScreenShotImage);
 		LoadGameScreenShotImage->SetVisibility(ESlateVisibility::Visible);
 	}
 	//деактивация поля сейва.
@@ -304,7 +290,7 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 	}
 }
 
-void AHUDMagicTrigger::SetScreenShotToImageWidget(UTextureRenderTarget2D* InScreenShot, UImage* InImage)
+void AHUDMagicTrigger::SetScreenShotToImageWidget(UTexture* InScreenShot, UImage* InImage)
 {
 	UMaterialInstanceDynamic* ScreenShotMaterialDynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), ScreenShotMaterial); 
 	ScreenShotMaterialDynamic->SetTextureParameterValue(FName(TEXT("Texture")), InScreenShot);
@@ -386,6 +372,11 @@ void AHUDMagicTrigger::MainLoadGame(const FString& NameOfLoadGame)
 	GameInstanceMT->MainLoadGame(NameOfLoadGame);
 }
 
+bool AHUDMagicTrigger::MainDeleteGame(const FString& NameOfDeleteGame, TArray<FString>& InGamesList) const
+{
+	return GameInstanceMT->MainDeleteGame(NameOfDeleteGame, InGamesList);
+}
+
 void AHUDMagicTrigger::BeginNewGame()
 {
 	GameInstanceMT->BeginNewGame();
@@ -394,6 +385,21 @@ void AHUDMagicTrigger::BeginNewGame()
 void AHUDMagicTrigger::SaveGameSettings()
 {
 	GameInstanceMT->SaveGameSettings();
+}
+
+bool AHUDMagicTrigger::LoadGamesNamesList(TArray<FString>& InSavedGamesNamesList)
+{
+	return GameInstanceMT->LoadGamesNamesList(InSavedGamesNamesList);
+}
+
+FString AHUDMagicTrigger::GetGamesListName() const
+{
+	return GameInstanceMT->GetGamesListName();
+}
+
+UTextureRenderTarget2D* AHUDMagicTrigger::CreateScreenShot() const
+{
+	return SaveGameManager->CreateScreenShot();
 }
 
 float AHUDMagicTrigger::GetMouseSensitivity() const

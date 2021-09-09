@@ -7,8 +7,6 @@
 
 #include "LevelSaveGameStruct.generated.h"
 
-class UTextureRenderTarget2D;
-
 USTRUCT(BlueprintType)
 struct FLevelSaveGameStruct
 {
@@ -17,5 +15,5 @@ struct FLevelSaveGameStruct
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSaveGameStruct")
 		FName LevelName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSaveGameStruct")
-		UTextureRenderTarget2D* ScreenShot;
+		FString NameOfSavedGame;
 };

@@ -2,6 +2,8 @@
 
 
 #include "SaveGameManager.h"
+
+#include "ImageUtils.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
 #include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
 #include "MagicTrigger/CoreClasses/PlayerStateMagicTrigger.h"
@@ -12,6 +14,8 @@
 #include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger/UI/SaveGame/LoadingUserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Serialization/BufferArchive.h"
+#include "Engine/TextureRenderTarget2D.h"
 
 USaveGameManager::USaveGameManager()
 {
@@ -53,13 +57,12 @@ void USaveGameManager::LoadAll(USaveGameMT* InLoadingGame)
 
 }
 
-void USaveGameManager::SaveAll(USaveGameMT* InSavingGame)
+void USaveGameManager::SaveAll(USaveGameMT* InSavingGame, const FString& InNameOfSavingGame)
 {
 	SavePlayerCharacter(InSavingGame);
 	SavePlayerState(InSavingGame);
-	SaveLevelData(InSavingGame);
+	SaveLevelData(InSavingGame, InNameOfSavingGame);
 }
-
 
 void USaveGameManager::CheckHUD()
 {
@@ -204,7 +207,6 @@ void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
-
 void USaveGameManager::SaveGameSettings(UGameSettingsSaveGameMT* InSavingGame)
 {
 	if (!PlayerController)
@@ -251,8 +253,111 @@ void USaveGameManager::ResetGameSettings()
 	GameInstance->GetWorld()->GetTimerManager().SetTimer(LoadSettingsTimer, TmpDelegate, AllTimersDeltaTime, true);
 }
 
-void USaveGameManager::SaveLevelData(USaveGameMT* InSavingGame)
+void USaveGameManager::SaveLevelData(USaveGameMT* InSavingGame, const FString& InNameOfSavingGame)
 {
 	InSavingGame->LevelSaveGameStruct.LevelName = GameInstance->GetNameOfCurrentLevel();
-	InSavingGame->LevelSaveGameStruct.ScreenShot = PlayerCharacter->CreateScreenShot();
+	InSavingGame->LevelSaveGameStruct.NameOfSavedGame = InNameOfSavingGame;
+	ScreenshotTextureTarget = CreateScreenShot();
+	SaveScreenshot(ScreenshotTextureTarget, InNameOfSavingGame);
+}
+
+FString USaveGameManager::GeneratePathToScreenshot(const FString& InNameOfSavingGame)
+{
+	return FPaths::ProjectSavedDir() + TEXT("SaveGames/") + InNameOfSavingGame + TEXT(".exr");
+	//FPaths::ProjectSavedDir() - в c:\Users\YourName\AppData\Local\YourUE4Project\Saved\SaveGames\
+	//FPaths::ProjectDir() - в папке с игрой.
+	//FPaths::GameContentDir()
+}
+
+UTexture2D* USaveGameManager::LoadScreenshot(const FString& InNameOfSavedGame)
+{
+	const FString PathToScreenshot = GeneratePathToScreenshot(InNameOfSavedGame);
+	if (!FPaths::FileExists(PathToScreenshot))
+	{
+		DEBUGMESSAGE("!FPaths::FileExists(SaveFile)");
+		return nullptr;
+	}
+	return FImageUtils::ImportFileAsTexture2D(PathToScreenshot);
+}
+
+void USaveGameManager::SaveScreenshot(UTextureRenderTarget2D* InTextureRenderTarget, const FString& InNameOfSavingGame)
+{
+	const FString PathToScreenshot = GeneratePathToScreenshot(InNameOfSavingGame);
+////////////////////////////////////////////////////////////////////////////////////
+	FText PathError;
+	FPaths::ValidatePath(PathToScreenshot, &PathError);
+
+	if (!InTextureRenderTarget)
+	{
+		//InTextureRenderTarget must be non-null
+		DEBUGMESSAGE("!InTextureRenderTarget");
+		return;
+	}
+	if (!InTextureRenderTarget->Resource)
+	{
+		//render target has been released
+		DEBUGMESSAGE("!InTextureRenderTarget->Resource");
+		return;
+	}
+	if (!PathError.IsEmpty())
+	{
+		//Invalid file path provided
+		DEBUGMESSAGE("!PathError.IsEmpty()");
+		return;
+	}
+	if (InNameOfSavingGame.IsEmpty())
+	{
+		//FileName must be non-empty
+		DEBUGMESSAGE("InNameOfSavingGame.IsEmpty()");
+		return;
+	}
+	//////////////////////////////////////////////////////////////////////////////
+	// const FImageWriteOptions ImageWriteOptions = FImageWriteOptions();
+	// UImageWriteBlueprintLibrary::ExportToDisk(InTextureRenderTarget, PathToScreenshot, ImageWriteOptions);
+	
+	FArchive* Ar = IFileManager::Get().CreateFileWriter(*PathToScreenshot);
+	
+	if(!Ar)
+	{
+		//FileWrite failed to create
+		DEBUGMESSAGE("!Ar");
+		return;
+	}
+	FBufferArchive Buffer;
+	const bool bSuccess = FImageUtils::ExportRenderTarget2DAsEXR(InTextureRenderTarget, Buffer);
+	 if (!Buffer.Num())
+	 {
+	 	DEBUGMESSAGE("!Buffer.Num()");
+	 }
+	if (bSuccess)
+	{
+		Ar->Serialize(const_cast<uint8*>(Buffer.GetData()), Buffer.Num());
+	}
+	else
+	{
+		DEBUGMESSAGE("!bSuccess");
+	}
+	
+	delete Ar;
+	/**
+	 *
+	*I think ExportRenderTarget2DAsPNG is exporting only HDR pictures whih means only EXR format.
+	You can use this which makes the write operation async and gives more feedback on what texture
+	format matches what export type: UImageWriteBlueprintLibrary::ExportToDisk | Unreal Engine Documentation
+
+	To verify but I think Export PNG is only possible with this format ETextureRenderTargetFormat::RTF_RGBA16f,
+	which means having the render target capturing FinalColor_LDR, other ones will need to be exported in EXR.
+	Or if you need some specific format in PNG you need to convert it manually.
+	 */
+}
+
+void USaveGameManager::DeleteSavedScreenshot(const FString& InSavedGameName)
+{
+	const FString PathToScreenshot = GeneratePathToScreenshot(InSavedGameName);
+	IFileManager::Get().Delete(*PathToScreenshot, true, false, true);
+}
+
+UTextureRenderTarget2D* USaveGameManager::CreateScreenShot() const
+{
+	return PlayerCharacter->CreateScreenShot();
 }

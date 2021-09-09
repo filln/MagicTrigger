@@ -3,7 +3,6 @@
 
 #include "MenuUserWidget.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
-#include "MagicTrigger/Interfaces/GameInstanceInterface.h"
 #include "MagicTrigger/Data/DebugMessage.h"
 #include "MagicTrigger/UI/Settings/SettingsMenuUserWidget.h"
 #include "MagicTrigger/UI/SaveGame/SaveGameMenuUserWidget.h"
@@ -25,25 +24,24 @@ void UMenuUserWidget::NativeOnInitialized()
 void UMenuUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	//Проверить, есть ли сохраненные игры. Если нет, то скрыть кнопку загрузки игры.
-	if (HUDMagicTrigger)
+	//Проверить, есть ли сохраненные игры (т.е. список имен сохраненных игр). Если нет, то скрыть кнопку загрузки игры.
+	if (!HUDMagicTrigger)
 	{
-		if (IsInterfaceImplementedBy<IGameInstanceInterface>(HUDMagicTrigger->GameInstance))
-		{
-			bool bVisible = UGameplayStatics::DoesSaveGameExist(IGameInstanceInterface::Execute_GetGamesListName_IF(HUDMagicTrigger->GameInstance), 0);
-			if (bVisible)
-			{
-				LoadGameMenuButton->SetVisibility(ESlateVisibility::Visible);
-				SpacerLoad->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			}
-			else
-			{
-				LoadGameMenuButton->SetVisibility(ESlateVisibility::Collapsed);
-				SpacerLoad->SetVisibility(ESlateVisibility::Collapsed);
-			}
-		}
+		DEBUGMESSAGE("!HUDMagicTrigger");
+		return;
 	}
-	//DEBUGMESSAGE("NativeConstruct");
+	TArray<FString> GamesList;
+	const bool bGamesListNameExist = HUDMagicTrigger->LoadGamesNamesList(GamesList); 
+	if (bGamesListNameExist)
+	{
+		LoadGameMenuButton->SetVisibility(ESlateVisibility::Visible);
+		SpacerLoad->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		LoadGameMenuButton->SetVisibility(ESlateVisibility::Collapsed);
+		SpacerLoad->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UMenuUserWidget::OnPressedResumeButton()
