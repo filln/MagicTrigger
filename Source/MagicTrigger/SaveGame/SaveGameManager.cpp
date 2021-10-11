@@ -44,7 +44,7 @@ void USaveGameManager::LoadAll(USaveGameMT* InLoadingGame)
 				GameInstanceLoc->LoadingUserWidget->RemoveFromParent();
 			}
 			HUDLoc->ShowPlayerGUIWidget();
-			HUDLoc->SetInputMode(EInputMode::EIM_GameOnly);
+			HUDLoc->SetInputMode(EInputMode::EIM_GameOnly, nullptr);
 			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);			
 		}
 	}
@@ -199,7 +199,7 @@ void USaveGameManager::LoadGameSettings(UGameSettingsSaveGameMT* InLoadingGame)
 	{
 		if (*PlayerControllerLoc)
 		{
-			(*PlayerControllerLoc)->SetInputRotationScale(InLoadingGame->MouseSensitivity);
+			(*PlayerControllerLoc)->SetMouseSensitivity(InLoadingGame->MouseSensitivity);
 			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 		}
 	}
@@ -245,7 +245,7 @@ void USaveGameManager::ResetGameSettings()
 	{
 		if (*PlayerControllerLoc)
 		{
-			(*PlayerControllerLoc)->SetInputRotationScale(GameInstanceLoc->GameSettingsStruct.MouseSensitivity);
+			(*PlayerControllerLoc)->SetMouseSensitivity(GameInstanceLoc->GameSettingsStruct.MouseSensitivity);
 			GameInstanceLoc->GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 		}
 	}

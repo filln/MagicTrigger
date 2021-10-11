@@ -10,6 +10,7 @@
 #include "MagicTrigger/Interfaces/OwnerTargetSelectionInterface.h"
 #include "MagicTrigger/Interfaces/PlayerCharacterInterface.h"
 #include "MagicTrigger/Data/MovementStatusEnum.h"
+#include "MagicTrigger/Data/InputSettingsStruct.h"
 #include "InputCoreTypes.h"
 #include "PlayerCharacterMagicTrigger.generated.h"
 
@@ -27,6 +28,7 @@ class USceneCaptureComponent2D;
 class UCameraComponent;
 class USpringArmComponent;
 class APlayerController;
+class APlayerControllerMagicTrigger;
 class AHUD;
 class AGameModeBase;
 class AAbilitySystemManager;
@@ -196,6 +198,8 @@ public:
 	UPROPERTY()
 	APlayerController* PlayerController;
 	UPROPERTY()
+	APlayerControllerMagicTrigger* PlayerControllerMT;
+	UPROPERTY()
 	AHUD* HUD;
 	UPROPERTY()
 	AGameModeBase* GameMode;
@@ -216,6 +220,7 @@ private:
 	//Регулирует какое-либо движение: ходьба, бег, прыжок, атаку и пр.
 	bool bMoveEnable;
 
+	FInputSettingsStruct DefaultInputSettingsStruct;
 	/**
 	 * Methods
 	 */

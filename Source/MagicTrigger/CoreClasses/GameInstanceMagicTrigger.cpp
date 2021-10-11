@@ -13,7 +13,6 @@
 #include "MagicTrigger/UI/SaveGame/LoadingUserWidget.h"
 
 #include "GameFramework/PlayerController.h"
-#include "GameFramework/HUD.h"
 
 UGameInstanceMagicTrigger::UGameInstanceMagicTrigger()
 {
@@ -515,7 +514,7 @@ void UGameInstanceMagicTrigger::ShowGameMenu_IF_Implementation()
 		{
 			if (HUDMT->CheckMenuUserWidget())
 			{
-				HUDMT->ShowGameMenu();
+				HUDMT->ShowGameMenuAfterLaunchGame();
 				GetWorld()->GetTimerManager().ClearTimer(*TmpTimer);
 			}
 		}

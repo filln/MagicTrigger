@@ -32,6 +32,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, SaveGame, Category = "PlayerControllerMagicTrigger")
 		float MouseSensitivity;
 
+	
 	/**
 	 * Methods
 	 */
@@ -42,12 +43,13 @@ public:
 	/**
 	 * Установка чувствительности мыши. 
 	 */
-	void SetInputRotationScale(float InMouseSensitivity);
+	void SetMouseSensitivity(float InMouseSensitivity);
 	float GetMouseSensitivity() const;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerControllerInterface")
-		void SetInputRotationScale_IF(float InMouseSensitivity);
-	virtual void SetInputRotationScale_IF_Implementation(float InMouseSensitivity) override;
+		void SetMouseSensitivity_IF(float InMouseSensitivity);
+	virtual void SetMouseSensitivity_IF_Implementation(float InMouseSensitivity) override;
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerControllerInterface")
 		float GetMouseSensitivity_IF();
 	virtual float GetMouseSensitivity_IF_Implementation() override;
+	void SetInputRotationScale(float InInputPitchScale, float InInputYawScale, float InInputRollScale);
 };

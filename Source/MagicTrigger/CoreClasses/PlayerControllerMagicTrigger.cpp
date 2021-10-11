@@ -27,7 +27,8 @@ APlayerControllerMagicTrigger::APlayerControllerMagicTrigger()
 void APlayerControllerMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
+	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(
+		UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
 		if (GameInstance->SaveGameManager)
@@ -46,13 +47,12 @@ void APlayerControllerMagicTrigger::BeginPlay()
 	}
 }
 
-void APlayerControllerMagicTrigger::SetInputRotationScale(float InMouseSensitivity)
+void APlayerControllerMagicTrigger::SetMouseSensitivity(float InMouseSensitivity)
 {
 	MouseSensitivity = InMouseSensitivity;
 	InputPitchScale = InitialInputPitchScale * MouseSensitivity;
 	InputYawScale = InitialInputYawScale * MouseSensitivity;
 	InputRollScale = InitialInputRollScale * MouseSensitivity;
-
 }
 
 float APlayerControllerMagicTrigger::GetMouseSensitivity() const
@@ -60,12 +60,19 @@ float APlayerControllerMagicTrigger::GetMouseSensitivity() const
 	return MouseSensitivity;
 }
 
-void APlayerControllerMagicTrigger::SetInputRotationScale_IF_Implementation(float InMouseSensitivity)
+void APlayerControllerMagicTrigger::SetMouseSensitivity_IF_Implementation(float InMouseSensitivity)
 {
-	SetInputRotationScale(InMouseSensitivity);
+	SetMouseSensitivity(InMouseSensitivity);
 }
 
 float APlayerControllerMagicTrigger::GetMouseSensitivity_IF_Implementation()
 {
 	return GetMouseSensitivity();
+}
+
+void APlayerControllerMagicTrigger::SetInputRotationScale(float InInputPitchScale, float InInputYawScale, float InInputRollScale)
+{
+	InputPitchScale = InInputPitchScale;
+	InputYawScale = InInputYawScale;
+	InputRollScale = InInputRollScale;
 }

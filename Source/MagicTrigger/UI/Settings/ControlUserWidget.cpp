@@ -50,9 +50,9 @@ void UControlUserWidget::OnValueChangedMouseSensSlider(float Value)
 		//DEBUGMESSAGE("!HUDMagicTrigger");
 		return;
 	}
-
+	//DEBUGMESSAGE("OnValueChangedMouseSensSlider");
 	MouseSensitivity = Value * MouseSensSliderMultiplier + MouseSensSliderAddend;
-	HUDMagicTrigger->SetInputRotationScale(MouseSensitivity);
+	HUDMagicTrigger->SetMouseSensitivity(MouseSensitivity);
 	MouseSensTextBlock2->SetText(ConvertMouseSensToText());
 }
 

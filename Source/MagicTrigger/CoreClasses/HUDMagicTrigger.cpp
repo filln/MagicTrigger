@@ -65,7 +65,6 @@ void AHUDMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	StartBeginPlayTimer_IF_Implementation();
-
 }
 
 void AHUDMagicTrigger::DoBeginPlay_IF_Implementation()
@@ -114,7 +113,6 @@ void AHUDMagicTrigger::CreateWidgets()
 
 	ControlUserWidget = CreateWidget<UControlUserWidget>(PlayerController, ControlUserWidgetClass, FName(TEXT("ControlUserWidget")));
 	ControlUserWidget->HUDMagicTrigger = this;
-
 }
 
 void AHUDMagicTrigger::SetShowWidget(bool bShow, UUserWidget* InUserWidget, int ZOrder)
@@ -133,11 +131,22 @@ void AHUDMagicTrigger::SetShowWidget(bool bShow, UUserWidget* InUserWidget, int 
 		{
 			InUserWidget->AddToViewport(ZOrder);
 		}
-
 	}
 	else
 	{
 		InUserWidget->RemoveFromViewport();
+	}
+}
+
+void AHUDMagicTrigger::SetVisibilityWidget(UUserWidget* InUserWidget, bool bVisible)
+{
+	if (bVisible)
+	{
+		InUserWidget->Visibility = ESlateVisibility::Visible;
+	}
+	else
+	{
+		InUserWidget->Visibility = ESlateVisibility::Hidden;
 	}
 }
 
@@ -154,7 +163,7 @@ void AHUDMagicTrigger::SetPauseGame(bool bPause, UUserWidget* TurnOffWidget)
 			CurrentDateTime = GetCurrentDateTime();
 			SetVisibleToButtons();
 			SetShowWidget(true, MenuUserWidget, 1);
-			SetInputMode(EInputMode::EIM_UIOnly);
+			SetInputMode(EInputMode::EIM_UIOnly, nullptr);
 		}
 	}
 	else
@@ -164,7 +173,7 @@ void AHUDMagicTrigger::SetPauseGame(bool bPause, UUserWidget* TurnOffWidget)
 			PlayerController->SetPause(false);
 		}
 		SetShowWidget(false, TurnOffWidget, 0);
-		SetInputMode(EInputMode::EIM_GameOnly);
+		SetInputMode(EInputMode::EIM_GameOnly, nullptr);
 	}
 }
 
@@ -185,7 +194,7 @@ void AHUDMagicTrigger::SetShowInteractionWidget(bool bShow, FText InInteractionT
 	}
 }
 
-void AHUDMagicTrigger::SetInputMode(EInputMode InInputMode)
+void AHUDMagicTrigger::SetInputMode(EInputMode InInputMode, UUserWidget* InWidgetToFocus)
 {
 	if (!PlayerController)
 	{
@@ -193,26 +202,38 @@ void AHUDMagicTrigger::SetInputMode(EInputMode InInputMode)
 		if (!PlayerController)
 		{
 			DEBUGMESSAGE("!PlayerController");
-        	return;	
+			return;
 		}
 	}
 	switch (InInputMode)
 	{
 	case EInputMode::EIM_UIOnly:
-	{
-		PlayerController->bShowMouseCursor = true;
-		FInputModeUIOnly InputModeDataUI;
-		InputModeDataUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		PlayerController->SetInputMode(InputModeDataUI);
-	}
-	break;
+		{
+			PlayerController->bShowMouseCursor = true;
+			FInputModeUIOnly InputModeDataUI;
+			InputModeDataUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PlayerController->SetInputMode(InputModeDataUI);
+		}
+		break;
 	case EInputMode::EIM_GameOnly:
-	{
-		PlayerController->bShowMouseCursor = false;
-		FInputModeGameOnly InputModeDataGame;
-		PlayerController->SetInputMode(InputModeDataGame);
-	}
-	break;
+		{
+			PlayerController->bShowMouseCursor = false;
+			FInputModeGameOnly InputModeDataGame;
+			PlayerController->SetInputMode(InputModeDataGame);
+		}
+		break;
+	case EInputMode::EIM_GameAndUI:
+		{
+			PlayerController->bShowMouseCursor = true;
+			FInputModeGameAndUI InputModeDataGameAndUI;
+			InputModeDataGameAndUI.SetWidgetToFocus(InWidgetToFocus->TakeWidget());
+			InputModeDataGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			InputModeDataGameAndUI.SetHideCursorDuringCapture(false);
+			PlayerController->SetInputMode(InputModeDataGameAndUI);
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -251,8 +272,7 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 		{
 			//Сделать предыдущее поле сейва невыбранным.
 			LastSavedGame->SavedGameCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
-			
-		} 
+		}
 		//Запомнить новое поле.
 		LastSavedGame = InSavedGameUserWidget;
 		//Загрузка и показ скриншота игры.
@@ -273,7 +293,7 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 		SetScreenShotToImageWidget(ScreenshotTmp, LoadGameScreenShotImage);
 		LoadGameScreenShotImage->SetVisibility(ESlateVisibility::Visible);
 	}
-	//деактивация поля сейва.
+		//деактивация поля сейва.
 	else
 	{
 		//если кликнули по тому же сейву (анчек), то вернуть ему чек.
@@ -292,7 +312,7 @@ void AHUDMagicTrigger::SwitchSavedGames(bool bCheck, USavedGameUserWidget* InSav
 
 void AHUDMagicTrigger::SetScreenShotToImageWidget(UTexture* InScreenShot, UImage* InImage)
 {
-	UMaterialInstanceDynamic* ScreenShotMaterialDynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), ScreenShotMaterial); 
+	UMaterialInstanceDynamic* ScreenShotMaterialDynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), ScreenShotMaterial);
 	ScreenShotMaterialDynamic->SetTextureParameterValue(FName(TEXT("Texture")), InScreenShot);
 	InImage->Brush.SetResourceObject(ScreenShotMaterialDynamic);
 }
@@ -311,7 +331,6 @@ void AHUDMagicTrigger::SetVisibleToButtons()
 
 	ControlUserWidget->ResumeButton->SetVisibility(ESlateVisibility::Visible);
 	ControlUserWidget->ResumeGameSpacer0->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
 }
 
 void AHUDMagicTrigger::HideLoadGameMenuWidget()
@@ -350,16 +369,18 @@ bool AHUDMagicTrigger::CheckMenuUserWidget()
 	return !!MenuUserWidget;
 }
 
-void AHUDMagicTrigger::ShowGameMenu()
+void AHUDMagicTrigger::ShowGameMenuAfterLaunchGame()
 {
 	if (!MenuUserWidget)
 	{
 		DEBUGMESSAGE("!MenuUserWidget");
 		return;
 	}
-
-	SetShowWidget(true, MenuUserWidget, 1);
-	SetInputMode(EInputMode::EIM_UIOnly);
+	if (PlayerController->SetPause(true))
+	{
+		SetShowWidget(true, MenuUserWidget, 1);
+		SetInputMode(EInputMode::EIM_UIOnly, nullptr);		
+	}
 }
 
 bool AHUDMagicTrigger::MainSaveGame(const FString& NameOfSaveGame, TArray<FString>& InGamesList)
@@ -407,9 +428,29 @@ float AHUDMagicTrigger::GetMouseSensitivity() const
 	return PlayerControllerMT->GetMouseSensitivity();
 }
 
-void AHUDMagicTrigger::SetInputRotationScale(float InMouseSensitivity) const
+void AHUDMagicTrigger::SetMouseSensitivity(float InMouseSensitivity) const
 {
-	PlayerControllerMT->SetInputRotationScale(InMouseSensitivity);
+	PlayerControllerMT->SetMouseSensitivity(InMouseSensitivity);
+}
+
+void AHUDMagicTrigger::SetInputRotationScale(float InInputPitchScale, float InInputYawScale, float InInputRollScale)
+{
+	PlayerControllerMT->SetInputRotationScale(InInputPitchScale, InInputYawScale, InInputRollScale);
+}
+
+float AHUDMagicTrigger::GetInputPitchScale() const
+{
+	return PlayerControllerMT->InputPitchScale;
+}
+
+float AHUDMagicTrigger::GetInputYawScale() const
+{
+	return PlayerControllerMT->InputYawScale;
+}
+
+float AHUDMagicTrigger::GetInputRollScale() const
+{
+	return PlayerControllerMT->InputRollScale;
 }
 
 void AHUDMagicTrigger::SetEnemy_IF_Implementation(AActor* InEnemy)
@@ -459,12 +500,12 @@ void AHUDMagicTrigger::HideInteractionWidget_IF_Implementation()
 
 void AHUDMagicTrigger::SetInputMode_IF_Implementation(EInputMode InInputMode)
 {
-	SetInputMode(InInputMode);
+	SetInputMode(InInputMode, nullptr);
 }
 
 void AHUDMagicTrigger::ShowGameMenu_IF_Implementation()
 {
-	ShowGameMenu();
+	ShowGameMenuAfterLaunchGame();
 }
 
 bool AHUDMagicTrigger::CheckMenuUserWidget_IF_Implementation()

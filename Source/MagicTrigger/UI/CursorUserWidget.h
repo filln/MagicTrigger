@@ -12,5 +12,5 @@ UCLASS()
 class MAGICTRIGGER_API UCursorUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
-	
+
 };

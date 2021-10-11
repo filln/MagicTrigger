@@ -15,6 +15,7 @@
 #include "MagicTrigger/SaveGame/SaveGameManager.h"
 #include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
+#include "MagicTrigger/CoreClasses/PlayerControllerMagicTrigger.h"
 #include "TargetSelectionComponent.h"
 
 #include "MagicTrigger/Interfaces/HUDInterface.h"
@@ -38,9 +39,8 @@
 
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PlayerController.h"
-#include "GameFramework/HUD.h"
 #include "GameFramework/PlayerState.h"
+#include "GameFramework/HUD.h"
 
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h"
@@ -110,7 +110,8 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	GetMesh()->SetCollisionResponseToChannel(ECC_PhysicsBody, ECollisionResponse::ECR_Block);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Destructible, ECollisionResponse::ECR_Block);
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(TEXT("/Game/MagicTrigger/Meshes/PlayerCharacter/SK_Player_Idle_Kachujin"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(
+		TEXT("/Game/MagicTrigger/Meshes/PlayerCharacter/SK_Player_Idle_Kachujin"));
 	if (MeshObj.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(MeshObj.Object);
@@ -120,7 +121,8 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 		DEBUGMESSAGE("!MeshObj.Succeeded()")
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimationClass(TEXT("/Game/MagicTrigger/Animations/PlayerCharacter/ABP_PlayerCharacter"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimationClass(
+		TEXT("/Game/MagicTrigger/Animations/PlayerCharacter/ABP_PlayerCharacter"));
 	if (AnimationClass.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(AnimationClass.Class);
@@ -148,7 +150,8 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	ScreenShotComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ScreenShotComponent"));
 
-	AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSourceComponent"));
+	AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(
+		TEXT("AIPerceptionStimuliSourceComponent"));
 
 	bRotatingToTarget = true;
 	ZoomIntencity = 50;
@@ -211,7 +214,8 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	ScreenShotComponent->OrthoWidth = 512;
 	ScreenShotComponent->bCaptureEveryFrame = false;
 	ScreenShotComponent->bCaptureOnMovement = false;
-	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTargetObject(TEXT("/Game/MagicTrigger/Textures/RTT_ScreenShot"));
+	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTargetObject(
+		TEXT("/Game/MagicTrigger/Textures/RTT_ScreenShot"));
 	if (RenderTargetObject.Succeeded())
 	{
 		ScreenShotComponent->TextureTarget = RenderTargetObject.Object;
@@ -232,7 +236,8 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 void APlayerCharacterMagicTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(UGameplayStatics::GetGameInstance(GetWorld()));
+	UGameInstanceMagicTrigger* GameInstance = Cast<UGameInstanceMagicTrigger>(
+		UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
 		GameInstance->SaveGameManager->PlayerCharacter = this;
@@ -246,6 +251,7 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (PlayerController)
 		{
+			PlayerControllerMT = Cast<APlayerControllerMagicTrigger>(PlayerController);
 			HUD = PlayerController->GetHUD();
 		}
 		else
@@ -259,14 +265,17 @@ void APlayerCharacterMagicTrigger::BeginPlay()
 	{
 		DEBUGMESSAGE("!GetWorld()")
 	}
-	InteractCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap);
-	InteractCollision->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::InteractCollisionEndOverlap);
+	InteractCollision->OnComponentBeginOverlap.AddDynamic(
+		this, &APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap);
+	InteractCollision->OnComponentEndOverlap.AddDynamic(
+		this, &APlayerCharacterMagicTrigger::InteractCollisionEndOverlap);
 
-	TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
-	TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap);
+	TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentBeginOverlap.AddDynamic(
+		this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap);
+	TargetSelectionComponent->GetTargetSelectionCollision()->OnComponentEndOverlap.AddDynamic(
+		this, &APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap);
 
 	SpawnAbilitySystemManager();
-
 }
 
 // Called to bind functionality to input
@@ -275,46 +284,45 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 	if (!PlayerInputComponent)
 	{
 		DEBUGMESSAGE("!PlayerInputComponent")
-			return;
+		return;
 	}
-
+	DefaultInputSettingsStruct = FInputSettingsStruct();
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis(DefaultInputSettingsStruct.MoveForwardKeyMapping.AxisName, this, &APlayerCharacterMagicTrigger::MoveForward_InAx);
+	PlayerInputComponent->BindAxis(DefaultInputSettingsStruct.MoveRightKeyMapping.AxisName, this, &APlayerCharacterMagicTrigger::MoveRight_InAx);
+	PlayerInputComponent->BindAxis(DefaultInputSettingsStruct.TurnNameMapping, this, &APlayerCharacterMagicTrigger::Turn_InAx);
+	PlayerInputComponent->BindAxis(DefaultInputSettingsStruct.LookUpNameMapping, this, &APlayerCharacterMagicTrigger::LookUp_InAx);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacterMagicTrigger::MoveForward_InAx);
-	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacterMagicTrigger::MoveRight_InAx);
-	PlayerInputComponent->BindAxis("Turn", this, &APlayerCharacterMagicTrigger::Turn_InAx);
-	PlayerInputComponent->BindAxis("LookUp", this, &APlayerCharacterMagicTrigger::LookUp_InAx);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.MoveActForwardKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::StartMove_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.MoveActForwardKeyMapping.ActionName, IE_Released, this, &APlayerCharacterMagicTrigger::StopMove_InAct);
 
-	PlayerInputComponent->BindAction("MoveAct", IE_Pressed, this, &APlayerCharacterMagicTrigger::StartMove_InAct);
-	PlayerInputComponent->BindAction("MoveAct", IE_Released, this, &APlayerCharacterMagicTrigger::StopMove_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.RunKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::StartRunning_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.RunKeyMapping.ActionName, IE_Released, this, &APlayerCharacterMagicTrigger::StopRunning_InAct);
 
-	PlayerInputComponent->BindAction("Running", IE_Pressed, this, &APlayerCharacterMagicTrigger::StartRunning_InAct);
-	PlayerInputComponent->BindAction("Running", IE_Released, this, &APlayerCharacterMagicTrigger::StopRunning_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.AutoRunKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::AutoRunning_InAct);
 
-	PlayerInputComponent->BindAction("ShortWalking", IE_Pressed, this, &APlayerCharacterMagicTrigger::StartShortWalking_InAct);
-	PlayerInputComponent->BindAction("ShortWalking", IE_Released, this, &APlayerCharacterMagicTrigger::StopShortWalking_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ShortWalkingKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::StartShortWalking_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ShortWalkingKeyMapping.ActionName, IE_Released, this, &APlayerCharacterMagicTrigger::StopShortWalking_InAct);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &APlayerCharacterMagicTrigger::StartJump_InAct);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &APlayerCharacterMagicTrigger::StopJump_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.JumpKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::StartJump_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.JumpKeyMapping.ActionName, IE_Released, this, &APlayerCharacterMagicTrigger::StopJump_InAct);
 
-	PlayerInputComponent->BindAction("ZoomUp", IE_Pressed, this, &APlayerCharacterMagicTrigger::ZoomUp_InAct);
-	PlayerInputComponent->BindAction("ZoomDown", IE_Pressed, this, &APlayerCharacterMagicTrigger::ZoomDown_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.InteractKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::Interact_InAct);
 
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APlayerCharacterMagicTrigger::Attack_InAct);
-	PlayerInputComponent->BindAction("ShowGameMenu", IE_Pressed, this, &APlayerCharacterMagicTrigger::ShowGameMenu_InAct);
-	PlayerInputComponent->BindAction("AutoRun", IE_Pressed, this, &APlayerCharacterMagicTrigger::AutoRunning_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.AttackKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::Attack_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.MeleeAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::MeleeAbility_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ThrowAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::ThrowAbility_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.SevenfoldSphereAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::SSphereAbility_InAct);
 
-	PlayerInputComponent->BindAction("WatchEnemies_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::WatchEnemies_InAct);
-	PlayerInputComponent->BindAction("OffWatchingActors_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::OffWatchingActors_InAct);
-	PlayerInputComponent->BindAction("WatchOtherActors_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::WatchOtherActors_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.WatchEnemiesKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::WatchEnemies_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.WatchOtherActorsKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::WatchOtherActors_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.OffWatchingKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::OffWatchingActors_InAct);
 
-	PlayerInputComponent->BindAction("Interact_IA", IE_Pressed, this, &APlayerCharacterMagicTrigger::Interact_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ZoomUpKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::ZoomUp_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ZoomDownKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::ZoomDown_InAct);
 
-	PlayerInputComponent->BindAction("MeleeAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::MeleeAbility_InAct);
-	PlayerInputComponent->BindAction("ThrowAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::ThrowAbility_InAct);
-	PlayerInputComponent->BindAction("SSphereAbility", IE_Pressed, this, &APlayerCharacterMagicTrigger::SSphereAbility_InAct);
-
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ShowGameMenuKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::ShowGameMenu_InAct);
 }
 
 void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
@@ -326,7 +334,7 @@ void APlayerCharacterMagicTrigger::MoveForward_InAx(float AxisValue)
 	if (!PlayerController)
 	{
 		DEBUGMESSAGE("!PlayerController")
-			return;
+		return;
 	}
 
 	float ScaleAxisValue = CalcScaleMovementInput(AxisValue);
@@ -351,7 +359,7 @@ void APlayerCharacterMagicTrigger::MoveRight_InAx(float AxisValue)
 	if (!PlayerController)
 	{
 		DEBUGMESSAGE("!PlayerController")
-			return;
+		return;
 	}
 
 	float ScaleAxisValue = CalcScaleMovementInput(AxisValue);
@@ -414,14 +422,13 @@ void APlayerCharacterMagicTrigger::StartRunning_InAct()
 		MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
 		|| !AnimationManagerComponent->bCanRun
-		)
+	)
 	{
 		return;
 	}
 
 	AxisValueMovementCoeff = AxisValueRunningCoeff;
 	MovementStatus = EMovementStatus::EMM_Running;
-
 }
 
 void APlayerCharacterMagicTrigger::StopRunning_InAct()
@@ -434,14 +441,13 @@ void APlayerCharacterMagicTrigger::StopRunning_InAct()
 		MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| MovementStatus != EMovementStatus::EMM_Running
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
-		)
+	)
 	{
 		return;
 	}
 
 	AxisValueMovementCoeff = AxisValueWalkingCoeff;
 	MovementStatus = EMovementStatus::EMM_Walking;
-
 }
 
 void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
@@ -454,7 +460,7 @@ void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
 		MovementStatus == EMovementStatus::EMM_Running
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
 		|| !AnimationManagerComponent->bCanRun
-		)
+	)
 	{
 		return;
 	}
@@ -462,7 +468,6 @@ void APlayerCharacterMagicTrigger::StartShortWalking_InAct()
 	AxisValueMovementCoeff = AxisValueShortWalkingCoeff;
 	MovementStatus = EMovementStatus::EMM_ShortWalking;
 	AnimationManagerComponent->bShortWalk = true;
-
 }
 
 void APlayerCharacterMagicTrigger::StopShortWalking_InAct()
@@ -475,7 +480,7 @@ void APlayerCharacterMagicTrigger::StopShortWalking_InAct()
 		MovementStatus == EMovementStatus::EMM_Running
 		|| MovementStatus != EMovementStatus::EMM_ShortWalking
 		|| MovementStatus == EMovementStatus::EMM_AutoRunning
-		)
+	)
 	{
 		return;
 	}
@@ -569,7 +574,7 @@ void APlayerCharacterMagicTrigger::AutoRunning_InAct()
 		MovementStatus == EMovementStatus::EMM_Running
 		|| MovementStatus == EMovementStatus::EMM_ShortWalking
 		|| !AnimationManagerComponent->bCanRun
-		)
+	)
 	{
 		return;
 	}
@@ -586,7 +591,8 @@ void APlayerCharacterMagicTrigger::AutoRunning_InAct()
 		AxisValueMovementCoeff = AxisValueRunningCoeff;
 		MovementStatus = EMovementStatus::EMM_AutoRunning;
 		AnimationManagerComponent->bCanInteract = false;
-		GetWorld()->GetTimerManager().SetTimer(AutoRunningTimer, this, &APlayerCharacterMagicTrigger::AutoRunning, 0.017, true);
+		GetWorld()->GetTimerManager().SetTimer(AutoRunningTimer, this, &APlayerCharacterMagicTrigger::AutoRunning,
+		                                       0.017, true);
 	}
 }
 
@@ -630,7 +636,6 @@ void APlayerCharacterMagicTrigger::WatchEnemies_InAct(FKey InputKey)
 	}
 
 	AnimationManagerComponent->bWatchingNow = TargetSelectionComponent->GetIsWatchingNow();
-
 }
 
 void APlayerCharacterMagicTrigger::WatchOtherActors_InAct(FKey InputKey)
@@ -684,7 +689,6 @@ void APlayerCharacterMagicTrigger::Interact_InAct()
 		DEBUGMESSAGE("!IsInterfaceImplementedBy<IInteractionInterface>(FirstActor)");
 		return;
 	}
-
 }
 
 void APlayerCharacterMagicTrigger::MeleeAbility_InAct()
@@ -736,9 +740,9 @@ void APlayerCharacterMagicTrigger::ShowOrHideInteractionText(bool bShow, AActor*
 	}
 }
 
-float APlayerCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
+float APlayerCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+                                               class AController* EventInstigator, class AActor* DamageCauser)
 {
-
 	if (!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState()))
 	{
 		DEBUGMESSAGE("!IsInterfaceImplementedBy<IPlayerStateInterface>(GetPlayerState())");
@@ -787,22 +791,29 @@ void APlayerCharacterMagicTrigger::RotateToTarget()
 		!bRotatingToTarget
 		|| !TargetSelectionComponent->GetIsWatchingNow()
 		|| !TargetSelectionComponent->GetObservedActor()
-		)
+	)
 	{
 		return;
 	}
 
 	FRotator NewRotation = GetActorRotation();
-	NewRotation.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetSelectionComponent->GetObservedActor()->GetActorLocation()).Yaw;
+	NewRotation.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
+	                                                         TargetSelectionComponent->GetObservedActor()->
+	                                                         GetActorLocation()).Yaw;
 	SetActorRotation(NewRotation);
 }
 
-void APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APlayerCharacterMagicTrigger::InteractCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                                                 AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                                                 int32 OtherBodyIndex, bool bFromSweep,
+                                                                 const FHitResult& SweepResult)
 {
 	ShowOrHideInteractionText(true, OtherActor);
 }
 
-void APlayerCharacterMagicTrigger::InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void APlayerCharacterMagicTrigger::InteractCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                                               AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                                               int32 OtherBodyIndex)
 {
 	ShowOrHideInteractionText(false, OtherActor);
 }
@@ -844,12 +855,12 @@ FVector APlayerCharacterMagicTrigger::GetForwardVectorArrowRightFoot()
 
 FVector APlayerCharacterMagicTrigger::GetArrowLeftFootSocketLocation()
 {
-	return 	GetMesh()->GetSocketLocation(ArrowLeftFootSocketName);
+	return GetMesh()->GetSocketLocation(ArrowLeftFootSocketName);
 }
 
 FVector APlayerCharacterMagicTrigger::GetArrowRightFootSocketLocation()
 {
-	return 	GetMesh()->GetSocketLocation(ArrowRightFootSocketName);
+	return GetMesh()->GetSocketLocation(ArrowRightFootSocketName);
 }
 
 void APlayerCharacterMagicTrigger::SpawnAbilitySystemManager()
@@ -857,7 +868,8 @@ void APlayerCharacterMagicTrigger::SpawnAbilitySystemManager()
 	FTransform SpawnTransform = FTransform();
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	AbilitySystemManager = GetWorld()->SpawnActor<AAbilitySystemManager>(AbilitySystemManagerClass, SpawnTransform, ActorSpawnParameters);
+	AbilitySystemManager = GetWorld()->SpawnActor<AAbilitySystemManager>(
+		AbilitySystemManagerClass, SpawnTransform, ActorSpawnParameters);
 	if (!AbilitySystemManager)
 	{
 		DEBUGMESSAGE("!AbilitySystemManager");
@@ -880,7 +892,8 @@ float APlayerCharacterMagicTrigger::CalcScaleMovementInput(float AxisValue)
 		return 0;
 	}
 
-	float ScaleValue = AxisValueMovementCoeff * AxisValue;
+	const float ScaleValue = AxisValueMovementCoeff * AxisValue;
+	//DEBUGFLOAT(AxisValueMovementCoeff);
 	return ScaleValue;
 }
 
@@ -909,7 +922,6 @@ UTextureRenderTarget2D* APlayerCharacterMagicTrigger::CreateScreenShot()
 	ScreenShotComponent->CaptureScene();
 
 	return ScreenShotComponent->TextureTarget;
-
 }
 
 void APlayerCharacterMagicTrigger::RemoveAndSwitchActors(AActor* RemovingActor)
@@ -918,12 +930,19 @@ void APlayerCharacterMagicTrigger::RemoveAndSwitchActors(AActor* RemovingActor)
 	AnimationManagerComponent->bWatchingNow = TargetSelectionComponent->GetIsWatchingNow();
 }
 
-void APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APlayerCharacterMagicTrigger::TargetSelectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                                                        AActor* OtherActor,
+                                                                        UPrimitiveComponent* OtherComp,
+                                                                        int32 OtherBodyIndex, bool bFromSweep,
+                                                                        const FHitResult& SweepResult)
 {
 	TargetSelectionComponent->AddActor(OtherActor);
 }
 
-void APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void APlayerCharacterMagicTrigger::TargetSelectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                                                      AActor* OtherActor,
+                                                                      UPrimitiveComponent* OtherComp,
+                                                                      int32 OtherBodyIndex)
 {
 	TargetSelectionComponent->RemoveAndSwitchActors(OtherActor);
 }
@@ -1116,4 +1135,3 @@ FTransform APlayerCharacterMagicTrigger::GetPointStartTraceToPutDownPointTransfo
 {
 	return PointStartTraceToPutDownPoint->GetComponentTransform();
 }
-

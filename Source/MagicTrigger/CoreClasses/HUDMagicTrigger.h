@@ -18,6 +18,7 @@ class USavedGameUserWidget;
 class ULoadGameMenuUserWidget;
 class USettingsMenuUserWidget;
 class UControlUserWidget;
+class UCursorUserWidget;
 class UTextureRenderTarget2D;
 class UImage;
 class APlayerController;
@@ -89,6 +90,8 @@ public:
 	USettingsMenuUserWidget* SettingsMenuUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 	UControlUserWidget* ControlUserWidget;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
+	UCursorUserWidget* CursorUserWidget;
 	//////////////////////////////////////////////////////////////////////////
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|CoreClasses")
@@ -133,6 +136,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
 	void SetShowWidget(bool bShow, UUserWidget* InUserWidget, int ZOrder);
 	/**
+	*
+	*/
+	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
+	void SetVisibilityWidget(UUserWidget* InUserWidget, bool bVisible);
+	/**
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
@@ -146,7 +154,7 @@ public:
 	 *
 	 */
 	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
-	void SetInputMode(EInputMode InInputMode);
+	void SetInputMode(EInputMode InInputMode, UUserWidget* InWidgetToFocus);
 	/**
 	 *
 	 */
@@ -206,7 +214,7 @@ public:
 	void ShowPlayerGUIWidget();
 
 	bool CheckMenuUserWidget();
-	void ShowGameMenu();
+	void ShowGameMenuAfterLaunchGame();
 
 	/**
 	 * GameInstance
@@ -227,7 +235,11 @@ public:
 	 *PlayerController
 	 */
 	float GetMouseSensitivity() const;
-	void SetInputRotationScale(float InMouseSensitivity) const;
+	void SetMouseSensitivity(float InMouseSensitivity) const;
+	void SetInputRotationScale(float InInputPitchScale, float InInputYawScale, float InInputRollScale);
+	float GetInputPitchScale() const;
+	float GetInputYawScale() const;
+	float GetInputRollScale() const;
 
 	/**
 	 * Interface methods

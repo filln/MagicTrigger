@@ -27,7 +27,7 @@ class MAGICTRIGGER_API IPlayerControllerInterface
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerControllerInterface")
-		void SetInputRotationScale_IF(float InMouseSensitivity);
+		void SetMouseSensitivity_IF(float InMouseSensitivity);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "PlayerControllerInterface")
 		float GetMouseSensitivity_IF();
 };

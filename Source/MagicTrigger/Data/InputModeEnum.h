@@ -11,6 +11,7 @@ UENUM(BlueprintType, Category = "InputModeEnum")
 enum class EInputMode : uint8
 {
     EIM_UIOnly      UMETA(DisplayName = "UI_Only"),
-    EIM_GameOnly    UMETA(DisplayName = "Game_Only")
+    EIM_GameOnly    UMETA(DisplayName = "Game_Only"),
+	EIM_GameAndUI	UMETA(DisplayName = "Game_And_UI")
 
 };
