@@ -79,8 +79,7 @@ public:
 	UTextBlock* ZoomDownKeyMappingTextBlock;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
 	UTextBlock* ZoomUpKeyMappingTextBlock;
-	UPROPERTY()
-	UTextBlock* CurrentTextBlock;
+
 	/**
 	 *ActionKeyButton
 	 */

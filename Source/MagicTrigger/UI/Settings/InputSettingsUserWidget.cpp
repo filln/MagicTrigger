@@ -554,5 +554,4 @@ void UInputSettingsUserWidget::ResetSupportVariablesToDefault()
 {
 	CurrentChoiceAxisKeyToChange = DefaultNoneAxisKeyMapping;
 	CurrentChoiceActionKeyToChange = DefaultNoneActionKeyMapping;
-	CurrentTextBlock = nullptr;
 }
