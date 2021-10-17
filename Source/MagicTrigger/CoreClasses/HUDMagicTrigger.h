@@ -29,6 +29,7 @@ class UGameInstance;
 class UGameInstanceMagicTrigger;
 class USaveGameManager;
 class UMaterialInterface;
+class UGraphicsSettingsUserWidget;
 
 /**
  *
@@ -68,7 +69,8 @@ public:
 	TSubclassOf<USettingsMenuUserWidget> SettingsMenuUserWidgetClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
 	TSubclassOf<UControlUserWidget> ControlUserWidgetClass;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|WidgetsClasses")
+	TSubclassOf<UGraphicsSettingsUserWidget> GraphicsSettingsUserWidgetClass;
 	/**
 	 * References to Widgets.
 	 */
@@ -92,6 +94,8 @@ public:
 	UControlUserWidget* ControlUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
 	UCursorUserWidget* CursorUserWidget;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|Widgets")
+	UGraphicsSettingsUserWidget* GraphicsSettingsUserWidget;
 	//////////////////////////////////////////////////////////////////////////
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "HUDMagicTrigger|CoreClasses")

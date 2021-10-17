@@ -1,13 +1,13 @@
 	// Copyright 2021 Anatoli Kucharau https://vk.com/ulvprog. All Rights Reserved. 
 /**
- * Интерфейс для класса GameInstanceMagicTrigger. Используется для вызова методов класса, получения и определения переменных.
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ GameInstanceMagicTrigger. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
  */
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "MagicTrigger/Interfaces/InterfaceCheck.h"
-#include "MagicTrigger/Data/GameSettingsStruct.h"
+#include "MagicTrigger/Data/Settings/GameSettingsStruct.h"
 #include "GameInstanceInterface.generated.h"
 
 class USaveGameMT;

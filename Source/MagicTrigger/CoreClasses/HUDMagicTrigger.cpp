@@ -16,6 +16,7 @@
 #include "MagicTrigger/UI/Settings/SettingsMenuUserWidget.h"
 #include "MagicTrigger/UI/Settings/ControlUserWidget.h"
 #include "MagicTrigger/UI/SaveGame/ListOfSavedGamesUserWidget.h" //SwitchSavedGames()
+#include "MagicTrigger/UI/Settings/GraphicsSettingsUserWidget.h"
 #include "MagicTrigger/CoreClasses/GameInstanceMagicTrigger.h"
 #include "MagicTrigger/CoreClasses/PlayerControllerMagicTrigger.h"
 
@@ -29,6 +30,7 @@
 #include "Components/Spacer.h"
 #include "Components/Image.h"	//SwitchSavedGames()
 #include "Engine/Texture2D.h"
+
 
 AHUDMagicTrigger::AHUDMagicTrigger()
 {
@@ -44,6 +46,7 @@ AHUDMagicTrigger::AHUDMagicTrigger()
 	LoadGameMenuUserWidgetClass = ULoadGameMenuUserWidget::StaticClass();
 	SettingsMenuUserWidgetClass = USettingsMenuUserWidget::StaticClass();
 	ControlUserWidgetClass = UControlUserWidget::StaticClass();
+	GraphicsSettingsUserWidgetClass = UGraphicsSettingsUserWidget::StaticClass();
 
 	bShowingHints = true;
 	CurrentDateTime = FText::FromString(TEXT("DefaultCurrentDateTime"));
@@ -113,6 +116,9 @@ void AHUDMagicTrigger::CreateWidgets()
 
 	ControlUserWidget = CreateWidget<UControlUserWidget>(PlayerController, ControlUserWidgetClass, FName(TEXT("ControlUserWidget")));
 	ControlUserWidget->HUDMagicTrigger = this;
+
+	GraphicsSettingsUserWidget = CreateWidget<UGraphicsSettingsUserWidget>(PlayerController, GraphicsSettingsUserWidgetClass, FName(TEXT("GraphicsSettingsUserWidget")));
+	GraphicsSettingsUserWidget->HUDMagicTrigger = this;
 }
 
 void AHUDMagicTrigger::SetShowWidget(bool bShow, UUserWidget* InUserWidget, int ZOrder)
@@ -331,6 +337,9 @@ void AHUDMagicTrigger::SetVisibleToButtons()
 
 	ControlUserWidget->ResumeButton->SetVisibility(ESlateVisibility::Visible);
 	ControlUserWidget->ResumeGameSpacer0->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	GraphicsSettingsUserWidget->ResumeButton->SetVisibility(ESlateVisibility::Visible);
+	GraphicsSettingsUserWidget->ResumeGameSpacer0->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void AHUDMagicTrigger::HideLoadGameMenuWidget()

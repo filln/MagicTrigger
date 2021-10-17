@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MagicTrigger/Interfaces/GameInstanceInterface.h"
-#include "MagicTrigger/Data/GameSettingsStruct.h"
+#include "MagicTrigger/Data/Settings/GameSettingsStruct.h"
 #include "GameInstanceMagicTrigger.generated.h"
 
 class USaveGameMT;

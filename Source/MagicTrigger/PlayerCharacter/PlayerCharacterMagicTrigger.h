@@ -10,7 +10,7 @@
 #include "MagicTrigger/Interfaces/OwnerTargetSelectionInterface.h"
 #include "MagicTrigger/Interfaces/PlayerCharacterInterface.h"
 #include "MagicTrigger/Data/MovementStatusEnum.h"
-#include "MagicTrigger/Data/InputSettingsStruct.h"
+#include "MagicTrigger/Data/Settings/InputSettingsStruct.h"
 #include "InputCoreTypes.h"
 #include "PlayerCharacterMagicTrigger.generated.h"
 

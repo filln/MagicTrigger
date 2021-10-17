@@ -18,21 +18,24 @@ class MAGICTRIGGER_API USettingsMenuUserWidget : public UParentUserWidgetMT
 
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
-		UButton* ResumeButton;
+	UButton* ResumeButton;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
-		UButton* BackMenuButton;
+	UButton* BackMenuButton;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
-		UButton* ControlButton;
+	UButton* ControlButton;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
-		USpacer* ResumeGameSpacer0;
+	UButton* GraphicsButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
+	USpacer* ResumeGameSpacer0;
+	
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
-		void OnPressedBackMenuButton();
+	void OnPressedBackMenuButton();
 	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
-		void OnPressedResumeButton();
+	void OnPressedResumeButton();
 	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
-		void OnPressedControlButton();
-
-
+	void OnPressedControlButton();
+	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	void OnPressedGraphicsButton();
 };

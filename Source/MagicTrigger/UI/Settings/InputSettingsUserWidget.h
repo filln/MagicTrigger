@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MagicTrigger/Data/InputSettingsStruct.h"
+#include "MagicTrigger/Data/Settings/InputSettingsStruct.h"
 #include "MagicTrigger/UI/ParentUserWidgetMT.h"
 #include "InputSettingsUserWidget.generated.h"
 
