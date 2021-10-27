@@ -15,6 +15,7 @@ class UButton;
 class USpacer;
 class UComboBoxString;
 class UGameUserSettings;
+class UCheckBox;
 
 /**
  * 
@@ -33,30 +34,33 @@ protected:
 	 *Variables
 	 */
 public:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget")
 	UButton* ResumeButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget")
 	USpacer* ResumeGameSpacer0;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget")
+	UCheckBox* WindowedCheckBox;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* ScreenResolutionComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* ResolutionScaleComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* ViewDistanceComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* AntiAliasingComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* PostProcessingComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* ShadowsComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* TexturesComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* EffectsComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* FoliageComboBox;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "SettingsMenuUserWidget|ComboBox")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "GraphicsSettingsUserWidget|ComboBox")
 	UComboBoxString* ShadingComboBox;
 	
 	UPROPERTY()
@@ -73,26 +77,28 @@ private:
 	 *Methods
 	 */
 public:
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void OnPressedBackMenuButton();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void OnPressedResumeButton();
 
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void ApplyGraphicsSettings();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void ResetToDefaultGraphicsSettings();
 
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void LoadLowGraphicsSettings();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void LoadMediumGraphicsSettings();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void LoadHighGraphicsSettings();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void LoadEpicGraphicsSettings();
-	UFUNCTION(BlueprintCallable, Category = "SettingsMenuUserWidget")
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
 	void LoadCinematicGraphicsSettings();
+	UFUNCTION(BlueprintCallable, Category = "GraphicsSettingsUserWidget")
+	void SetWindowedMode(bool bInWindowedOn);
 
 	private:
 	void FillAllComboBox();

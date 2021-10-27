@@ -152,6 +152,7 @@ void UInputSettingsUserWidget::ResetToDefaults()
 	FillCurrentInputSettingsStruct();
 	ShowActionKeysNamesMapping();
 	InputSettings->ForceRebuildKeymaps();
+	InputSettings->SaveKeyMappings();
 }
 
 /**
@@ -545,6 +546,7 @@ void UInputSettingsUserWidget::FindActionToChange(FKey InKey)
 		InputSettings->AddActionMapping(CurrentChoiceActionKeyToChange);
 	}
 	InputSettings->ForceRebuildKeymaps();
+	InputSettings->SaveKeyMappings();
 	FillCurrentInputSettingsStruct();
 	ShowActionKeysNamesMapping();
 	ResetSupportVariablesToDefault();

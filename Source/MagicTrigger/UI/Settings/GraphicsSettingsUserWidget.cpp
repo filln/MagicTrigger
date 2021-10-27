@@ -2,6 +2,8 @@
 
 
 #include "GraphicsSettingsUserWidget.h"
+
+#include "Components/CheckBox.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
 #include "MagicTrigger/UI/Settings/SettingsMenuUserWidget.h"
 #include "Components/ComboBoxString.h"
@@ -62,7 +64,7 @@ void UGraphicsSettingsUserWidget::OnPressedResumeButton()
 void UGraphicsSettingsUserWidget::ApplyGraphicsSettings()
 {
 	SaveSettingsFromWidget();
-	GameUserSettings->ApplySettings(true);
+	GameUserSettings->ApplySettings(false);
 }
 
 void UGraphicsSettingsUserWidget::ResetToDefaultGraphicsSettings()
@@ -110,6 +112,11 @@ void UGraphicsSettingsUserWidget::LoadCinematicGraphicsSettings()
 	{
 		ComboBox->SetSelectedOption(GraphicsSettingsStruct.Cinematic);
 	}
+}
+
+void UGraphicsSettingsUserWidget::SetWindowedMode(bool bInWindowedOn)
+{
+	ScreenResolutionComboBox->SetIsEnabled(bInWindowedOn);
 }
 
 void UGraphicsSettingsUserWidget::FillAllComboBox()
@@ -183,6 +190,29 @@ void UGraphicsSettingsUserWidget::LoadSettingsFromSavedToWidget()
 	const FIntPoint ResolutionInt = GameUserSettings->GetScreenResolution();
 	const FString ResolutionStr = ConvertFIntPointToResolutionString(ResolutionInt);
 	ScreenResolutionComboBox->SetSelectedOption(ResolutionStr);
+
+	switch (GameUserSettings->GetFullscreenMode())
+	{
+	case EWindowMode::Fullscreen:
+		{
+			WindowedCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+			ScreenResolutionComboBox->SetIsEnabled(false);
+			break;
+		}
+	case EWindowMode::Windowed:
+		{
+			WindowedCheckBox->SetCheckedState(ECheckBoxState::Checked);
+			ScreenResolutionComboBox->SetIsEnabled(true);
+			break;
+		}
+	default:
+		{
+			WindowedCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+			ScreenResolutionComboBox->SetIsEnabled(false);
+			break;
+		}
+	}
+
 	const float ResScale = GameUserSettings->GetResolutionScaleNormalized();
 	//DEBUGFLOAT(ResScale);
 	if (ResScale > 0 && ResScale <= 0.21)
@@ -260,47 +290,72 @@ void UGraphicsSettingsUserWidget::LoadSettingsFromSavedToComboBoxesBasedOnSwitch
 
 void UGraphicsSettingsUserWidget::SaveSettingsFromWidget()
 {
-	GameUserSettings->SetScreenResolution(ConvertResolutionStringToFIntPoint(ScreenResolutionComboBox->GetSelectedOption()));
-	
+	switch (WindowedCheckBox->GetCheckedState())
+	{
+	case ECheckBoxState::Checked:
+		{
+			GameUserSettings->SetFullscreenMode(EWindowMode::Windowed);
+			break;
+		}
+	case ECheckBoxState::Unchecked:
+		{
+			GameUserSettings->SetFullscreenMode(EWindowMode::Fullscreen);
+			break;
+		}
+	default:
+		{
+			GameUserSettings->SetFullscreenMode(EWindowMode::Fullscreen);
+			break;
+		}
+	}
+
+	if (
+		GameUserSettings->GetFullscreenMode() == EWindowMode::Windowed
+		&& WindowedCheckBox->GetCheckedState() == ECheckBoxState::Checked
+	)
+	{
+		GameUserSettings->SetScreenResolution(ConvertResolutionStringToFIntPoint(ScreenResolutionComboBox->GetSelectedOption()));
+	}
+
 	const int32 ResScaleInt = *(GraphicsLevelsMap.Find(ResolutionScaleComboBox->GetSelectedOption()));
 	//DEBUGSTRING(FString::FromInt(ScaleLevelInt));
 	float ResScaleFloat;
 	switch (ResScaleInt)
 	{
-		case 0:
-			{
-				ResScaleFloat = 0.2;
-				break;
-			}
-		case 1:
-			{
-				ResScaleFloat = 0.4;
-				break;
-			}
-		case 2:
-			{
-				ResScaleFloat = 0.6;
-				break;
-			}
-		case 3:
-			{
-				ResScaleFloat = 0.8;
-				break;
-			}
-		case 4:
-			{
-				ResScaleFloat = 1;
-				break;
-			}
-		default:
-			{
-				DEBUGMESSAGE("No exists levels.");
-				ResScaleFloat = 0.2;
-			}			
+	case 0:
+		{
+			ResScaleFloat = 0.2;
+			break;
+		}
+	case 1:
+		{
+			ResScaleFloat = 0.4;
+			break;
+		}
+	case 2:
+		{
+			ResScaleFloat = 0.6;
+			break;
+		}
+	case 3:
+		{
+			ResScaleFloat = 0.8;
+			break;
+		}
+	case 4:
+		{
+			ResScaleFloat = 1;
+			break;
+		}
+	default:
+		{
+			DEBUGMESSAGE("No exists levels.");
+			ResScaleFloat = 0.2;
+		}
 	}
 	//DEBUGFLOAT(ResScaleFloat);
 	GameUserSettings->SetResolutionScaleNormalized(ResScaleFloat);
-	
+
 	GameUserSettings->SetViewDistanceQuality(*(GraphicsLevelsMap.Find(ViewDistanceComboBox->GetSelectedOption())));
 	GameUserSettings->SetAntiAliasingQuality(*(GraphicsLevelsMap.Find(AntiAliasingComboBox->GetSelectedOption())));
 	GameUserSettings->SetPostProcessingQuality(*(GraphicsLevelsMap.Find(PostProcessingComboBox->GetSelectedOption())));
@@ -309,6 +364,10 @@ void UGraphicsSettingsUserWidget::SaveSettingsFromWidget()
 	GameUserSettings->SetVisualEffectQuality(*(GraphicsLevelsMap.Find(EffectsComboBox->GetSelectedOption())));
 	GameUserSettings->SetFoliageQuality(*(GraphicsLevelsMap.Find(FoliageComboBox->GetSelectedOption())));
 	GameUserSettings->SetShadingQuality(*(GraphicsLevelsMap.Find(ShadingComboBox->GetSelectedOption())));
+
+	// const FIntPoint DebugRes = GameUserSettings->GetScreenResolution();
+	// DEBUGSTRING(FString::FromInt(DebugRes.X));
+	// DEBUGSTRING(FString::FromInt(DebugRes.Y));
 }
 
 FIntPoint UGraphicsSettingsUserWidget::ConvertResolutionStringToFIntPoint(const FString InResolution)
@@ -336,6 +395,8 @@ FIntPoint UGraphicsSettingsUserWidget::ConvertResolutionStringToFIntPoint(const 
 	// DEBUGSTRING(InResolution);
 	// DEBUGSTRING(XString);
 	// DEBUGSTRING(YString);
+	// DEBUGSTRING(FString::FromInt(OutResolution.X));
+	// DEBUGSTRING(FString::FromInt(OutResolution.Y));
 	return OutResolution;
 }
 
