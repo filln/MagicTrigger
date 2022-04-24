@@ -219,7 +219,7 @@ FString UGameInstanceMagicTrigger::ReplaceSpecSymbols(const FString& NameOfSaveG
 
 	for (const auto& SpecSymbol : SpecSymbols)
 	{
-		NameOfSaveGameTmp.Replace(&SpecSymbol, *MainSymbol, ESearchCase::IgnoreCase);
+		FString tmpStr = NameOfSaveGameTmp.Replace(&SpecSymbol, *MainSymbol, ESearchCase::IgnoreCase);
 	}
 
 	return NameOfSaveGameTmp;

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Runtime/Engine/Classes/Engine/DeveloperSettings.h"
+#include "Engine/DeveloperSettings.h"
 #include "ElectronicNodesSettings.generated.h"
 
 UENUM(BlueprintType)

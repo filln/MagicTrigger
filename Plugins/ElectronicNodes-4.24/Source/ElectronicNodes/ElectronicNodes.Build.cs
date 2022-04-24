@@ -25,7 +25,7 @@ public class ElectronicNodes : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core"
+				"Core", "DeveloperSettings"
 			}
 			);
 
