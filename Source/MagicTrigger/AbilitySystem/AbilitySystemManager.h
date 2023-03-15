@@ -20,6 +20,7 @@ class APlayerCharacterMagicTrigger;
 class AHUDMagicTrigger;
 class UParentUserWidgetMT;
 class USkeletalMeshComponent;
+class URoundWaveComponent;
 
 UCLASS()
 class MAGICTRIGGER_API AAbilitySystemManager : public AActor
@@ -45,6 +46,9 @@ public:
 		UThrowComponent* ThrowComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilitySystemManager|Abilities")
 		USevenfoldSphereComponent* SevenfoldSphereComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilitySystemManager|Abilities")
+		URoundWaveComponent* RoundWaveComponent;
+
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AbilitySystemManager")
 		ECurrentAbility CurrentAbility;
@@ -98,6 +102,11 @@ public:
 	void UseSSphereAbility();
 	void SpawnSSphere();
 	void SetCountOfSpheresText();
+
+	/**
+	 * RoundWave
+	 */
+	void UseRoundWave();
 
 
 };

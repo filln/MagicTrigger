@@ -13,6 +13,7 @@ class UMeleeAbilityUserWidget;
 class UThrowAbilityUserWidget;
 class USFSphereAbilityUserWidget;
 class UBorder;
+class URoundWaveUserWidget;
 
 /**
  *
@@ -33,11 +34,17 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
 		UBorder* SFSphereBorder;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
+		UBorder* RoundWaveBorder;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
 		UMeleeAbilityUserWidget* MeleeAbilityUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
 		UThrowAbilityUserWidget* ThrowAbilityUserWidget;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
 		USFSphereAbilityUserWidget* SFSphereAbilityUserWidget;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
+		URoundWaveUserWidget* RoundWaveUserWidget;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")
 		float ActiveAlpha;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "PanelAbilityUserWidget")

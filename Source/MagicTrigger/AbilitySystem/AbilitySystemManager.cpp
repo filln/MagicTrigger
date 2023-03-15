@@ -5,6 +5,7 @@
 #include "MagicTrigger/AbilitySystem/MeleeAttack/MeleeAttackComponent.h"
 #include "MagicTrigger/AbilitySystem/SevenfoldSphere/SevenfoldSphereComponent.h"
 #include "MagicTrigger/AbilitySystem/Throw/ThrowComponent.h"
+#include "MagicTrigger/AbilitySystem/RoundWave/RoundWaveComponent.h"
 #include "MagicTrigger/PlayerCharacter/PlayerCharacterMagicTrigger.h"
 #include "MagicTrigger/PlayerCharacter/AnimationManagerComponent.h"
 #include "MagicTrigger/CoreClasses/HUDMagicTrigger.h"
@@ -13,6 +14,7 @@
 #include "MagicTrigger/UI/AbilitySystem/MeleeAbilityUserWidget.h"
 #include "MagicTrigger/UI/AbilitySystem/ThrowAbilityUserWidget.h"
 #include "MagicTrigger/UI/AbilitySystem/SFSphereAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/RoundWaveUserWidget.h"
 #include "MagicTrigger/Data/DebugMessage.h"
 #include "Components/Border.h"
 #include "Components/TextBlock.h"
@@ -29,6 +31,7 @@ AAbilitySystemManager::AAbilitySystemManager()
 	ThrowComponent = CreateDefaultSubobject<UThrowComponent>(TEXT("ThrowComponent"));
 	SevenfoldSphereComponent = CreateDefaultSubobject<USevenfoldSphereComponent>(TEXT("SevenfoldSphereComponent"));
 	//SevenfoldSphereComponent->Deactivate();
+	RoundWaveComponent = CreateDefaultSubobject<URoundWaveComponent>(TEXT("RoundWaveComponent"));
 
 	AvaliabilityAbilities = FAvaliabilityAbilitiesStruct();
 	CurrentAbility = ECurrentAbility::ECA_Melee;
@@ -71,6 +74,10 @@ void AAbilitySystemManager::Attack()
 	case ECurrentAbility::ECA_SSphere:
 		SevenfoldSphereComponent->Use();
 		break;
+	case ECurrentAbility::ECA_RoundWave:
+		RoundWaveComponent->Use();
+		break;
+
 	}
 }
 
@@ -107,6 +114,15 @@ void AAbilitySystemManager::SetCurrentAbility(ECurrentAbility InCurrentAbility)
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveBorderColor);
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereAbilityUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveAbilityWidgetColorAndOpacity);
 		break;
+	case ECurrentAbility::ECA_RoundWave:
+		if (!AvaliabilityAbilities.bRoundWave)
+		{
+			return;
+		}
+		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->RoundWaveBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveBorderColor);
+		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->RoundWaveUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->ActiveAbilityWidgetColorAndOpacity);
+		break;
+
 	}
 
 	//Убрать выделение прошлой абилки.
@@ -124,6 +140,11 @@ void AAbilitySystemManager::SetCurrentAbility(ECurrentAbility InCurrentAbility)
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveBorderColor);
 		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereAbilityUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveAbilityWidgetColorAndOpacity);
 		break;
+	case ECurrentAbility::ECA_RoundWave:
+		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->RoundWaveBorder->SetBrushColor(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveBorderColor);
+		HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->RoundWaveUserWidget->SetColorAndOpacity(HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->InactiveAbilityWidgetColorAndOpacity);
+		break;
+
 	}
 
 	CurrentAbility = InCurrentAbility;
@@ -260,5 +281,10 @@ void AAbilitySystemManager::SetCountOfSpheresText()
 {
 	FString CountString = FString::FromInt(SevenfoldSphereComponent->GetCountOfSpheres());
 	HUD->PlayerGUIUserWidget->PanelAbilityUserWidget->SFSphereAbilityUserWidget->CountText->SetText(FText::FromString(CountString));
+}
+
+void AAbilitySystemManager::UseRoundWave()
+{
+	PlayerCharacter->AnimationManagerComponent->RoundWaveAnimation();
 }
 

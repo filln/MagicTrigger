@@ -106,6 +106,8 @@ public:
 		void ThrowAnimation();
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SpawnSSphereAnimation();
+	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
+		void RoundWaveAnimation();
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")

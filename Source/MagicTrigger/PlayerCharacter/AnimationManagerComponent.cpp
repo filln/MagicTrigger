@@ -161,6 +161,10 @@ void UAnimationManagerComponent::SpawnSSphereAnimation()
 	GetWorld()->GetTimerManager().SetTimer(CheckStopThrowAnimationTimer, TmpDelegate, CheckStopThrowAnimationTimerRate, false);
 }
 
+void UAnimationManagerComponent::RoundWaveAnimation()
+{
+}
+
 void UAnimationManagerComponent::SetPlayingAnimationThrow(bool bPlaying)
 {
 	if (bPlaying)

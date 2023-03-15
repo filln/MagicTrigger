@@ -14,6 +14,8 @@ enum class ECurrentAbility : uint8
 
 	ECA_Throw				UMETA(DisplayName = "Throw"),
 
-	ECA_SSphere				UMETA(DisplayName = "SSphere")
+	ECA_SSphere				UMETA(DisplayName = "SSphere"),
+
+	ECA_RoundWave			UMETA(DisplayName = "RoundWave")
 
 };

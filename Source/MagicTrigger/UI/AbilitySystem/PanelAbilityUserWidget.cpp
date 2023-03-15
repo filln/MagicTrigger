@@ -6,6 +6,7 @@
 #include "MagicTrigger/UI/AbilitySystem/MeleeAbilityUserWidget.h"
 #include "MagicTrigger/UI/AbilitySystem/ThrowAbilityUserWidget.h"
 #include "MagicTrigger/UI/AbilitySystem/SFSphereAbilityUserWidget.h"
+#include "MagicTrigger/UI/AbilitySystem/RoundWaveUserWidget.h"
 
 void UPanelAbilityUserWidget::SetActiveColor()
 {
@@ -25,8 +26,11 @@ void UPanelAbilityUserWidget::SetWidgetsColor()
 	MeleeBorder->SetBrushColor(ActiveBorderColor);
 	ThrowBorder->SetBrushColor(InactiveBorderColor);
 	SFSphereBorder->SetBrushColor(InactiveBorderColor);
+	RoundWaveBorder->SetBrushColor(InactiveBorderColor);
 
 	MeleeAbilityUserWidget->SetColorAndOpacity(ActiveAbilityWidgetColorAndOpacity);
 	ThrowAbilityUserWidget->SetColorAndOpacity(InactiveAbilityWidgetColorAndOpacity);
 	SFSphereAbilityUserWidget->SetColorAndOpacity(InactiveAbilityWidgetColorAndOpacity);
+	RoundWaveUserWidget->SetColorAndOpacity(InactiveAbilityWidgetColorAndOpacity);
+
 }
