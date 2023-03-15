@@ -210,6 +210,7 @@ public:
 	/**
 	 *
 	 */
+	UFUNCTION(BlueprintCallable, Category = "HUDMagicTrigger")
 	void CreatePlayerGUIUserWidget(APlayerController* InPlayerController);
 	/**
 	 *
