@@ -42,6 +42,8 @@ protected:
 		float CheckStopMeleeAttackAnimationTimerRate;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimationManagerComponent")
 		float CheckStopThrowAnimationTimerRate;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimationManagerComponent")
+		float CheckStopRoundWaveAnimationTimerRate;
 
 public:
 
@@ -51,6 +53,8 @@ public:
 		bool bThrowing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bSpawningSSphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
+		bool bRoundWaving;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
 		bool bLiftingUp1Hand;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationManagerComponent|States")
@@ -89,6 +93,7 @@ private:
 	FTimerHandle CheckStopJumpAnimationTimer;
 	FTimerHandle CheckStopMeleeAttackAnimationTimer;
 	FTimerHandle CheckStopThrowAnimationTimer;
+	FTimerHandle CheckStopRoundWaveAnimationTimer;
 
 
 	/**
@@ -114,6 +119,8 @@ public:
 		void SetPlayingAnimationThrow(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SetPlayingAnimationAttack(bool bPlaying);
+	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
+		void SetPlayingAnimationRoundWave(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")
 		void SetPlayingAnimationSpawnSSphere(bool bPlaying);
 	UFUNCTION(BlueprintCallable, Category = "AnimationManagerComponent")

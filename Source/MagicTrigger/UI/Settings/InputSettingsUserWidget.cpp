@@ -225,6 +225,26 @@ void UInputSettingsUserWidget::ChangeMeleeAbilityKey()
 	HoldCursor();
 }
 
+void UInputSettingsUserWidget::ChangeRoundWaveAbilityKey()
+{
+	RoundWaveAbilityKeyMappingTextBlock->SetText(PressKeyText);
+	CurrentChoiceActionKeyToChange = CurrentInputSettingsStruct.RoundWaveAbilityKeyMapping;
+	HoldCursor();
+}
+
+void UInputSettingsUserWidget::ChangeThrowAbilityKey()
+{
+	ThrowAbilityKeyMappingTextBlock->SetText(PressKeyText);
+	CurrentChoiceActionKeyToChange = CurrentInputSettingsStruct.ThrowAbilityKeyMapping;
+	HoldCursor();
+}
+void UInputSettingsUserWidget::ChangeSevenfoldSphereAbilityKey()
+{
+	SevenfoldSphereAbilityKeyMappingTextBlock->SetText(PressKeyText);
+	CurrentChoiceActionKeyToChange = CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping;
+	HoldCursor();
+}
+
 void UInputSettingsUserWidget::ChangeOffWatchingKey()
 {
 	OffWatchingKeyMappingTextBlock->SetText(PressKeyText);
@@ -239,12 +259,6 @@ void UInputSettingsUserWidget::ChangeRunKey()
 	HoldCursor();
 }
 
-void UInputSettingsUserWidget::ChangeSevenfoldSphereAbilityKey()
-{
-	SevenfoldSphereAbilityKeyMappingTextBlock->SetText(PressKeyText);
-	CurrentChoiceActionKeyToChange = CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping;
-	HoldCursor();
-}
 
 void UInputSettingsUserWidget::ChangeShortWalkingKey()
 {
@@ -260,12 +274,6 @@ void UInputSettingsUserWidget::ChangeShowGameMenuKey()
 	HoldCursor();
 }
 
-void UInputSettingsUserWidget::ChangeThrowAbilityKey()
-{
-	ThrowAbilityKeyMappingTextBlock->SetText(PressKeyText);
-	CurrentChoiceActionKeyToChange = CurrentInputSettingsStruct.ThrowAbilityKeyMapping;
-	HoldCursor();
-}
 
 void UInputSettingsUserWidget::ChangeWatchEnemiesKey()
 {
@@ -310,13 +318,16 @@ void UInputSettingsUserWidget::FillKeyMappingArrays()
 		&CurrentInputSettingsStruct.AutoRunKeyMapping,
 		&CurrentInputSettingsStruct.InteractKeyMapping,
 		&CurrentInputSettingsStruct.JumpKeyMapping,
+
 		&CurrentInputSettingsStruct.MeleeAbilityKeyMapping,
+		&CurrentInputSettingsStruct.RoundWaveAbilityKeyMapping,
+		&CurrentInputSettingsStruct.ThrowAbilityKeyMapping,
+		&CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping,
+
 		&CurrentInputSettingsStruct.OffWatchingKeyMapping,
 		&CurrentInputSettingsStruct.RunKeyMapping,
-		&CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping,
 		&CurrentInputSettingsStruct.ShortWalkingKeyMapping,
 		&CurrentInputSettingsStruct.ShowGameMenuKeyMapping,
-		&CurrentInputSettingsStruct.ThrowAbilityKeyMapping,
 		&CurrentInputSettingsStruct.WatchEnemiesKeyMapping,
 		&CurrentInputSettingsStruct.WatchOtherActorsKeyMapping,
 		&CurrentInputSettingsStruct.ZoomDownKeyMapping,
@@ -339,13 +350,16 @@ void UInputSettingsUserWidget::FillKeyMappingArrays()
 		&DefaultInputSettingsStruct.AutoRunKeyMapping,
 		&DefaultInputSettingsStruct.InteractKeyMapping,
 		&DefaultInputSettingsStruct.JumpKeyMapping,
+
 		&DefaultInputSettingsStruct.MeleeAbilityKeyMapping,
+		&DefaultInputSettingsStruct.RoundWaveAbilityKeyMapping,
+		&DefaultInputSettingsStruct.ThrowAbilityKeyMapping,
+		&DefaultInputSettingsStruct.SevenfoldSphereAbilityKeyMapping,
+
 		&DefaultInputSettingsStruct.OffWatchingKeyMapping,
 		&DefaultInputSettingsStruct.RunKeyMapping,
-		&DefaultInputSettingsStruct.SevenfoldSphereAbilityKeyMapping,
 		&DefaultInputSettingsStruct.ShortWalkingKeyMapping,
 		&DefaultInputSettingsStruct.ShowGameMenuKeyMapping,
-		&DefaultInputSettingsStruct.ThrowAbilityKeyMapping,
 		&DefaultInputSettingsStruct.WatchEnemiesKeyMapping,
 		&DefaultInputSettingsStruct.WatchOtherActorsKeyMapping,
 		&DefaultInputSettingsStruct.ZoomDownKeyMapping,
@@ -424,13 +438,16 @@ void UInputSettingsUserWidget::ShowActionKeysNamesMapping()
 	AutoRunKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.AutoRunKeyMapping.Key.GetDisplayName());
 	InteractKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.InteractKeyMapping.Key.GetDisplayName());
 	JumpKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.JumpKeyMapping.Key.GetDisplayName());
+
 	MeleeAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.MeleeAbilityKeyMapping.Key.GetDisplayName());
+	RoundWaveAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.RoundWaveAbilityKeyMapping.Key.GetDisplayName());
+	SevenfoldSphereAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping.Key.GetDisplayName());
+	ThrowAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.ThrowAbilityKeyMapping.Key.GetDisplayName());
+
 	OffWatchingKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.OffWatchingKeyMapping.Key.GetDisplayName());
 	RunKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.RunKeyMapping.Key.GetDisplayName());
-	SevenfoldSphereAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.SevenfoldSphereAbilityKeyMapping.Key.GetDisplayName());
 	ShortWalkingKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.ShortWalkingKeyMapping.Key.GetDisplayName());
 	ShowGameMenuKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.ShowGameMenuKeyMapping.Key.GetDisplayName());
-	ThrowAbilityKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.ThrowAbilityKeyMapping.Key.GetDisplayName());
 	WatchEnemiesKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.WatchEnemiesKeyMapping.Key.GetDisplayName());
 	WatchOtherActorsKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.WatchOtherActorsKeyMapping.Key.GetDisplayName());
 	ZoomDownKeyMappingTextBlock->SetText(CurrentInputSettingsStruct.ZoomDownKeyMapping.Key.GetDisplayName());

@@ -45,6 +45,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bSpawningSSphere;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
+		bool bRoundWaving;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bShortWalk;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAnimInstance")
 		bool bWatchingNow;
@@ -114,6 +116,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void EndAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
+		void CastRoundWave();
+	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
+		void EndAnimationRoundWave();
+
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")
 		void StartAnimationThrow();
 	UFUNCTION(BlueprintCallable, Category = "PlayerAnimInstance|AnimNotifies")

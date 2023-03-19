@@ -163,6 +163,49 @@ void UAnimationManagerComponent::SpawnSSphereAnimation()
 
 void UAnimationManagerComponent::RoundWaveAnimation()
 {
+	DEBUGMESSAGE("Start RoundWaveAnimation");
+	if (!bCanAttack)
+	{
+		return;
+	}
+
+	SetPlayingAnimationRoundWave(true);
+
+	FTimerDelegate TmpDelegate;
+	TmpDelegate.BindLambda
+	(
+		[=]()
+	{
+		if (bRoundWaving)
+		{
+			SetPlayingAnimationRoundWave(false);
+		}
+	}
+	);
+	GetWorld()->GetTimerManager().SetTimer(CheckStopRoundWaveAnimationTimer, TmpDelegate, CheckStopRoundWaveAnimationTimerRate, false);
+}
+void UAnimationManagerComponent::SetPlayingAnimationRoundWave(bool bPlaying)
+{
+	if (bPlaying)
+	{
+		bCanThrow = false;
+		bCanAttack = false;
+		bCanInteract = false;
+		bCanRun = false;
+		bCanJump = false;
+
+		bRoundWaving = true;
+	}
+	else
+	{
+		bCanThrow = true;
+		bCanAttack = true;
+		bCanInteract = true;
+		bCanRun = true;
+		bCanJump = true;
+
+		bRoundWaving = false;
+	}
 }
 
 void UAnimationManagerComponent::SetPlayingAnimationThrow(bool bPlaying)
@@ -354,9 +397,9 @@ void UAnimationManagerComponent::StopAnimations()
  * Setters
  */
 
-//void UAnimationManagerComponent::SetGettingDamage_IF_Implementation(bool bInGettingDamage)
-//{
-//	bGettingDamage = bInGettingDamage;
-//}
+ //void UAnimationManagerComponent::SetGettingDamage_IF_Implementation(bool bInGettingDamage)
+ //{
+ //	bGettingDamage = bInGettingDamage;
+ //}
 
 

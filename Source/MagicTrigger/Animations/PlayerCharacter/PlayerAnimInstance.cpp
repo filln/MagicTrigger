@@ -65,6 +65,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	bAttacking = AnimationManagerComponent->bAttacking;
 	bSpawningSSphere = AnimationManagerComponent->bSpawningSSphere;
+	bRoundWaving = AnimationManagerComponent->bRoundWaving;
 	bWatchingNow = AnimationManagerComponent->bWatchingNow;
 	bShortWalk = AnimationManagerComponent->bShortWalk;
 	bLiftingUp2Hands = AnimationManagerComponent->bLiftingUp2Hands;
@@ -194,6 +195,17 @@ void UPlayerAnimInstance::EndAttack()
 {
 	AnimationManagerComponent->SetPlayingAnimationAttack(false);
 	Montage_Play(PlayerFightIdle);	
+}
+
+void UPlayerAnimInstance::CastRoundWave()
+{
+	DEBUGMESSAGE("Cast Round Wave");
+}
+
+void UPlayerAnimInstance::EndAnimationRoundWave()
+{
+	DEBUGMESSAGE("End of RoundWaveAnimation");
+	AnimationManagerComponent->SetPlayingAnimationRoundWave(false);
 }
 
 void UPlayerAnimInstance::StartAnimationThrow()

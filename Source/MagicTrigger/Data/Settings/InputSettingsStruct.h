@@ -24,13 +24,16 @@ struct FInputSettingsStruct
 	FInputActionKeyMapping AutoRunKeyMapping;
 	FInputActionKeyMapping InteractKeyMapping;
 	FInputActionKeyMapping JumpKeyMapping;
+
 	FInputActionKeyMapping MeleeAbilityKeyMapping;
+	FInputActionKeyMapping RoundWaveAbilityKeyMapping;
+	FInputActionKeyMapping ThrowAbilityKeyMapping;
+	FInputActionKeyMapping SevenfoldSphereAbilityKeyMapping;
+
 	FInputActionKeyMapping OffWatchingKeyMapping;
 	FInputActionKeyMapping RunKeyMapping;
-	FInputActionKeyMapping SevenfoldSphereAbilityKeyMapping;
 	FInputActionKeyMapping ShortWalkingKeyMapping;
 	FInputActionKeyMapping ShowGameMenuKeyMapping;
-	FInputActionKeyMapping ThrowAbilityKeyMapping;
 	FInputActionKeyMapping WatchEnemiesKeyMapping;
 	FInputActionKeyMapping WatchOtherActorsKeyMapping;
 	FInputActionKeyMapping ZoomDownKeyMapping;
@@ -80,13 +83,16 @@ struct FInputSettingsStruct
 		AutoRunKeyMapping.ActionName = FName(TEXT("AutoRun"));
 		InteractKeyMapping.ActionName = FName(TEXT("Interact"));
 		JumpKeyMapping.ActionName = FName(TEXT("Jump"));
+
 		MeleeAbilityKeyMapping.ActionName = FName(TEXT("MeleeAbility"));
+		RoundWaveAbilityKeyMapping.ActionName = FName(TEXT("RoundWaveAbility"));
+		ThrowAbilityKeyMapping.ActionName = FName(TEXT("ThrowAbility"));
+		SevenfoldSphereAbilityKeyMapping.ActionName = FName(TEXT("SSphereAbility"));
+
 		OffWatchingKeyMapping.ActionName = FName(TEXT("OffWatchingActors"));
 		RunKeyMapping.ActionName = FName(TEXT("Running"));
-		SevenfoldSphereAbilityKeyMapping.ActionName = FName(TEXT("SSphereAbility"));
 		ShortWalkingKeyMapping.ActionName = FName(TEXT("ShortWalking"));
 		ShowGameMenuKeyMapping.ActionName = FName(TEXT("ShowGameMenu"));
-		ThrowAbilityKeyMapping.ActionName = FName(TEXT("ThrowAbility"));
 		WatchEnemiesKeyMapping.ActionName = FName(TEXT("WatchEnemies"));
 		WatchOtherActorsKeyMapping.ActionName = FName(TEXT("WatchOtherActors"));
 		ZoomDownKeyMapping.ActionName = FName(TEXT("ZoomDown"));
@@ -109,13 +115,16 @@ struct FInputSettingsStruct
 		AutoRunKeyMapping.Key = FKey(TEXT("NumLock"));
 		InteractKeyMapping.Key = FKey(TEXT("RightMouseButton"));
 		JumpKeyMapping.Key = FKey(TEXT("SpaceBar"));
-		MeleeAbilityKeyMapping.Key = FKey(TEXT("One"));
 		OffWatchingKeyMapping.Key = FKey(TEXT("CapsLock"));
 		RunKeyMapping.Key = FKey(TEXT("LeftShift"));
-		SevenfoldSphereAbilityKeyMapping.Key = FKey(TEXT("Three"));
+
+		MeleeAbilityKeyMapping.Key = FKey(TEXT("One"));
+		RoundWaveAbilityKeyMapping.Key = FKey(TEXT("Two"));
+		ThrowAbilityKeyMapping.Key = FKey(TEXT("Three"));
+		SevenfoldSphereAbilityKeyMapping.Key = FKey(TEXT("Four"));
+
 		ShortWalkingKeyMapping.Key = FKey(TEXT("LeftControl"));
 		ShowGameMenuKeyMapping.Key = FKey(TEXT("Escape"));
-		ThrowAbilityKeyMapping.Key = FKey(TEXT("Two"));
 		WatchEnemiesKeyMapping.Key = FKey(TEXT("Tab"));
 		WatchOtherActorsKeyMapping.Key = FKey(TEXT("Q"));
 		ZoomDownKeyMapping.Key = FKey(MouseScrollDownKeyName);

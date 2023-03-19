@@ -16,14 +16,14 @@ class APlayerController;
 class UWidgetAnimation;
 
 /**
- * 
+ *
  */
 UCLASS()
 class MAGICTRIGGER_API UInputSettingsUserWidget : public UParentUserWidgetMT
 {
 	GENERATED_BODY()
 
-	UInputSettingsUserWidget();
+		UInputSettingsUserWidget();
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativePreConstruct() override;
@@ -32,7 +32,7 @@ protected:
 	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
+
 	/**
 	 *Variables
 	 */
@@ -41,92 +41,100 @@ public:
 	/**
 	 *ActionKeyMappingTextBlock
 	 */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* MoveBackwardKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* MoveForwardKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* MoveLeftKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* MoveRightKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* AttackKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* AutoRunKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* InteractKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* JumpKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* MeleeAbilityKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* OffWatchingKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* RunKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* SevenfoldSphereAbilityKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* ShortWalkingKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* ShowGameMenuKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* ThrowAbilityKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* WatchEnemiesKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* WatchOtherActorsKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* ZoomDownKeyMappingTextBlock;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyMappingTextBlock")
-	UTextBlock* ZoomUpKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* MoveBackwardKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* MoveForwardKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* MoveLeftKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* MoveRightKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* AttackKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* AutoRunKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* InteractKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* JumpKeyMappingTextBlock;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* MeleeAbilityKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* RoundWaveAbilityKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* ThrowAbilityKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* SevenfoldSphereAbilityKeyMappingTextBlock;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* OffWatchingKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* RunKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* ShortWalkingKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* ShowGameMenuKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* WatchEnemiesKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* WatchOtherActorsKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* ZoomDownKeyMappingTextBlock;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyMappingTextBlock")
+		UTextBlock* ZoomUpKeyMappingTextBlock;
 
 	/**
 	 *ActionKeyButton
 	 */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* MoveForwardKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* MoveBackwardKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* MoveLeftKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* MoveRightKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* AttackKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* AutoRunKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* InteractKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* JumpKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* MeleeAbilityKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* OffWatchingKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* RunKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* SevenfoldSphereAbilityKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* ShortWalkingKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* ShowGameMenuKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* ThrowAbilityKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* WatchEnemiesKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* WatchOtherActorsKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* ZoomDownKeyButton;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|ActionKeyButton")
-	UButton* ZoomUpKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* MoveForwardKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* MoveBackwardKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* MoveLeftKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* MoveRightKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* AttackKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* AutoRunKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* InteractKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* JumpKeyButton;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* MeleeAbilityKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* RoundWaveAbilityKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* ThrowAbilityKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* SevenfoldSphereAbilityKeyButton;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* OffWatchingKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* RunKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* ShortWalkingKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* ShowGameMenuKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* WatchEnemiesKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* WatchOtherActorsKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* ZoomDownKeyButton;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|ActionKeyButton")
+		UButton* ZoomUpKeyButton;
 
 	/**
 	 *Aniamtion
 	 */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="InputSettingsUserWidget|Aniamtion")
-	UWidgetAnimation* BindingExistTextBlockAnimation;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "InputSettingsUserWidget|Aniamtion")
+		UWidgetAnimation* BindingExistTextBlockAnimation;
 
 private:
 	FLinearColor HoveredColor;
@@ -155,62 +163,66 @@ private:
 
 public:
 	UPROPERTY()
-	UInputSettings* InputSettings;
+		UInputSettings* InputSettings;
 	UPROPERTY()
-	APlayerController* PlayerController;
-	
+		APlayerController* PlayerController;
+
 	/**
 	 *Methods
 	 */
 public:
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget")
-	void SetHoveredColorToText(UTextBlock* InText);
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget")
-	void SetUnHoveredColorToText(UTextBlock* InText);
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget")
-	void ResetToDefaults();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget")
+		void SetHoveredColorToText(UTextBlock* InText);
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget")
+		void SetUnHoveredColorToText(UTextBlock* InText);
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget")
+		void ResetToDefaults();
 
 	/**
 	 *ChangeKey
 	 */
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeMoveForwardKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeMoveBackwardKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeMoveLeftKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeMoveRightKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeAttackKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeAutoRunKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeInteractKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeJumpKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeMeleeAbilityKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeOffWatchingKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeRunKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeSevenfoldSphereAbilityKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeShortWalkingKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeShowGameMenuKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeThrowAbilityKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeWatchEnemiesKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeWatchOtherActorsKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeZoomDownKey();
-	UFUNCTION(BlueprintCallable, Category="InputSettingsUserWidget|ChangeKey")
-	void ChangeZoomUpKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeMoveForwardKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeMoveBackwardKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeMoveLeftKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeMoveRightKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeAttackKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeAutoRunKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeInteractKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeJumpKey();
+
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeMeleeAbilityKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeRoundWaveAbilityKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeThrowAbilityKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeSevenfoldSphereAbilityKey();
+
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeOffWatchingKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeRunKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeShortWalkingKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeShowGameMenuKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeWatchEnemiesKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeWatchOtherActorsKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeZoomDownKey();
+	UFUNCTION(BlueprintCallable, Category = "InputSettingsUserWidget|ChangeKey")
+		void ChangeZoomUpKey();
 
 
 private:
@@ -220,8 +232,8 @@ private:
 	void FillCurrentInputSettingsStruct();
 	//FillCurrentInputSettingsStruct()
 	void FillAxisKeysInCurrentInputSettingsStruct(FName InActionNameMapping,
-	                                              FInputAxisKeyMapping& InPositiveScaleAxisKeyMapping,
-	                                              FInputAxisKeyMapping& InNegativeScaleAxisKeyMapping);
+		FInputAxisKeyMapping& InPositiveScaleAxisKeyMapping,
+		FInputAxisKeyMapping& InNegativeScaleAxisKeyMapping);
 	//FillCurrentInputSettingsStruct()
 	void FillActionKeysInCurrentInputSettingsStruct(FName InActionNameMapping, FInputActionKeyMapping& InActionKeyMapping);
 

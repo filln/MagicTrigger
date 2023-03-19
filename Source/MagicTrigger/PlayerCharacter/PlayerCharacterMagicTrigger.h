@@ -261,6 +261,7 @@ public:
 	void Interact_InAct();
 
 	void MeleeAbility_InAct();
+	void RoundWaveAbility_InAct();
 	void ThrowAbility_InAct();
 	void SSphereAbility_InAct();
 

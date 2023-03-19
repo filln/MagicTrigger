@@ -312,6 +312,7 @@ void APlayerCharacterMagicTrigger::SetupPlayerInputComponent(UInputComponent* Pl
 
 	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.AttackKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::Attack_InAct);
 	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.MeleeAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::MeleeAbility_InAct);
+	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.RoundWaveAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::RoundWaveAbility_InAct);
 	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.ThrowAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::ThrowAbility_InAct);
 	PlayerInputComponent->BindAction(DefaultInputSettingsStruct.SevenfoldSphereAbilityKeyMapping.ActionName, IE_Pressed, this, &APlayerCharacterMagicTrigger::SSphereAbility_InAct);
 
@@ -694,6 +695,11 @@ void APlayerCharacterMagicTrigger::Interact_InAct()
 void APlayerCharacterMagicTrigger::MeleeAbility_InAct()
 {
 	AbilitySystemManager->SetCurrentAbility(ECurrentAbility::ECA_Melee);
+}
+
+void APlayerCharacterMagicTrigger::RoundWaveAbility_InAct()
+{
+	AbilitySystemManager->SetCurrentAbility(ECurrentAbility::ECA_RoundWave);
 }
 
 void APlayerCharacterMagicTrigger::ThrowAbility_InAct()
