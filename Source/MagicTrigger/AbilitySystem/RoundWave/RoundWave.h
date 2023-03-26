@@ -59,6 +59,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RoundWave")
 		APlayerCharacterMagicTrigger* PlayerCharacter;
 
+	/**
+	 * 
+	 */
+	FVector InitialScale;
 private:
 	/**
 	 *

@@ -31,7 +31,7 @@ ARoundWave::ARoundWave()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(GetRootComponent());
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObject(TEXT("/Game/MagicTrigger/Meshes/AttackAbilities/SM_RoundWavePlane"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObject(TEXT("/Game/MagicTrigger/Meshes/AttackAbilities/SM_RoundWaveRadialDisk"));
 	if (MeshObject.Succeeded())
 	{
 		Mesh->SetStaticMesh(MeshObject.Object);
@@ -43,7 +43,7 @@ ARoundWave::ARoundWave()
 	Mesh->SetEnableGravity(false);
 	Mesh->SetGenerateOverlapEvents(false);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	Mesh->SetMobility(EComponentMobility::Static);
+	//Mesh->SetMobility(EComponentMobility::Static);
 
 	//static ConstructorHelpers::FObjectFinder<UTexture> TextureObject(TEXT("/Game/MagicTrigger/Textures/T_FireBall_D"));
 	//if (TextureObject.Succeeded())

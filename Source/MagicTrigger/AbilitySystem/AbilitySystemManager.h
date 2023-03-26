@@ -70,6 +70,7 @@ public:
 	void SetCurrentAbility(ECurrentAbility InCurrentAbility);
 	APlayerCharacterMagicTrigger* GetPlayerCharacter() const;
 	APlayerController* GetPlayerController() const;
+	FVector GetPlayerLocation() const;
 
 	/**
 	 * Melee
@@ -107,6 +108,5 @@ public:
 	 * RoundWave
 	 */
 	void UseRoundWave();
-
-
+	void CastRoundWave();
 };

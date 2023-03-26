@@ -199,12 +199,13 @@ void UPlayerAnimInstance::EndAttack()
 
 void UPlayerAnimInstance::CastRoundWave()
 {
-	DEBUGMESSAGE("Cast Round Wave");
+	//DEBUGMESSAGE("Cast Round Wave");
+	PlayerCharacter->CastRoundWave();
 }
 
 void UPlayerAnimInstance::EndAnimationRoundWave()
 {
-	DEBUGMESSAGE("End of RoundWaveAnimation");
+	//DEBUGMESSAGE("End of RoundWaveAnimation");
 	AnimationManagerComponent->SetPlayingAnimationRoundWave(false);
 }
 

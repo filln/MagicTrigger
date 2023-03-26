@@ -38,6 +38,7 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	CheckStopJumpAnimationTimerRate = 1.9;
 	CheckStopMeleeAttackAnimationTimerRate = 1.5;
 	CheckStopThrowAnimationTimerRate = 1.1;
+	CheckStopRoundWaveAnimationTimerRate = 5.65;
 }
 
 
@@ -163,7 +164,7 @@ void UAnimationManagerComponent::SpawnSSphereAnimation()
 
 void UAnimationManagerComponent::RoundWaveAnimation()
 {
-	DEBUGMESSAGE("Start RoundWaveAnimation");
+	//DEBUGMESSAGE("Start RoundWaveAnimation");
 	if (!bCanAttack)
 	{
 		return;

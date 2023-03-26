@@ -322,7 +322,7 @@ public:
 	void SpawnSSphere();
 	UFUNCTION(BlueprintCallable, Category = "PlayerCharacterMagicTrigger")
 		USevenfoldSphereComponent* GetSevenfoldSphereComponent() const;
-
+	void CastRoundWave();
 	/**
 	 * Изменяет значение AxisValue для AddMovementInput() при контроле игроком скорости передвижения.
 	 */

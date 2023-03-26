@@ -10,6 +10,7 @@
 #include "RoundWaveComponent.generated.h"
 
 class AAbilitySystemManager;
+class ARoundWave;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MAGICTRIGGER_API URoundWaveComponent : public UActorComponent
@@ -25,20 +26,51 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	/**
 	 * Variables
 	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWaveComponent")
+		FVector SpawnScale;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWaveComponent")
+		float IncreaseScaleTime;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWaveComponent")
+		float DecreaseScaleTime;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWaveComponent")
+		float MaxScaleMultiplier;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWaveComponent")
+		TSubclassOf<ARoundWave> RoundWaveClass;
+	UPROPERTY()
+		FTimerHandle ScaleTimer;
 private:
 	AAbilitySystemManager* AbilitySystemManager;
-
+	ARoundWave* RoundWave;
+	float ScaleTimerDeltaTime;
+	float CurrentScaleMultiplier;
+	float DeltaScaleMultiplier;
 	/**
 	 * Methods
 	 */
 public:
+	/**
+	 * Использовать абилку. Начинает цепочку действий до начала анимации.
+	 */
 	void Use();
+	/*
+		Скастовать абилку. Вызывается через цепочку функций от определенного момента анимации.
+	*/
+	void CastRoundWave();
+	/**
+	 * Закончить абилку.
+	 */
+	void EndRoundWave();
 
-
+private:
+	/**
+	 * Плавно увеличивает размер актора волны.
+	 */
+	void IncreaseScale();
+	/**
+	 * Плавно уменьшает размер актора волны до нуля и удаляет его.
+	 */
+	void DecreaseScale();
 };

@@ -1091,6 +1091,12 @@ USevenfoldSphereComponent* APlayerCharacterMagicTrigger::GetSevenfoldSphereCompo
 	return AbilitySystemManager->SevenfoldSphereComponent;
 }
 
+void APlayerCharacterMagicTrigger::CastRoundWave()
+{
+	AbilitySystemManager->CastRoundWave();
+}
+
+
 void APlayerCharacterMagicTrigger::StartTraceAttackRightFoot()
 {
 	AbilitySystemManager->StartTraceAttackRightFoot();

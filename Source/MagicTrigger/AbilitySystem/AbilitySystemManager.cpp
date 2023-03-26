@@ -160,6 +160,11 @@ APlayerController* AAbilitySystemManager::GetPlayerController() const
 	return PlayerCharacter->GetPlayerController();
 }
 
+FVector AAbilitySystemManager::GetPlayerLocation() const
+{
+	return PlayerCharacter->GetActorLocation();
+}
+
 void AAbilitySystemManager::UseMeleeAbility()
 {
 	PlayerCharacter->AnimationManagerComponent->MeleeAttackAnimation();
@@ -287,4 +292,10 @@ void AAbilitySystemManager::UseRoundWave()
 {
 	PlayerCharacter->AnimationManagerComponent->RoundWaveAnimation();
 }
+
+void AAbilitySystemManager::CastRoundWave()
+{
+	RoundWaveComponent->CastRoundWave();
+}
+
 
