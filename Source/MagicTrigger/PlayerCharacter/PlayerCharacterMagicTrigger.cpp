@@ -94,6 +94,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Observe, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_InteractNPC, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_InteractPlayerCharacter, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_RoundWave, ECollisionResponse::ECR_Ignore);
 
 	FHitResult HitResultTmp = FHitResult();
 
@@ -109,6 +110,7 @@ APlayerCharacterMagicTrigger::APlayerCharacterMagicTrigger()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECollisionResponse::ECR_Block);
 	GetMesh()->SetCollisionResponseToChannel(ECC_PhysicsBody, ECollisionResponse::ECR_Block);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Destructible, ECollisionResponse::ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECC_RoundWave, ECollisionResponse::ECR_Ignore);
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshObj(
 		TEXT("/Game/MagicTrigger/Meshes/PlayerCharacter/SK_Player_Idle_Kachujin"));

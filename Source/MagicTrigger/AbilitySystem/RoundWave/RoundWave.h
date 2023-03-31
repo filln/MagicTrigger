@@ -12,7 +12,8 @@
 class UMaterialInterface;
 class UStaticMeshComponent;
 class UTexture;
-class USphereComponent;
+//class USphereComponent;
+class UBoxComponent;
 class APlayerCharacterMagicTrigger;
 
 UCLASS()
@@ -35,8 +36,10 @@ public:
 	/**
 	 *
 	 */
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWave|Components")
+	//	USphereComponent* SphereCollision;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "RoundWave|Components")
-		USphereComponent* SphereCollision;
+		UBoxComponent* BoxCollision;
 	/**
 	 *
 	 */
@@ -54,13 +57,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoundWave|Settings")
 		float Damage;
 	/**
+	 * Задержка нужна, т.к. анимация получения дамага мешает сработке LaunchCharacter.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoundWave|Settings")
+		float ApplyDamageDelay;
+	/**
+	 * Множители вектора для LaunchCharacter
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoundWave|Settings")
+		float ImpulseForceX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoundWave|Settings")
+		float ImpulseForceY;
+	/**
+	 * Слагаемое вектора для LaunchCharacter
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoundWave|Settings")
+		float ImpulseForceZ;
+	/**
 	 *
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RoundWave")
 		APlayerCharacterMagicTrigger* PlayerCharacter;
 
 	/**
-	 * 
+	 *
 	 */
 	FVector InitialScale;
 private:
@@ -73,11 +93,15 @@ private:
 	  * Methods
 	  */
 public:
+	//UFUNCTION()
+	//	void OnSphereCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-		void OnSphereCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+		void OnCollisionHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 private:
-
+	/**
+	 * Отбросить всех врагов, которых коснулась волна.
+	 */
+	void DoForce(AActor* EnemyActor);
 
 
 };

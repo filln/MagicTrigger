@@ -39,6 +39,7 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Observe, ECollisionResponse::ECR_Overlap);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_InteractNPC, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_InteractPlayerCharacter, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_RoundWave, ECollisionResponse::ECR_Block);
 
 	FHitResult HitResultTmp = FHitResult();
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0), false, &HitResultTmp, ETeleportType::None);
@@ -55,6 +56,7 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	GetMesh()->SetCollisionResponseToChannel(ECC_AttackAbility, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetCollisionResponseToChannel(ECC_InteractNPC, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetCollisionResponseToChannel(ECC_InteractPlayerCharacter, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECC_RoundWave, ECollisionResponse::ECR_Ignore);
 
 	GetCharacterMovement()->MaxWalkSpeed = 450;
 	GetCharacterMovement()->JumpZVelocity = 500;
@@ -69,6 +71,7 @@ AEnemyCharacterMagicTrigger::AEnemyCharacterMagicTrigger()
 	RunAISphere->SetCollisionObjectType(ECC_WorldDynamic);
 	RunAISphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	RunAISphere->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	RunAISphere->SetCollisionResponseToChannel(ECC_RoundWave, ECollisionResponse::ECR_Ignore);
 	RunAISphere->SetSphereRadius(5000, false);
 
 	bGettingDamage = false;
@@ -114,6 +117,71 @@ void AEnemyCharacterMagicTrigger::StopAttack()
 	}
 }
 
+void AEnemyCharacterMagicTrigger::StopAI()
+{
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+	EnemyController->OnStopAI();
+}
+
+void AEnemyCharacterMagicTrigger::StopMovement()
+{
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+	EnemyController->StopMovement();
+}
+
+void AEnemyCharacterMagicTrigger::DeactivatePathFollowing()
+{
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+	EnemyController->GetPathFollowingComponent()->Deactivate();
+}
+
+void AEnemyCharacterMagicTrigger::RunAI()
+{
+	if (!GetController())
+	{
+		DEBUGMESSAGE("!GetController()");
+		return;
+	}
+	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
+	if (!EnemyController)
+	{
+		DEBUGMESSAGE("!EnemyController");
+		return;
+	}
+
+	EnemyController->OnRunAI();
+}
+
 void AEnemyCharacterMagicTrigger::OnRunAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//DEBUGMESSAGE("RunAISphere overlap something.");
@@ -135,19 +203,7 @@ void AEnemyCharacterMagicTrigger::OnRunAI(UPrimitiveComponent* OverlappedCompone
 
 	//DEBUGMESSAGE("RunAISphere begin overlap PlayerCharacter.")
 
-	if (!GetController())
-	{
-		DEBUGMESSAGE("!GetController()");
-		return;
-	}
-	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
-	if (!EnemyController)
-	{
-		DEBUGMESSAGE("!EnemyController");
-		return;
-	}
-
-	EnemyController->OnRunAI();
+	RunAI();
 }
 
 void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -170,19 +226,7 @@ void AEnemyCharacterMagicTrigger::OnStopAI(UPrimitiveComponent* OverlappedCompon
 
 	//DEBUGMESSAGE("RunAISphere end overlap PlayerCharacter.")
 
-	if (!GetController())
-	{
-		//DEBUGMESSAGE("!GetController()");
-		return;
-	}
-	AEnemyAIController* EnemyController = Cast<AEnemyAIController>(GetController());
-	if (!EnemyController)
-	{
-		DEBUGMESSAGE("!EnemyController");
-		return;
-	}
-
-	EnemyController->OnStopAI();
+	StopAI();
 }
 
 float AEnemyCharacterMagicTrigger::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)

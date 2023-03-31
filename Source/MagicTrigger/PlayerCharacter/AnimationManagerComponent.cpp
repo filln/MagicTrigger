@@ -38,7 +38,7 @@ UAnimationManagerComponent::UAnimationManagerComponent()
 	CheckStopJumpAnimationTimerRate = 1.9;
 	CheckStopMeleeAttackAnimationTimerRate = 1.5;
 	CheckStopThrowAnimationTimerRate = 1.1;
-	CheckStopRoundWaveAnimationTimerRate = 5.65;
+	CheckStopRoundWaveAnimationTimerRate = 2.27;
 }
 
 

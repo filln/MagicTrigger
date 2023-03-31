@@ -93,7 +93,22 @@ public:
 	 *
 	 */
 	void StopAttack();
-
+	/**
+	 * Остановить ИИ.
+	 */
+	void StopAI();
+	/**
+	 * Остановить движение.
+	 */
+	void StopMovement();
+	/**
+	 * Остановить поиск пути.
+	 */
+	void DeactivatePathFollowing();
+	/**
+	 * Запустить ИИ.
+	 */
+	void RunAI();
 	/**
 	 *Запуск ИИ, когда перс оверлапится с коллизией RunAISphere.
 	 */
